@@ -14,6 +14,20 @@
   --color-accent-dim: #22c55e;
   --color-danger: #f87171;
   --color-warning: #fbbf24;
+
+  /* ProphetArena component theme — mapped to dark palette */
+  --color-accent-primary: #6397C7;
+  --color-accent-secondary: #4a7aa8;
+  --color-accent-tertiary: #2a3a4a;
+  --color-accent-quaternary: #363632;
+  --color-bg-primary: #242422;
+  --color-bg-secondary: #1a1a17;
+  --color-text-primary: #e8e6e3;
+  --color-text-secondary: #9a9890;
+  --color-code-bg: #2d2d2a;
+  --color-heat-green: #1a3a1a;
+  --color-heat-red: #3a1a1a;
+  --color-accent-highlight: #7ab3e0;
 }
 
 * {

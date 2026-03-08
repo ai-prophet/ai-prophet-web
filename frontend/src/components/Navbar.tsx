@@ -1,28 +1,31 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+
+const NAV_LINKS = [
+  { label: "Events", href: "/markets" },
+  {
+    label: "Leaderboard",
+    href: "/leaderboard",
+    children: [
+      { label: "Model Leaderboard", href: "/leaderboard" },
+      { label: "Agent Leaderboard", href: "/agent-leaderboard" },
+    ],
+  },
+  { label: "Developer", href: "/" },
+  { label: "Research", href: "/research" },
+  { label: "About", href: "/about" },
+];
 
 const SITE = "https://www.prophetarena.co";
 
-const NAV_LINKS = [
-  { label: "Events", href: `${SITE}/markets` },
-  {
-    label: "Leaderboard",
-    href: `${SITE}/leaderboard`,
-    children: [
-      { label: "Model Leaderboard", href: `${SITE}/leaderboard` },
-      { label: "Agent Leaderboard", href: `${SITE}/agent-leaderboard` },
-    ],
-  },
-  { label: "Developer", href: null },
-  { label: "Research", href: `${SITE}/research` },
-  { label: "About", href: `${SITE}/about` },
-];
-
-export default function Navbar({ activePage, onPageChange }: { activePage?: string; onPageChange?: (page: string) => void }) {
+export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const pathname = usePathname();
 
   // Close dropdown on outside click
   useEffect(() => {
@@ -41,21 +44,26 @@ export default function Navbar({ activePage, onPageChange }: { activePage?: stri
     return () => { document.body.style.overflow = ""; };
   }, [mobileOpen]);
 
+  const isActive = (href: string) => {
+    if (href === "/") return pathname === "/";
+    return pathname.startsWith(href);
+  };
+
   return (
     <>
       <nav className="flex-shrink-0 border-b border-edge bg-surface relative z-50">
         <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 flex items-center justify-between h-12">
           {/* Left: logo + brand + nav links */}
           <div className="flex items-center gap-6">
-            <a
-              href={SITE}
+            <Link
+              href="/"
               className="flex items-center gap-2 text-sm font-semibold text-primary hover:text-accent transition-colors"
             >
               <div className="w-6 h-6 rounded-md bg-accent flex items-center justify-center">
                 <span className="text-ground text-xs font-bold">P</span>
               </div>
               <span className="hidden sm:inline">Prophet Arena</span>
-            </a>
+            </Link>
 
             {/* Desktop nav */}
             <div className="hidden md:flex items-center gap-1">
@@ -65,7 +73,11 @@ export default function Navbar({ activePage, onPageChange }: { activePage?: stri
                   <div key={link.label} className="relative" ref={dropdownRef}>
                     <button
                       onClick={() => setDropdownOpen((v) => !v)}
-                      className="px-3 py-1.5 text-xs font-medium text-secondary hover:text-primary transition-colors rounded-md hover:bg-surface-hover flex items-center gap-1"
+                      className={`px-3 py-1.5 text-xs font-medium transition-colors rounded-md flex items-center gap-1 ${
+                        isActive(link.href) || link.children.some(c => isActive(c.href))
+                          ? "text-accent"
+                          : "text-secondary hover:text-primary hover:bg-surface-hover"
+                      }`}
                     >
                       {link.label}
                       <svg className={`w-3 h-3 transition-transform ${dropdownOpen ? "rotate-180" : ""}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -73,41 +85,36 @@ export default function Navbar({ activePage, onPageChange }: { activePage?: stri
                       </svg>
                     </button>
                     {dropdownOpen && (
-                      <div className="absolute top-full left-0 mt-1 w-48 bg-surface rounded-lg shadow-lg border border-edge py-1 z-50">
+                      <div className="absolute top-full left-0 mt-1 w-48 bg-surface rounded-lg shadow-lg shadow-black/30 border border-edge py-1 z-50">
                         {link.children.map((child) => (
-                          <a
+                          <Link
                             key={child.label}
                             href={child.href}
-                            className="block px-4 py-2 text-xs font-medium text-secondary hover:text-primary hover:bg-surface-hover transition-colors"
+                            onClick={() => setDropdownOpen(false)}
+                            className={`block px-4 py-2 text-xs font-medium transition-colors ${
+                              isActive(child.href)
+                                ? "text-accent bg-surface-hover"
+                                : "text-secondary hover:text-primary hover:bg-surface-hover"
+                            }`}
                           >
                             {child.label}
-                          </a>
+                          </Link>
                         ))}
                       </div>
                     )}
                   </div>
-                ) : link.href ? (
-                  /* Regular external link */
-                  <a
+                ) : (
+                  <Link
                     key={link.label}
                     href={link.href}
-                    className="px-3 py-1.5 text-xs font-medium text-secondary hover:text-primary transition-colors rounded-md hover:bg-surface-hover"
-                  >
-                    {link.label}
-                  </a>
-                ) : (
-                  /* Local page tab */
-                  <button
-                    key={link.label}
-                    onClick={() => onPageChange?.(link.label)}
                     className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors ${
-                      activePage === link.label
+                      isActive(link.href)
                         ? "text-accent"
                         : "text-secondary hover:text-primary hover:bg-surface-hover"
                     }`}
                   >
                     {link.label}
-                  </button>
+                  </Link>
                 )
               )}
             </div>
@@ -157,37 +164,33 @@ export default function Navbar({ activePage, onPageChange }: { activePage?: stri
                       {link.label}
                     </span>
                     {link.children.map((child) => (
-                      <a
+                      <Link
                         key={child.label}
                         href={child.href}
-                        className="block px-3 py-2 pl-6 text-sm text-secondary hover:text-primary hover:bg-surface-hover rounded-lg transition-colors"
+                        className={`block px-3 py-2 pl-6 text-sm rounded-lg transition-colors ${
+                          isActive(child.href)
+                            ? "text-accent font-medium"
+                            : "text-secondary hover:text-primary hover:bg-surface-hover"
+                        }`}
                         onClick={() => setMobileOpen(false)}
                       >
                         {child.label}
-                      </a>
+                      </Link>
                     ))}
                   </div>
-                ) : link.href ? (
-                  <a
+                ) : (
+                  <Link
                     key={link.label}
                     href={link.href}
-                    className="block px-3 py-2 text-sm text-secondary hover:text-primary hover:bg-surface-hover rounded-lg transition-colors"
+                    className={`block px-3 py-2 text-sm rounded-lg transition-colors ${
+                      isActive(link.href)
+                        ? "text-accent font-medium"
+                        : "text-secondary hover:text-primary hover:bg-surface-hover"
+                    }`}
                     onClick={() => setMobileOpen(false)}
                   >
                     {link.label}
-                  </a>
-                ) : (
-                  <button
-                    key={link.label}
-                    onClick={() => { onPageChange?.(link.label); setMobileOpen(false); }}
-                    className={`block w-full text-left px-3 py-2 text-sm font-medium rounded-lg transition-colors ${
-                      activePage === link.label
-                        ? "text-accent"
-                        : "text-secondary hover:text-primary hover:bg-surface-hover"
-                    }`}
-                  >
-                    {link.label}
-                  </button>
+                  </Link>
                 )
               )}
               <div className="pt-3 border-t border-edge mt-3">
