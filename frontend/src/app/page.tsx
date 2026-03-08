@@ -5,6 +5,7 @@ import ChatInterface from "@/components/ChatInterface";
 import Sidebar from "@/components/Sidebar";
 import SettingsModal from "@/components/SettingsModal";
 import Navbar from "@/components/Navbar";
+import DeveloperContent from "@/components/DeveloperContent";
 import type { SearchGroup, BoardEntry, UserSettings } from "@/types";
 import { DEFAULT_SETTINGS } from "@/types";
 
@@ -30,6 +31,7 @@ function saveSettings(s: UserSettings) {
 }
 
 export default function Home() {
+  const [activePage, setActivePage] = useState<"forecast" | "Developer">("forecast");
   const [started, setStarted] = useState(false);
   const [initialQuery, setInitialQuery] = useState("");
   const [heroInput, setHeroInput] = useState("");
@@ -132,6 +134,14 @@ export default function Home() {
     };
   }, [updateSidebarWidth]);
 
+  const handlePageChange = useCallback((page: string) => {
+    if (page === "Developer") {
+      setActivePage("Developer");
+    } else {
+      setActivePage("forecast");
+    }
+  }, []);
+
   const handleHeroSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const text = heroInput.trim();
@@ -140,11 +150,23 @@ export default function Home() {
     setStarted(true);
   };
 
+  /* ── Developer page ── */
+  if (activePage === "Developer") {
+    return (
+      <div className="h-screen flex flex-col">
+        <Navbar activePage="Developer" onPageChange={handlePageChange} />
+        <div className="flex-1 overflow-y-auto">
+          <DeveloperContent />
+        </div>
+      </div>
+    );
+  }
+
   /* ── Hero / landing view ── */
   if (!started) {
     return (
       <div className="h-screen flex flex-col">
-        <Navbar />
+        <Navbar activePage="forecast" onPageChange={handlePageChange} />
         <div className="flex-1 flex items-center justify-center">
           <div className="w-full max-w-2xl px-6 -mt-20">
             <div className="text-center mb-10">
@@ -201,7 +223,7 @@ export default function Home() {
   /* ── Chat + sidebar view ── */
   return (
     <div className="h-screen flex flex-col">
-      <Navbar />
+      <Navbar activePage="forecast" onPageChange={handlePageChange} />
       <div ref={layoutRef} className="flex-1 flex overflow-hidden min-h-0">
         <div className="flex-1 min-w-0">
           <ChatInterface
