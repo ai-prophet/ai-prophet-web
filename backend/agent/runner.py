@@ -43,7 +43,7 @@ def start_run(
     from miniprophet.environment.forecast_env import ForecastEnvironment, create_default_tools
     from miniprophet.environment.source_board import SourceBoard
     from miniprophet.models import get_model
-    from miniprophet.search import get_search_tool
+    from miniprophet.tools.search import get_search_backend
 
     from agent.web_agent import WebForecastAgent
 
@@ -63,7 +63,7 @@ def start_run(
             model = get_model(config=model_config)
 
             search_config = {"search_class": settings.search_backend}
-            search_backend = get_search_tool(config=search_config)
+            search_backend = get_search_backend(search_config)
 
             env_cfg = dict(ENVIRONMENT_DEFAULTS)
             agent_cfg = dict(AGENT_DEFAULTS)
