@@ -1,4 +1,4 @@
-# Deploying Mini LLM Prophet Web
+# Deploying Mini Prophet Web
 
 This guide walks you through deploying the **backend** (FastAPI) and **frontend** (Next.js) for ~100 users. We use **Render** for the backend and **Vercel** for the frontend—both have free tiers and require no credit card.
 
@@ -16,20 +16,20 @@ This guide walks you through deploying the **backend** (FastAPI) and **frontend*
 
 ## Part 1: Deploy the Backend (Render)
 
-### 1.1 Add mini-llm-prophet (required for Render)
+### 1.1 Add mini-prophet (required for Render)
 
-Your backend depends on `mini-llm-prophet`. Add it as a **git submodule** so Render can clone it during build:
+Your backend depends on `mini-prophet`. Add it as a **git submodule** so Render can clone it during build:
 
 ```bash
 cd /path/to/prophet-agent/app    # your repo root (contains backend/, frontend/)
-git submodule add https://github.com/ai-prophet/mini-llm-prophet mini-llm-prophet
-git add .gitmodules mini-llm-prophet
-git commit -m "Add mini-llm-prophet as submodule"
+git submodule add https://github.com/ai-prophet/mini-prophet mini-prophet
+git add .gitmodules mini-prophet
+git commit -m "Add mini-prophet as submodule"
 ```
 
-This creates `app/mini-llm-prophet/` inside your repo. The submodule will be cloned when Render runs `git submodule update --init --recursive` during the build (see step 1.2).
+This creates `app/mini-prophet/` inside your repo. The submodule will be cloned when Render runs `git submodule update --init --recursive` during the build (see step 1.2).
 
-> **Alternative:** If your repo root is `prophet-agent` and contains both `app/` and `mini-llm-prophet/` as siblings, use Root Directory `app/backend` and Build Command `pip install -r requirements.txt && pip install -e ../../mini-llm-prophet` (no submodule init needed).
+> **Alternative:** If your repo root is `prophet-agent` and contains both `app/` and `mini-prophet/` as siblings, use Root Directory `app/backend` and Build Command `pip install -r requirements.txt && pip install -e ../../mini-prophet` (no submodule init needed).
 
 ### 1.2 Push your code to GitHub
 
@@ -58,7 +58,7 @@ git push -u origin main
    | **Region** | Choose closest to your users |
    | **Root Directory** | `backend` |
    | **Runtime** | Python 3 |
-   | **Build Command** | `cd .. && git submodule update --init --recursive && cd backend && pip install -r requirements.txt && pip install -e ../mini-llm-prophet` |
+   | **Build Command** | `cd .. && git submodule update --init --recursive && cd backend && pip install -r requirements.txt && pip install -e ../mini-prophet` |
    | **Start Command** | `uvicorn main:app --host 0.0.0.0 --port $PORT` |
 
 5. Under **Advanced** → **Environment Variables**, add:
@@ -159,7 +159,7 @@ Save. Render will redeploy automatically.
 | **CORS errors** in browser console | Ensure `CORS_ORIGINS` on Render includes your exact frontend URL (with `https://`, no trailing slash). |
 | **502 / 503** on first load | Free tier cold start—wait 30–60 seconds and retry. |
 | **"Run not found"** or SSE disconnects | Backend may have restarted; refresh and try again. |
-| **Build fails on Render** | Check that `mini-llm-prophet` exists at repo root. If it's a submodule, ensure it's initialized. |
+| **Build fails on Render** | Check that `mini-prophet` exists at repo root. If it's a submodule, ensure it's initialized. |
 | **Build fails on Vercel** | Ensure Root Directory is `app/frontend` and `NEXT_PUBLIC_API_URL` is set. |
 
 ---

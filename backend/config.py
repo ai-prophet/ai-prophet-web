@@ -1,4 +1,4 @@
-"""Backend-local configuration. Does not rely on mini-llm-prophet's default.yaml.
+"""Backend-local configuration. Does not rely on mini-prophet's default.yaml.
 
 Fixed agent parameters live here. User-configurable parameters (API keys,
 model choice, search backend) are passed per-request via UserSettings.

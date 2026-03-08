@@ -1,18 +1,18 @@
-# Mini LLM Prophet Web
+# Mini Prophet Web
 
-Web interface for the mini-llm-prophet forecasting agent.
+Web interface for the mini-prophet forecasting agent.
 
 ## Setup
 
 ### Backend
 
 ```bash
-# clone the mini-llm-prophet to root
-git clone https://github.com/ai-prophet/mini-llm-prophet
+# clone mini-prophet to root
+git clone https://github.com/ai-prophet/mini-prophet
 
 cd app/backend
 pip install -r requirements.txt
-pip install -e ../../mini-llm-prophet  # install the agent package
+pip install -e ../../mini-prophet  # install the agent package
 uvicorn main:app --reload --port 8000
 ```
 

@@ -1,4 +1,4 @@
-"""FastAPI application for mini-llm-prophet web interface."""
+"""FastAPI application for mini-prophet web interface."""
 
 import os
 
@@ -7,7 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from routers.forecast import router as forecast_router
 
-app = FastAPI(title="Mini LLM Prophet Web")
+app = FastAPI(title="Mini Prophet Web")
 
 # CORS: allow frontend origin. Set CORS_ORIGINS for explicit origins (comma-separated).
 # By default we allow localhost + *.vercel.app so Vercel deploys work without config.

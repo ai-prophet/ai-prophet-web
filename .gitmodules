@@ -1,3 +1,3 @@
-[submodule "mini-llm-prophet"]
-	path = mini-llm-prophet
-	url = https://github.com/ai-prophet/mini-llm-prophet
+[submodule "mini-prophet"]
+	path = mini-prophet
+	url = https://github.com/ai-prophet/mini-prophet
