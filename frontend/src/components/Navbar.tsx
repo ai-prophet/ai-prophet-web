@@ -62,7 +62,7 @@ export default function Navbar() {
               <div className="w-6 h-6 rounded-md bg-accent flex items-center justify-center">
                 <span className="text-ground text-xs font-bold">P</span>
               </div>
-              <span className="hidden sm:inline">Prophet Arena</span>
+              <span className="hidden sm:inline">AI Prophet</span>
             </Link>
 
             {/* Desktop nav */}
