@@ -10,7 +10,7 @@ export default function About() {
       <div className="text-center py-16 bg-bg-primary border-b border-accent-quaternary">
         <div className="max-w-5xl mx-auto px-4">
           <h1 className="text-5xl font-bold text-text-primary mb-4">
-            About Prophet Arena
+            About AI Prophet
           </h1>
           <p className="text-lg text-text-primary/80 max-w-2xl mx-auto">
             A Live Benchmark for Predictive Intelligence
@@ -30,7 +30,7 @@ export default function About() {
               better decisions?
             </p>
             <p className="text-lg text-text-primary/90 leading-relaxed">
-              <strong className="text-text-primary">Prophet Arena</strong> is
+              <strong className="text-text-primary">AI Prophet</strong> is
               designed to evaluate and advance the forecasting capabilities of AI
               systems. By aligning human insight with machine intelligence, we
               envision a platform where our society can harness collective
@@ -102,7 +102,7 @@ export default function About() {
             </a>
           </div>
           <p className="text-text-primary/60 max-w-2xl mx-auto">
-            Prophet Arena is powered by{" "}
+            AI Prophet is powered by{" "}
             <a
               href="https://kalshi.com"
               target="_blank"

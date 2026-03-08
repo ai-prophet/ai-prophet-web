@@ -7,6 +7,7 @@ import SettingsModal from "@/components/SettingsModal";
 import Navbar from "@/components/Navbar";
 import type { SearchGroup, BoardEntry, UserSettings } from "@/types";
 import { DEFAULT_SETTINGS } from "@/types";
+import { getApiUrl } from "@/config/api";
 
 const SETTINGS_KEY = "prophet_settings";
 const DEFAULT_SIDEBAR_WIDTH = 380;
@@ -132,6 +133,64 @@ export default function Home() {
     };
   }, [updateSidebarWidth]);
 
+  const [suggestions, setSuggestions] = useState<string[]>([]);
+  const poolRef = useRef<string[]>([]);
+  const poolIndexRef = useRef(4);
+
+  useEffect(() => {
+    const SKIP = /announcers?\s+say|what will .+ say|highest temp|will it rain|^\w+ at \w+$/i;
+    async function fetchSuggestions() {
+      try {
+        const res = await fetch(getApiUrl("/events?resolved_type=unresolved&limit=200"));
+        const json = await res.json();
+        const events: { title: string }[] = json.data ?? [];
+        const good = events
+          .map((e) => e.title)
+          .filter((t) => !SKIP.test(t) && t.length > 20 && t.endsWith("?"));
+        for (let i = good.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [good[i], good[j]] = [good[j], good[i]];
+        }
+        poolRef.current = good;
+        poolIndexRef.current = 4;
+        setSuggestions(good.slice(0, 4));
+      } catch {
+        const fallback = [
+          "Will the Fed cut rates this year?",
+          "Will Bitcoin hit $200k by end of 2026?",
+        ];
+        poolRef.current = fallback;
+        setSuggestions(fallback);
+      }
+    }
+    fetchSuggestions();
+  }, []);
+
+  // Rotate one suggestion every 4 seconds
+  useEffect(() => {
+    if (suggestions.length === 0) return;
+    const interval = setInterval(() => {
+      setSuggestions((prev) => {
+        const pool = poolRef.current;
+        if (pool.length <= 4) return prev;
+        const next = [...prev];
+        const replaceIdx = Math.floor(Math.random() * next.length);
+        // Pick next from pool that isn't currently shown
+        let attempts = 0;
+        let candidate = pool[poolIndexRef.current % pool.length];
+        while (next.includes(candidate) && attempts < pool.length) {
+          poolIndexRef.current++;
+          candidate = pool[poolIndexRef.current % pool.length];
+          attempts++;
+        }
+        poolIndexRef.current++;
+        next[replaceIdx] = candidate;
+        return next;
+      });
+    }, 4000);
+    return () => clearInterval(interval);
+  }, [suggestions.length]);
+
   const handleHeroSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const text = heroInput.trim();
@@ -139,13 +198,6 @@ export default function Home() {
     setInitialQuery(text);
     setStarted(true);
   };
-
-  const SUGGESTIONS = [
-    "Will the Fed cut rates before July 2026?",
-    "Will GPT-5 be released this year?",
-    "Will Bitcoin hit $200k by end of 2026?",
-    "Will there be a ceasefire in Ukraine by 2027?",
-  ];
 
   /* ── Hero / landing view ── */
   if (!started) {
@@ -204,12 +256,12 @@ export default function Home() {
             </form>
 
             {/* Suggestion chips */}
-            <div className="flex flex-wrap items-center justify-center gap-2 mt-6 animate-[fadeSlideUp_1s_ease-out]">
-              {SUGGESTIONS.map((s) => (
+            <div className="flex flex-wrap items-center justify-center gap-2 mt-6 animate-[fadeSlideUp_1s_ease-out] min-h-[36px]">
+              {suggestions.map((s) => (
                 <button
                   key={s}
                   onClick={() => { setHeroInput(s); }}
-                  className="px-3 py-1.5 text-xs text-muted hover:text-primary bg-surface hover:bg-surface-hover border border-edge hover:border-accent/30 rounded-full transition-all duration-200 hover:scale-[1.02]"
+                  className="px-3 py-1.5 text-xs text-muted hover:text-primary bg-surface hover:bg-surface-hover border border-edge hover:border-accent/30 rounded-full transition-all duration-200 hover:scale-[1.02] animate-[chipIn_0.4s_ease-out]"
                 >
                   {s}
                 </button>

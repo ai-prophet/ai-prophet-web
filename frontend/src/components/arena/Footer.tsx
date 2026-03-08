@@ -36,16 +36,16 @@ export default function Footer() {
           <div className="flex items-center space-x-2">
             <Image
               src="/assets/logo.png"
-              alt="Prophet Arena Logo"
+              alt="AI Prophet Logo"
               width={24}
               height={24}
               className="object-contain"
             />
-            <span className="text-text-primary font-medium">Prophet Arena</span>
+            <span className="text-text-primary font-medium">AI Prophet</span>
           </div>
 
           <div className="text-center text-sm text-text-primary opacity-60">
-            © {new Date().getFullYear()} Prophet Arena. All rights reserved.
+            © {new Date().getFullYear()} AI Prophet. All rights reserved.
           </div>
         </div>
       </div>
