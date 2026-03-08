@@ -153,7 +153,7 @@ export default function Home() {
                   <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
                 </svg>
               </div>
-              <h2 className="text-3xl font-semibold text-primary mb-3">
+              <h2 className="text-2xl sm:text-3xl font-semibold text-primary mb-3">
                 Forecast anything, for anyone
               </h2>
             </div>
@@ -219,12 +219,12 @@ export default function Home() {
         </div>
         <div
           onMouseDown={handleResizeStart}
-          className="w-[3px] cursor-col-resize bg-edge hover:bg-accent/40 transition-colors"
+          className="hidden md:block w-[3px] cursor-col-resize bg-edge hover:bg-accent/40 transition-colors"
           role="separator"
           aria-orientation="vertical"
           aria-label="Resize sidebar"
         />
-        <div className="flex-shrink-0 min-w-0" style={{ width: `${sidebarWidth}px` }}>
+        <div className="hidden md:block flex-shrink-0 min-w-0" style={{ width: `${sidebarWidth}px` }}>
           <Sidebar
             searchGroups={searchGroups}
             boardEntries={boardEntries}
