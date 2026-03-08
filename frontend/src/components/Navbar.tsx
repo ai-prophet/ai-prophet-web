@@ -2,7 +2,9 @@
 
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
+import { useTheme } from "@/components/ThemeProvider";
 
 const NAV_LINKS = [
   { label: "Events", href: "/markets" },
@@ -14,7 +16,7 @@ const NAV_LINKS = [
       { label: "Agent Leaderboard", href: "/agent-leaderboard" },
     ],
   },
-  { label: "Developer", href: "/" },
+  { label: "Developer", href: "/developer" },
   { label: "Research", href: "/research" },
   { label: "About", href: "/about" },
 ];
@@ -26,6 +28,7 @@ export default function Navbar() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
+  const { theme, toggle: toggleTheme } = useTheme();
 
   // Close dropdown on outside click
   useEffect(() => {
@@ -59,9 +62,13 @@ export default function Navbar() {
               href="/"
               className="flex items-center gap-2 text-sm font-semibold text-primary hover:text-accent transition-colors"
             >
-              <div className="w-6 h-6 rounded-md bg-accent flex items-center justify-center">
-                <span className="text-ground text-xs font-bold">P</span>
-              </div>
+              <Image
+                src="/assets/logo.png"
+                alt="AI Prophet"
+                width={24}
+                height={24}
+                className="rounded-md"
+              />
               <span className="hidden sm:inline">AI Prophet</span>
             </Link>
 
@@ -120,8 +127,23 @@ export default function Navbar() {
             </div>
           </div>
 
-          {/* Right: login + hamburger */}
+          {/* Right: theme toggle + login + hamburger */}
           <div className="flex items-center gap-3">
+            <button
+              onClick={toggleTheme}
+              className="p-1.5 rounded-lg text-secondary hover:text-primary hover:bg-surface-hover transition-colors"
+              aria-label="Toggle theme"
+            >
+              {theme === "dark" ? (
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
+                </svg>
+              ) : (
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z" />
+                </svg>
+              )}
+            </button>
             <a
               href={`${SITE}/auth/login`}
               className="hidden sm:block px-3.5 py-1.5 text-xs font-medium rounded-lg bg-accent text-ground hover:bg-accent-dim transition-colors"

@@ -1,6 +1,8 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
 
 @theme {
+  /* ── Dark mode (default) ── */
   --color-ground: #1a1a17;
   --color-surface: #242422;
   --color-surface-hover: #2d2d2a;
@@ -10,12 +12,12 @@
   --color-muted: #6b6960;
   --color-edge: #363632;
   --color-edge-subtle: #2a2a27;
-  --color-accent: #4ade80;
-  --color-accent-dim: #22c55e;
+  --color-accent: #5b9bd5;
+  --color-accent-dim: #4a88c2;
   --color-danger: #f87171;
   --color-warning: #fbbf24;
 
-  /* ProphetArena component theme — mapped to dark palette */
+  /* ProphetArena component theme */
   --color-accent-primary: #6397C7;
   --color-accent-secondary: #4a7aa8;
   --color-accent-tertiary: #2a3a4a;
@@ -30,6 +32,36 @@
   --color-accent-highlight: #7ab3e0;
 }
 
+/* ── Light mode overrides ── */
+html.light {
+  --color-ground: #f8f8f6;
+  --color-surface: #ffffff;
+  --color-surface-hover: #f0f0ec;
+  --color-overlay: #e8e8e4;
+  --color-primary: #333333;
+  --color-secondary: #4d545c;
+  --color-muted: #8a8a8a;
+  --color-edge: #e0e0dc;
+  --color-edge-subtle: #eeeeea;
+  --color-accent: #055CA3;
+  --color-accent-dim: #044a8a;
+  --color-danger: #ef4444;
+  --color-warning: #f59e0b;
+
+  --color-accent-primary: #6397C7;
+  --color-accent-secondary: #C1D2EB;
+  --color-accent-tertiary: #E0E9F5;
+  --color-accent-quaternary: #DFE9F4;
+  --color-bg-primary: #ffffff;
+  --color-bg-secondary: #FFFEFE;
+  --color-text-primary: #333333;
+  --color-text-secondary: #4d545c;
+  --color-code-bg: #F0F4F8;
+  --color-heat-green: #DEF7DE;
+  --color-heat-red: #F0A29C;
+  --color-accent-highlight: #055CA3;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -42,11 +74,29 @@ body {
   background-color: var(--color-ground);
   color: var(--color-primary);
   line-height: 1.6;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 ::selection {
   background: var(--color-accent-dim);
   color: var(--color-ground);
+}
+
+@keyframes drift {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  25% { transform: translate(30px, -20px) scale(1.05); }
+  50% { transform: translate(-20px, 30px) scale(0.95); }
+  75% { transform: translate(20px, 20px) scale(1.02); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .custom-scrollbar::-webkit-scrollbar {

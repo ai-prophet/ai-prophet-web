@@ -589,7 +589,7 @@ export default function Leaderboard() {
         className="group fixed bottom-16 left-4 z-50 text-white h-9 rounded-full shadow-sm transition-all duration-300 flex items-center justify-start overflow-hidden w-9 hover:w-36 hover:animate-none"
         title="Add Your Model"
         style={{
-          backgroundColor: '#6397C7',
+          backgroundColor: 'var(--color-accent-primary)',
           animation: 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite'
         }}
       >

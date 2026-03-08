@@ -1,0 +1,55 @@
+import fs from "fs";
+import path from "path";
+import matter from "gray-matter";
+import { remark } from "remark";
+import html from "remark-html";
+import { notFound } from "next/navigation";
+import ResearchPost from "./ResearchPost";
+
+const CONTENT_DIR = path.join(process.cwd(), "content", "research");
+
+function getPost(slug: string) {
+  const filePath = path.join(CONTENT_DIR, `${slug}.md`);
+  if (!fs.existsSync(filePath)) return null;
+  const raw = fs.readFileSync(filePath, "utf-8");
+  const { data, content } = matter(raw);
+  return { frontmatter: data, content };
+}
+
+export function generateStaticParams() {
+  if (!fs.existsSync(CONTENT_DIR)) return [];
+  return fs
+    .readdirSync(CONTENT_DIR)
+    .filter((f) => f.endsWith(".md"))
+    .map((f) => ({ slug: f.replace(/\.md$/, "") }));
+}
+
+export default async function ResearchPostPage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
+  const { slug } = await params;
+  const post = getPost(slug);
+  if (!post) notFound();
+
+  // Strip custom directives (:::quote, :::callout, :::remark, :::llm-quote) into blockquotes
+  let cleaned = post.content
+    .replace(/:::quote\n/g, "> ")
+    .replace(/:::remark\n/g, "> **Note:** ")
+    .replace(/:::callout\{[^}]*\}\n/g, "> ")
+    .replace(/:::llm-quote\{[^}]*\}\n/g, "> ")
+    .replace(/^:::\s*$/gm, "");
+
+  const result = await remark().use(html, { sanitize: false }).process(cleaned);
+  const contentHtml = result.toString();
+
+  return (
+    <ResearchPost
+      title={post.frontmatter.title as string}
+      date={post.frontmatter.date as string}
+      author={post.frontmatter.author as string}
+      contentHtml={contentHtml}
+    />
+  );
+}

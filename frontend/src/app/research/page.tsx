@@ -6,48 +6,39 @@ import ArenaLayout from "@/components/arena/ArenaLayout";
 
 const POSTS = [
   {
-    slug: "welcome",
-    title: "Welcome to Prophet Arena",
-    excerpt:
-      "Introducing Prophet Arena: a live benchmark for AI prediction models using real prediction markets.",
-    date: "2025-02-15",
-    type: "Post",
-    heroImage: "/research/welcome/hero.png",
-  },
-  {
     slug: "stability",
-    title: "Forecast Stability Under Repeated Querying",
+    title: "Defining and Measuring Stability in our Agent Leaderboard",
     excerpt:
-      "How stable are LLM forecasts when asked the same question multiple times? We investigate.",
-    date: "2025-03-20",
-    type: "Experiment",
+      "A statistical analysis of leaderboard stability that motivates the adoption of a 10-day evaluation window for new model submissions.",
+    date: "2025-12-14",
+    type: "Analysis",
     heroImage: "/research/stability/hero.png",
   },
   {
     slug: "agent-leaderboard-rules",
-    title: "Agent Leaderboard Rules & Methodology",
+    title: "Agent Leaderboard Rules & Submission Guidelines",
     excerpt:
-      "How we score and rank autonomous forecasting agents on Prophet Arena.",
-    date: "2025-04-10",
+      "Guidelines for submitting your forecasting agent to the Prophet Arena Agent Leaderboard, including input/output formats and evaluation criteria.",
+    date: "2025-12-07",
     type: "Guide",
     heroImage: "/research/agent-leaderboard-rules/hero.png",
   },
   {
-    slug: "live-trading",
-    title: "Live Trading with AI Forecasts",
+    slug: "welcome",
+    title: "Prophet Arena: A Live Benchmark for Predictive Intelligence",
     excerpt:
-      "Can AI prediction models generate profitable trading strategies on Kalshi?",
-    date: "2025-05-01",
-    type: "Analysis",
-    heroImage: "/research/live-trading/hero.png",
+      "Introducing Prophet Arena — a benchmark that evaluates the predictive intelligence of AI systems through live updated real-world forecasting tasks.",
+    date: "2025-08-10",
+    type: "Post",
+    heroImage: "/research/welcome/hero.png",
   },
 ];
 
 const TYPE_STYLES: Record<string, string> = {
-  Post: "bg-blue-900/30 text-blue-400",
-  Experiment: "bg-purple-900/30 text-purple-400",
-  Guide: "bg-green-900/30 text-green-400",
-  Analysis: "bg-amber-900/30 text-amber-400",
+  Post: "bg-accent-primary/15 text-accent-primary",
+  Experiment: "bg-accent-primary/15 text-accent-primary",
+  Guide: "bg-accent-primary/15 text-accent-primary",
+  Analysis: "bg-accent-primary/15 text-accent-primary",
 };
 
 export default function ResearchPage() {
@@ -63,8 +54,7 @@ export default function ResearchPage() {
         {POSTS.map((post) => (
           <Link
             key={post.slug}
-            href={`https://www.prophetarena.co/research/${post.slug}`}
-            target="_blank"
+            href={`/research/${post.slug}`}
             className="group rounded-xl border border-accent-quaternary bg-bg-primary overflow-hidden hover:border-accent-primary transition-colors"
           >
             <div className="relative h-48 bg-accent-quaternary/20">
