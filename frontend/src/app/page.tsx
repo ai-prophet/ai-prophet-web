@@ -10,10 +10,18 @@ import { DEFAULT_SETTINGS } from "@/types";
 import { getApiUrl } from "@/config/api";
 
 const SETTINGS_KEY = "prophet_settings";
+const SESSION_KEY = "prophet_session";
 const DEFAULT_SIDEBAR_WIDTH = 380;
 const MIN_SIDEBAR_WIDTH = 320;
 const MAX_SIDEBAR_WIDTH = 720;
 const MIN_MAIN_WIDTH = 520;
+
+interface SessionState {
+  started: boolean;
+  searchGroups: SearchGroup[];
+  boardEntries: BoardEntry[];
+  activeTab: "board" | "searches";
+}
 
 function loadSettings(): UserSettings {
   if (typeof window === "undefined") return DEFAULT_SETTINGS;
@@ -30,6 +38,21 @@ function saveSettings(s: UserSettings) {
   } catch {}
 }
 
+function loadSession(): SessionState | null {
+  if (typeof window === "undefined") return null;
+  try {
+    const raw = sessionStorage.getItem(SESSION_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch {}
+  return null;
+}
+
+function saveSession(s: SessionState) {
+  try {
+    sessionStorage.setItem(SESSION_KEY, JSON.stringify(s));
+  } catch {}
+}
+
 export default function Home() {
   const [started, setStarted] = useState(false);
   const [initialQuery, setInitialQuery] = useState("");
@@ -42,13 +65,29 @@ export default function Home() {
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [settings, setSettings] = useState<UserSettings>(DEFAULT_SETTINGS);
   const [sidebarWidth, setSidebarWidth] = useState(DEFAULT_SIDEBAR_WIDTH);
+  const [sessionLoaded, setSessionLoaded] = useState(false);
   const layoutRef = useRef<HTMLDivElement>(null);
   const resizingRef = useRef(false);
 
+  // Restore session and settings from storage (client-only to avoid hydration mismatch)
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setSettings(loadSettings());
+    const session = loadSession();
+    if (session) {
+      setStarted(session.started);
+      setSearchGroups(session.searchGroups);
+      setBoardEntries(session.boardEntries);
+      setActiveTab(session.activeTab);
+    }
+    setSessionLoaded(true);
   }, []);
+
+  // Persist session state
+  useEffect(() => {
+    if (!sessionLoaded) return;
+    saveSession({ started, searchGroups, boardEntries, activeTab });
+  }, [started, searchGroups, boardEntries, activeTab]);
 
   const handleSettingsSave = useCallback((s: UserSettings) => {
     setSettings(s);
