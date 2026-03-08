@@ -135,16 +135,7 @@ export default function Home() {
     };
   }, [updateSidebarWidth]);
 
-  const hasRequiredKeys = (() => {
-    if (settings.admin_api_key.trim()) return true;
-    if (settings.model_class === "openrouter" && !settings.openrouter_api_key)
-      return false;
-    if (settings.search_backend === "perplexity" && !settings.perplexity_api_key)
-      return false;
-    if (settings.search_backend === "brave" && !settings.brave_api_key)
-      return false;
-    return true;
-  })();
+  const hasRequiredKeys = true;
 
   return (
     <div className="h-screen flex flex-col">
@@ -155,9 +146,9 @@ export default function Home() {
               <span className="text-white text-sm font-bold">P</span>
             </div>
             <h1 className="text-lg font-semibold text-gray-900">
-              Mini LLM Prophet
+              Mini Prophet
             </h1>
-            <span className="text-xs text-gray-400 font-mono">v0.1.3</span>
+            <span className="text-xs text-gray-400 font-mono">v0.1.6</span>
           </div>
           <button
             onClick={() => setSettingsOpen(true)}

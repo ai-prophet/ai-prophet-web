@@ -5,7 +5,7 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Mini LLM Prophet",
+  title: "Mini Prophet",
   description: "AI-powered forecasting agent web interface",
 };
 

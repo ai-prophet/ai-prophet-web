@@ -65,6 +65,8 @@ git push -u origin main
 
    | Key | Value |
    |-----|-------|
+   | `ANTHROPIC_API_KEY` | Your Anthropic API key (required for the default Claude Opus 4.6 model) |
+   | `PERPLEXITY_API_KEY` | Your Perplexity API key (required for the default search backend) |
    | `CORS_ORIGINS` | *(leave empty for now; you'll set this in step 2.3 after deploying the frontend)* |
 
 6. Click **Create Web Service**.

@@ -124,21 +124,27 @@ export interface SearchGroup {
 }
 
 export interface UserSettings {
-  model_class: "litellm" | "openrouter";
+  model_class: string;
   model_name: string;
-  search_backend: "perplexity" | "brave";
-  admin_api_key: string;
-  openrouter_api_key: string;
-  perplexity_api_key: string;
-  brave_api_key: string;
+  search_backend: string;
 }
 
 export const DEFAULT_SETTINGS: UserSettings = {
-  model_class: "openrouter",
-  model_name: "google/gemini-2.5-flash-preview-05-20",
+  model_class: "litellm",
+  model_name: "anthropic/claude-opus-4-6",
   search_backend: "perplexity",
-  admin_api_key: "",
-  openrouter_api_key: "",
-  perplexity_api_key: "",
-  brave_api_key: "",
 };
+
+export const MODEL_OPTIONS = [
+  { label: "Claude Opus 4.6", value: "anthropic/claude-opus-4-6", provider: "litellm" },
+  { label: "Claude Sonnet 4.6", value: "anthropic/claude-sonnet-4-6", provider: "litellm" },
+  { label: "GPT-5.4", value: "openai/gpt-5.4", provider: "litellm" },
+  { label: "Gemini 2.5 Flash", value: "google/gemini-2.5-flash-preview-05-20", provider: "litellm" },
+  { label: "Gemini 2.5 Pro", value: "google/gemini-2.5-pro-preview-05-06", provider: "litellm" },
+] as const;
+
+export const SEARCH_OPTIONS = [
+  { label: "Perplexity", value: "perplexity" },
+  { label: "Brave Search", value: "brave" },
+  { label: "Exa", value: "exa" },
+] as const;

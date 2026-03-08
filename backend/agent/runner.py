@@ -19,12 +19,16 @@ _active_runs: dict[str, Queue] = {}
 
 
 def _inject_api_keys(settings: UserSettings) -> None:
+    if settings.anthropic_api_key:
+        os.environ["ANTHROPIC_API_KEY"] = settings.anthropic_api_key
     if settings.openrouter_api_key:
         os.environ["OPENROUTER_API_KEY"] = settings.openrouter_api_key
     if settings.perplexity_api_key:
         os.environ["PERPLEXITY_API_KEY"] = settings.perplexity_api_key
     if settings.brave_api_key:
         os.environ["BRAVE_API_KEY"] = settings.brave_api_key
+    if settings.exa_api_key:
+        os.environ["EXA_API_KEY"] = settings.exa_api_key
 
 
 def start_run(

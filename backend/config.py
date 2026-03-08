@@ -6,7 +6,6 @@ model choice, search backend) are passed per-request via UserSettings.
 
 from __future__ import annotations
 
-import hmac
 import os
 
 from pydantic import BaseModel
@@ -18,9 +17,6 @@ except Exception:  # pragma: no cover - dependency optional at import time
 
 if load_dotenv is not None:
     load_dotenv()
-
-DEFAULT_ADMIN_API_KEY = "PLACEHOLDER"
-ADMIN_API_KEY_ENV_VAR = "MINI_PROPHET_ADMIN_API_KEY"
 
 AGENT_SYSTEM_TEMPLATE = """\
 You are a forecasting agent specialized in researching and predicting real-world event outcomes.
@@ -77,40 +73,29 @@ ENVIRONMENT_DEFAULTS = {
 class UserSettings(BaseModel):
     """User-provided settings sent with each request."""
 
-    model_class: str = "openrouter"
-    model_name: str = "google/gemini-3-flash-preview"
+    model_class: str = "litellm"
+    model_name: str = "anthropic/claude-opus-4-6"
     search_backend: str = "perplexity"
-    admin_api_key: str = ""
+    anthropic_api_key: str = ""
     openrouter_api_key: str = ""
     perplexity_api_key: str = ""
     brave_api_key: str = ""
+    exa_api_key: str = ""
 
     model_config = {"extra": "ignore"}
 
 
-class InvalidAdminAPIKey(ValueError):
-    """Raised when an admin_api_key is provided but does not validate."""
-
-
-def _is_valid_admin_api_key(provided_key: str) -> bool:
-    expected_key = os.getenv(ADMIN_API_KEY_ENV_VAR, DEFAULT_ADMIN_API_KEY)
-    return hmac.compare_digest(provided_key.strip(), expected_key.strip())
-
-
 def resolve_user_settings(settings: UserSettings) -> UserSettings:
-    """Resolve effective settings, including admin-backed key fallback."""
+    """Resolve effective settings, falling back to server-side env vars."""
     resolved = settings.model_copy(deep=True)
-    admin_key = resolved.admin_api_key.strip()
-    if not admin_key:
-        return resolved
-
-    if not _is_valid_admin_api_key(admin_key):
-        raise InvalidAdminAPIKey("Invalid admin_api_key.")
-
+    if not resolved.anthropic_api_key:
+        resolved.anthropic_api_key = os.getenv("ANTHROPIC_API_KEY", "")
     if not resolved.openrouter_api_key:
         resolved.openrouter_api_key = os.getenv("OPENROUTER_API_KEY", "")
     if not resolved.perplexity_api_key:
         resolved.perplexity_api_key = os.getenv("PERPLEXITY_API_KEY", "")
     if not resolved.brave_api_key:
         resolved.brave_api_key = os.getenv("BRAVE_API_KEY", "")
+    if not resolved.exa_api_key:
+        resolved.exa_api_key = os.getenv("EXA_API_KEY", "")
     return resolved

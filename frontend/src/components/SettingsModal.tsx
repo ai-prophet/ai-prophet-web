@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import type { UserSettings } from "@/types";
+import { MODEL_OPTIONS, SEARCH_OPTIONS } from "@/types";
 
 interface SettingsModalProps {
   settings: UserSettings;
@@ -10,31 +11,22 @@ interface SettingsModalProps {
   onClose: () => void;
 }
 
-function Field({
-  label,
-  hint,
-  children,
-}: {
-  label: string;
-  hint?: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <div>
-      <label className="block text-sm font-medium text-gray-700 mb-1">
-        {label}
-      </label>
-      {children}
-      {hint && <p className="text-xs text-gray-400 mt-1">{hint}</p>}
-    </div>
-  );
-}
-
-const INPUT_CLS =
-  "w-full px-2 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none font-mono";
-
 const SELECT_CLS =
   "w-full px-2 py-2 pr-9 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none bg-white appearance-none";
+
+function SelectChevron() {
+  return (
+    <svg
+      className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-500"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+      strokeWidth={1.8}
+    >
+      <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+    </svg>
+  );
+}
 
 export default function SettingsModal({
   settings: initial,
@@ -43,166 +35,67 @@ export default function SettingsModal({
 }: SettingsModalProps) {
   const [draft, setDraft] = useState<UserSettings>({ ...initial });
 
-  const set = <K extends keyof UserSettings>(
-    key: K,
-    value: UserSettings[K]
-  ) => setDraft((prev) => ({ ...prev, [key]: value }));
-
   const handleSave = () => {
     onSave(draft);
     onClose();
   };
-
-  const needsOpenRouterKey = draft.model_class === "openrouter";
-  const needsPerplexityKey = draft.search_backend === "perplexity";
-  const needsBraveKey = draft.search_backend === "brave";
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/20 backdrop-blur-[1px]">
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="bg-white rounded-2xl shadow-xl border border-gray-200 p-6 w-full max-w-lg mx-4 max-h-[85vh] overflow-y-auto custom-scrollbar"
+        className="bg-white rounded-2xl shadow-xl border border-gray-200 p-6 w-full max-w-sm mx-4"
       >
         <h3 className="text-lg font-semibold text-gray-900 mb-5">Settings</h3>
 
-        <div className="space-y-5">
-          <div className="border-b border-gray-100 pb-4">
-            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">
-              Access
-            </p>
-            <Field
-              label="Admin API key"
-              hint="Optional. If valid, backend defaults (OpenRouter + Perplexity) can be used without entering personal keys."
-            >
-              <input
-                type="password"
-                value={draft.admin_api_key}
-                onChange={(e) => set("admin_api_key", e.target.value)}
-                className={INPUT_CLS}
-                placeholder="insert-your-admin-api-key"
-              />
-            </Field>
-          </div>
-
-          <div className="border-b border-gray-100 pb-4">
-            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
               Model
-            </p>
-            <div className="space-y-3">
-              <Field label="Model provider">
-                <div className="relative">
-                  <select
-                    value={draft.model_class}
-                    onChange={(e) =>
-                      set(
-                        "model_class",
-                        e.target.value as "litellm" | "openrouter"
-                      )
-                    }
-                    className={SELECT_CLS}
-                  >
-                    <option value="litellm">LiteLLM (OpenAI, Anthropic, Google, etc.)</option>
-                    <option value="openrouter">OpenRouter</option>
-                  </select>
-                  <svg
-                    className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-500"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth={1.8}
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-                  </svg>
-                </div>
-              </Field>
-
-              <Field
-                label="Model name"
-                hint="e.g. google/gemini-3-flash-preview, openai/gpt-4o, anthropic/claude-sonnet-4-20250514"
+            </label>
+            <div className="relative">
+              <select
+                value={draft.model_name}
+                onChange={(e) => {
+                  const opt = MODEL_OPTIONS.find((o) => o.value === e.target.value);
+                  setDraft((prev) => ({
+                    ...prev,
+                    model_name: e.target.value,
+                    model_class: opt?.provider ?? "litellm",
+                  }));
+                }}
+                className={SELECT_CLS}
               >
-                <input
-                  type="text"
-                  value={draft.model_name}
-                  onChange={(e) => set("model_name", e.target.value)}
-                  className={INPUT_CLS}
-                  placeholder="google/gemini-3-flash-preview"
-                />
-              </Field>
-
-              {needsOpenRouterKey && (
-                <Field label="OpenRouter API key">
-                  <input
-                    type="password"
-                    value={draft.openrouter_api_key}
-                    onChange={(e) =>
-                      set("openrouter_api_key", e.target.value)
-                    }
-                    className={INPUT_CLS}
-                    placeholder="sk-or-..."
-                  />
-                </Field>
-              )}
+                {MODEL_OPTIONS.map((o) => (
+                  <option key={o.value} value={o.value}>
+                    {o.label}
+                  </option>
+                ))}
+              </select>
+              <SelectChevron />
             </div>
           </div>
 
           <div>
-            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
               Search
-            </p>
-            <div className="space-y-3">
-              <Field label="Search backend">
-                <div className="relative">
-                  <select
-                    value={draft.search_backend}
-                    onChange={(e) =>
-                      set(
-                        "search_backend",
-                        e.target.value as "perplexity" | "brave"
-                      )
-                    }
-                    className={SELECT_CLS}
-                  >
-                    <option value="perplexity">Perplexity</option>
-                    <option value="brave">Brave Search</option>
-                  </select>
-                  <svg
-                    className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-500"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth={1.8}
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-                  </svg>
-                </div>
-              </Field>
-
-              {needsPerplexityKey && (
-                <Field label="Perplexity API key">
-                  <input
-                    type="password"
-                    value={draft.perplexity_api_key}
-                    onChange={(e) =>
-                      set("perplexity_api_key", e.target.value)
-                    }
-                    className={INPUT_CLS}
-                    placeholder="pplx-..."
-                  />
-                </Field>
-              )}
-
-              {needsBraveKey && (
-                <Field label="Brave API key">
-                  <input
-                    type="password"
-                    value={draft.brave_api_key}
-                    onChange={(e) => set("brave_api_key", e.target.value)}
-                    className={INPUT_CLS}
-                    placeholder="BSA..."
-                  />
-                </Field>
-              )}
+            </label>
+            <div className="relative">
+              <select
+                value={draft.search_backend}
+                onChange={(e) =>
+                  setDraft((prev) => ({ ...prev, search_backend: e.target.value }))
+                }
+                className={SELECT_CLS}
+              >
+                {SEARCH_OPTIONS.map((o) => (
+                  <option key={o.value} value={o.value}>
+                    {o.label}
+                  </option>
+                ))}
+              </select>
+              <SelectChevron />
             </div>
           </div>
         </div>
