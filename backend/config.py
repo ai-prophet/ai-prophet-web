@@ -61,7 +61,7 @@ AGENT_DEFAULTS = {
     "search_limit": 10,
     "max_outcomes": 20,
     "context_window": 6,
-    "show_current_time": False,
+    "show_current_time": True,
 }
 
 ENVIRONMENT_DEFAULTS = {

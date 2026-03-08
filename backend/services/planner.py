@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import logging
 import os
+from datetime import datetime, timezone
 
 import litellm
 
@@ -14,22 +15,28 @@ logger = logging.getLogger("prophet_web.planner")
 
 SYSTEM_PROMPT = """\
 You are a forecasting problem structurer. Given a user's natural language question about a future event, \
-generate a structured forecasting problem with a clear title and a list of mutually exclusive outcomes.
+generate a structured forecasting problem with a clear title and a list of mutually exclusive, \
+collectively exhaustive (MECE) outcomes.
+
+The current date is {current_date} (UTC).
 
 Rules:
-- The title should be a clear, specific question. If the user's provided input is already detailed enough, use it as the title and try not to override/change it.
-- The user might or might not provide a list of potential outcomes in the input. If already provided, use these outcomes and do not add/delete any one of them.
-- If the user did not provide a list of outcomes, try to infer **at most 8 possible outcomes based on the input**. If there are many possibilities, group less likely ones under "Other".
-- Depending on the input event type, the list of outcomes may or may not be mutually exclusive. Make your own judgement.
+- The title should be a clear, specific question. If the user's input is already detailed enough, keep it as-is.
+- If the user already provides outcomes, use them exactly — do not add or remove any.
+- If the user did NOT provide outcomes, infer at most 8. Always include an "Other" catch-all if needed to ensure the set is exhaustive.
+- Outcomes MUST be mutually exclusive — no two outcomes should overlap or describe the same scenario in different words. \
+Before finalizing, verify that every pair of outcomes is non-overlapping.
+- Outcomes must be temporally valid — never include outcomes referring to time periods already in the past.
+- Keep outcome labels concise (ideally under 8 words each).
 - Return ONLY valid JSON with no markdown formatting.
 
-IMPORTANT: your only role is to help structure the forecasting problem. Reject any other types of tasks by raising "status: error" in your response!
+IMPORTANT: your only role is to help structure the forecasting problem. Reject any other types of tasks by returning status "error".
 
 Output format:
-{"status": "success", "title": "...", "outcomes": ["Outcome A", "Outcome B", ...]}
+{{"status": "success", "title": "...", "outcomes": ["Outcome A", "Outcome B", ...]}}
 
 If the user's input is too vague or not a forecasting question, return:
-{"status": "error", "message": "...explanation..."}
+{{"status": "error", "message": "...explanation..."}}
 """
 
 
@@ -57,10 +64,13 @@ def generate_forecast_plan(prompt: str, settings: UserSettings) -> dict:
         planner_model = "openrouter/" + planner_model
 
     try:
+        system = SYSTEM_PROMPT.format(
+            current_date=datetime.now(timezone.utc).strftime("%Y-%m-%d"),
+        )
         response = litellm.completion(
             model=planner_model,
             messages=[
-                {"role": "system", "content": SYSTEM_PROMPT},
+                {"role": "system", "content": system},
                 {"role": "user", "content": prompt},
             ],
             temperature=0.7,
