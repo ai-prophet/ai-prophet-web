@@ -9,11 +9,11 @@ export default function AgentDivider() {
       animate={{ opacity: 1 }}
       className="flex items-center gap-4 py-2"
     >
-      <div className="flex-1 border-t border-dashed border-gray-300" />
-      <span className="text-xs font-medium text-gray-400 tracking-wide uppercase">
+      <div className="flex-1 border-t border-dashed border-edge" />
+      <span className="text-xs font-medium text-muted tracking-wide uppercase">
         Agent Start
       </span>
-      <div className="flex-1 border-t border-dashed border-gray-300" />
+      <div className="flex-1 border-t border-dashed border-edge" />
     </motion.div>
   );
 }

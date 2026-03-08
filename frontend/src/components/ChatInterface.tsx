@@ -11,6 +11,7 @@ import StepMessage from "./StepMessage";
 import ForecastResultCard from "./ForecastResultCard";
 
 interface ChatInterfaceProps {
+  initialQuery?: string;
   settings: UserSettings;
   onSearchResult: (group: SearchGroup) => void;
   onBoardUpdate: (entries: BoardEntry[]) => void;
@@ -19,11 +20,11 @@ interface ChatInterfaceProps {
   onRunStart: () => void;
   onOpenSettings: () => void;
   onToggleSettings: () => void;
-  hasRequiredKeys: boolean;
   settingsOpen: boolean;
 }
 
 export default function ChatInterface({
+  initialQuery,
   settings,
   onSearchResult,
   onBoardUpdate,
@@ -32,11 +33,11 @@ export default function ChatInterface({
   onRunStart,
   onOpenSettings,
   onToggleSettings,
-  hasRequiredKeys,
   settingsOpen,
 }: ChatInterfaceProps) {
   const [input, setInput] = useState("");
   const bottomRef = useRef<HTMLDivElement>(null);
+  const initialQueryFired = useRef(false);
   const {
     messages,
     isRunning,
@@ -53,15 +54,19 @@ export default function ChatInterface({
   }, [onSearchResult, onBoardUpdate, searchRef, boardRef]);
 
   useEffect(() => {
+    if (initialQuery && !initialQueryFired.current) {
+      initialQueryFired.current = true;
+      plan(initialQuery, settings);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!hasRequiredKeys) {
-      onOpenSettings();
-      return;
-    }
     const text = input.trim();
     if (!text || isPlanning || isRunning) return;
     setInput("");
@@ -70,10 +75,6 @@ export default function ChatInterface({
 
   const handleRun = (title: string, outcomes: string[]) => {
     if (isRunning) return;
-    if (!hasRequiredKeys) {
-      onOpenSettings();
-      return;
-    }
     onRunStart();
     startRun(title, outcomes, settings);
   };
@@ -92,7 +93,6 @@ export default function ChatInterface({
     const onKeyDown = (event: KeyboardEvent) => {
       if (!event.ctrlKey && !event.metaKey) return;
       const key = event.key.toLowerCase();
-
       if (key === "k") {
         event.preventDefault();
         onToggleSettings();
@@ -101,41 +101,13 @@ export default function ChatInterface({
         openLatestForecastEdit();
       }
     };
-
     window.addEventListener("keydown", onKeyDown);
-    return () => {
-      window.removeEventListener("keydown", onKeyDown);
-    };
+    return () => window.removeEventListener("keydown", onKeyDown);
   }, [hasForecastPlans, onToggleSettings, openLatestForecastEdit]);
 
   return (
-    <div className="h-full flex flex-col relative">
+    <div className="h-full flex flex-col">
       <div className="flex-1 overflow-y-auto custom-scrollbar px-6 py-6 space-y-4">
-        {messages.length === 0 && (
-          <div className="flex flex-col items-center justify-center h-full text-center">
-            <div className="w-16 h-16 rounded-2xl bg-purple-100 flex items-center justify-center mb-4">
-              <svg className="w-8 h-8 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" />
-              </svg>
-            </div>
-            <h2 className="text-xl font-semibold text-gray-900 mb-2">
-              Forecast anything
-            </h2>
-            <p className="text-sm text-gray-500 max-w-md mb-4">
-              Ask a question about the future and the AI agent will research it,
-              gather evidence, and produce a probabilistic forecast.
-            </p>
-            {!hasRequiredKeys && (
-              <button
-                onClick={onOpenSettings}
-                className="px-4 py-2 text-sm font-medium rounded-lg bg-amber-100 text-amber-800 hover:bg-amber-200 transition-colors"
-              >
-                Configure API keys to get started
-              </button>
-            )}
-          </div>
-        )}
-
         {messages.map((msg) => {
           switch (msg.type) {
             case "user":
@@ -162,9 +134,7 @@ export default function ChatInterface({
                 />
               );
             case "think":
-              return (
-                <StepMessage key={msg.id} message={msg} />
-              );
+              return <StepMessage key={msg.id} message={msg} />;
             case "result":
               return (
                 <ForecastResultCard
@@ -181,7 +151,7 @@ export default function ChatInterface({
                   animate={{ opacity: 1 }}
                   className="pl-12"
                 >
-                  <div className="bg-red-50 border border-red-200 rounded-xl px-4 py-3 text-sm text-red-700">
+                  <div className="bg-danger/10 border border-danger/20 rounded-lg px-4 py-3 text-sm text-danger">
                     {msg.content}
                   </div>
                 </motion.div>
@@ -198,11 +168,11 @@ export default function ChatInterface({
             className="pl-12 flex items-center gap-2"
           >
             <div className="flex gap-1">
-              <span className="w-2 h-2 bg-purple-400 rounded-full animate-bounce [animation-delay:0ms]" />
-              <span className="w-2 h-2 bg-purple-400 rounded-full animate-bounce [animation-delay:150ms]" />
-              <span className="w-2 h-2 bg-purple-400 rounded-full animate-bounce [animation-delay:300ms]" />
+              <span className="w-1.5 h-1.5 bg-accent rounded-full animate-bounce [animation-delay:0ms]" />
+              <span className="w-1.5 h-1.5 bg-accent rounded-full animate-bounce [animation-delay:150ms]" />
+              <span className="w-1.5 h-1.5 bg-accent rounded-full animate-bounce [animation-delay:300ms]" />
             </div>
-            <span className="text-xs text-gray-400">
+            <span className="text-xs text-muted">
               {isPlanning ? "Generating plan..." : "Agent is thinking..."}
             </span>
           </motion.div>
@@ -211,40 +181,38 @@ export default function ChatInterface({
         <div ref={bottomRef} />
       </div>
 
-      <div className="flex-shrink-0 border-t border-gray-200 bg-white/80 backdrop-blur-sm px-6 py-4">
-        <form onSubmit={handleSubmit} className="flex gap-3">
+      <div className="flex-shrink-0 border-t border-edge bg-surface px-6 py-4">
+        <form onSubmit={handleSubmit} className="flex items-center gap-3">
+          <button
+            type="button"
+            onClick={onOpenSettings}
+            className="p-2.5 rounded-xl text-muted hover:text-secondary hover:bg-surface-hover transition-all group"
+            aria-label="Settings"
+          >
+            <svg className="w-5 h-5 group-hover:rotate-45 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.325.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.241-.438.613-.43.992a7.723 7.723 0 010 .255c-.008.378.137.75.43.991l1.004.827c.424.35.534.955.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.47 6.47 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.281c-.09.543-.56.94-1.11.94h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.991a6.932 6.932 0 010-.255c.007-.38-.138-.751-.43-.992l-1.004-.827a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.086.22-.128.332-.183.582-.495.644-.869l.214-1.28z" />
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+          </button>
           <input
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
             disabled={inputDisabled}
-            placeholder={
-              inputDisabled
-                ? "Agent is running..."
-                : !hasRequiredKeys
-                  ? "Configure API keys in Settings first..."
-                  : "Ask a forecasting question..."
-            }
-            className="flex-1 px-4 py-2.5 border border-gray-300 rounded-xl text-sm focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none disabled:bg-gray-50 disabled:text-gray-400 placeholder:text-gray-400"
+            placeholder={inputDisabled ? "Agent is running..." : "Ask anything..."}
+            className="flex-1 px-4 py-2.5 bg-overlay border border-edge rounded-xl text-sm text-primary focus:ring-1 focus:ring-accent focus:border-accent outline-none placeholder:text-muted disabled:opacity-40"
           />
           <button
             type="submit"
             disabled={inputDisabled || !input.trim()}
-            className="px-5 py-2.5 text-sm font-medium rounded-xl bg-purple-600 text-white hover:bg-purple-700 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+            className="p-2.5 rounded-xl bg-accent text-ground hover:bg-accent-dim transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+            aria-label="Send"
           >
-            Send
+            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+            </svg>
           </button>
         </form>
-      </div>
-
-      <div className="absolute bottom-24 right-5 border border-gray-300 bg-white/80 backdrop-blur-sm px-3 py-2 text-xs text-gray-600 space-y-1 pointer-events-none">
-        <p>
-          <span className="font-mono text-gray-900">Ctrl+K</span> Toggle Settings
-          ({settingsOpen ? "Open" : "Closed"})
-        </p>
-        <p className={hasForecastPlans ? "text-gray-600" : "text-gray-400"}>
-          <span className="font-mono text-gray-900">Ctrl+O</span> Open latest forecast editor
-        </p>
       </div>
     </div>
   );

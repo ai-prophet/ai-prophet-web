@@ -23,20 +23,20 @@ export default function Sidebar({
   highlightBoardId,
 }: SidebarProps) {
   return (
-    <div className="h-full flex flex-col bg-white/60 backdrop-blur-sm">
-      <div className="flex border-b border-gray-200">
+    <div className="h-full flex flex-col bg-surface">
+      <div className="flex border-b border-edge">
         <button
           onClick={() => onTabChange("board")}
           className={cn(
             "flex-1 py-3 text-sm font-medium transition-colors",
             activeTab === "board"
-              ? "text-purple-600 border-b-2 border-purple-600"
-              : "text-gray-500 hover:text-gray-700"
+              ? "text-accent border-b-2 border-accent"
+              : "text-muted hover:text-secondary"
           )}
         >
           Source Board
           {boardEntries.length > 0 && (
-            <span className="ml-1.5 text-xs bg-purple-100 text-purple-600 px-1.5 py-0.5 rounded-full">
+            <span className="ml-1.5 text-xs bg-accent/10 text-accent px-1.5 py-0.5 rounded-full">
               {boardEntries.length}
             </span>
           )}
@@ -46,13 +46,13 @@ export default function Sidebar({
           className={cn(
             "flex-1 py-3 text-sm font-medium transition-colors",
             activeTab === "searches"
-              ? "text-purple-600 border-b-2 border-purple-600"
-              : "text-gray-500 hover:text-gray-700"
+              ? "text-accent border-b-2 border-accent"
+              : "text-muted hover:text-secondary"
           )}
         >
           Searches
           {searchGroups.length > 0 && (
-            <span className="ml-1.5 text-xs bg-purple-100 text-purple-600 px-1.5 py-0.5 rounded-full">
+            <span className="ml-1.5 text-xs bg-accent/10 text-accent px-1.5 py-0.5 rounded-full">
               {searchGroups.length}
             </span>
           )}
@@ -60,10 +60,7 @@ export default function Sidebar({
       </div>
       <div className="flex-1 overflow-y-auto custom-scrollbar">
         {activeTab === "board" ? (
-          <SourceBoardPanel
-            entries={boardEntries}
-            highlightBoardId={highlightBoardId}
-          />
+          <SourceBoardPanel entries={boardEntries} highlightBoardId={highlightBoardId} />
         ) : (
           <SearchesPanel groups={searchGroups} highlightStep={highlightStep} />
         )}

@@ -26,27 +26,23 @@ export default function ForecastModal(props: ForecastModalProps) {
     const { submission } = props;
     const sorted = Object.entries(submission).sort(([, a], [, b]) => b - a);
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/20 backdrop-blur-[1px]">
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="bg-white rounded-2xl shadow-xl border border-gray-200 p-6 w-full max-w-lg mx-4"
+          className="bg-surface rounded-2xl border border-edge p-6 w-full max-w-lg mx-4"
         >
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">
-            Forecast Results
-          </h3>
+          <h3 className="text-lg font-semibold text-primary mb-4">Forecast Results</h3>
           <div className="space-y-3">
             {sorted.map(([name, prob]) => (
               <div key={name}>
                 <div className="flex justify-between text-sm mb-1">
-                  <span className="text-gray-700 font-medium">{name}</span>
-                  <span className="text-gray-500">
-                    {(prob * 100).toFixed(1)}%
-                  </span>
+                  <span className="text-primary font-medium">{name}</span>
+                  <span className="text-secondary">{(prob * 100).toFixed(1)}%</span>
                 </div>
-                <div className="w-full bg-gray-100 rounded-full h-2.5">
+                <div className="w-full bg-overlay rounded-full h-2.5">
                   <div
-                    className="bg-purple-500 h-2.5 rounded-full transition-all"
+                    className="bg-accent h-2.5 rounded-full transition-all"
                     style={{ width: `${Math.max(prob * 100, 1)}%` }}
                   />
                 </div>
@@ -55,7 +51,7 @@ export default function ForecastModal(props: ForecastModalProps) {
           </div>
           <button
             onClick={onClose}
-            className="mt-6 w-full py-2 text-sm font-medium rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors"
+            className="mt-6 w-full py-2 text-sm font-medium rounded-lg border border-edge text-secondary hover:text-primary hover:bg-surface-hover transition-colors"
           >
             Close
           </button>
@@ -67,18 +63,10 @@ export default function ForecastModal(props: ForecastModalProps) {
   return <EditModal {...props} />;
 }
 
-function EditModal({
-  title: initialTitle,
-  outcomes: initialOutcomes,
-  onSave,
-  onClose,
-}: EditProps) {
+function EditModal({ title: initialTitle, outcomes: initialOutcomes, onSave, onClose }: EditProps) {
   const [title, setTitle] = useState(initialTitle);
   const [outcomes, setOutcomes] = useState(initialOutcomes.join(", "));
-  const parsedOutcomes = outcomes
-    .split(",")
-    .map((o) => o.trim())
-    .filter(Boolean);
+  const parsedOutcomes = outcomes.split(",").map((o) => o.trim()).filter(Boolean);
 
   const handleSave = () => {
     if (title.trim() && parsedOutcomes.length >= 2) {
@@ -87,43 +75,37 @@ function EditModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/20 backdrop-blur-[1px]">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="bg-white rounded-2xl shadow-xl border border-gray-200 p-6 w-full max-w-lg mx-4"
+        className="bg-surface rounded-2xl border border-edge p-6 w-full max-w-lg mx-4"
       >
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">
-          Edit Forecast
-        </h3>
+        <h3 className="text-lg font-semibold text-primary mb-4">Edit Forecast</h3>
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Title
-            </label>
+            <label className="block text-sm font-medium text-secondary mb-1">Title</label>
             <input
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none"
+              className="w-full px-3 py-2 bg-overlay border border-edge rounded-lg text-sm text-primary focus:ring-1 focus:ring-accent focus:border-accent outline-none"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Outcomes (comma-separated)
-            </label>
+            <label className="block text-sm font-medium text-secondary mb-1">Outcomes (comma-separated)</label>
             <textarea
               value={outcomes}
               onChange={(e) => setOutcomes(e.target.value)}
               rows={3}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none resize-none"
+              className="w-full px-3 py-2 bg-overlay border border-edge rounded-lg text-sm text-primary focus:ring-1 focus:ring-accent focus:border-accent outline-none resize-none"
             />
             {parsedOutcomes.length > 0 && (
               <div className="mt-3 flex items-center gap-2 flex-wrap">
-                <span className="text-xs text-gray-500">Outcomes:</span>
+                <span className="text-xs text-muted">Outcomes:</span>
                 {parsedOutcomes.map((outcome, index) => (
                   <span
                     key={`${outcome}-${index}`}
-                    className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800"
+                    className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-overlay text-secondary"
                   >
                     {outcome}
                   </span>
@@ -135,13 +117,13 @@ function EditModal({
         <div className="flex gap-2 mt-5">
           <button
             onClick={onClose}
-            className="flex-1 py-2 text-sm font-medium rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors"
+            className="flex-1 py-2 text-sm font-medium rounded-lg border border-edge text-secondary hover:text-primary hover:bg-surface-hover transition-colors"
           >
             Cancel
           </button>
           <button
             onClick={handleSave}
-            className="flex-1 py-2 text-sm font-medium rounded-lg bg-purple-600 text-white hover:bg-purple-700 transition-colors"
+            className="flex-1 py-2 text-sm font-medium rounded-lg bg-accent text-ground hover:bg-accent-dim transition-colors"
           >
             Save
           </button>

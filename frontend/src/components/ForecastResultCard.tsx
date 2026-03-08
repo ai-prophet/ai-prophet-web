@@ -9,27 +9,17 @@ interface ForecastResultCardProps {
   exitStatus: string;
 }
 
-export default function ForecastResultCard({
-  submission,
-  exitStatus,
-}: ForecastResultCardProps) {
+export default function ForecastResultCard({ submission, exitStatus }: ForecastResultCardProps) {
   const [viewOpen, setViewOpen] = useState(false);
   const [visibleCount, setVisibleCount] = useState(3);
   const rowRef = useRef<HTMLDivElement>(null);
   const measureRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const entries = useMemo(
-    () => Object.entries(submission).sort(([, a], [, b]) => b - a),
-    [submission]
-  );
+  const entries = useMemo(() => Object.entries(submission).sort(([, a], [, b]) => b - a), [submission]);
 
   const recomputeVisibleCount = useCallback(() => {
     const row = rowRef.current;
     if (!row || entries.length === 0) return;
-
-    const widths = entries.map((_, index) => {
-      const el = measureRefs.current[index];
-      return el?.offsetWidth ?? 0;
-    });
+    const widths = entries.map((_, index) => measureRefs.current[index]?.offsetWidth ?? 0);
     if (widths.some((w) => w === 0)) return;
 
     const GAP = 12;
@@ -48,11 +38,7 @@ export default function ForecastResultCard({
 
     count = Math.max(1, count);
     let remaining = entries.length - count;
-    while (
-      remaining > 0 &&
-      count > 1 &&
-      used + GAP + MORE_LABEL_WIDTH > available
-    ) {
+    while (remaining > 0 && count > 1 && used + GAP + MORE_LABEL_WIDTH > available) {
       used -= widths[count - 1];
       if (count > 1) used -= GAP;
       count -= 1;
@@ -65,39 +51,23 @@ export default function ForecastResultCard({
   useEffect(() => {
     const row = rowRef.current;
     if (!row) return;
-
-    const raf = window.requestAnimationFrame(() => {
-      recomputeVisibleCount();
-    });
-    const observer = new ResizeObserver(() => {
-      recomputeVisibleCount();
-    });
+    const raf = window.requestAnimationFrame(() => recomputeVisibleCount());
+    const observer = new ResizeObserver(() => recomputeVisibleCount());
     observer.observe(row);
-    return () => {
-      window.cancelAnimationFrame(raf);
-      observer.disconnect();
-    };
+    return () => { window.cancelAnimationFrame(raf); observer.disconnect(); };
   }, [recomputeVisibleCount]);
 
-  useEffect(() => {
-    measureRefs.current = measureRefs.current.slice(0, entries.length);
-  }, [entries.length]);
+  useEffect(() => { measureRefs.current = measureRefs.current.slice(0, entries.length); }, [entries.length]);
 
   const preview = entries.slice(0, visibleCount);
 
   if (!submission || Object.keys(submission).length === 0) {
     return (
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="pl-12"
-      >
-        <div className="bg-amber-50 border border-amber-200 rounded-xl px-5 py-4 shadow-sm">
-          <p className="text-sm text-amber-800">
+      <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="pl-12">
+        <div className="bg-warning/10 border border-warning/20 rounded-lg px-5 py-4">
+          <p className="text-sm text-warning">
             Agent exited without submitting a forecast.
-            <span className="text-xs text-amber-600 ml-2">
-              ({exitStatus})
-            </span>
+            <span className="text-xs text-warning/70 ml-2">({exitStatus})</span>
           </p>
         </div>
       </motion.div>
@@ -106,69 +76,41 @@ export default function ForecastResultCard({
 
   return (
     <>
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="pl-12"
-      >
-        <div
-          className="absolute pointer-events-none opacity-0 -z-10"
-          aria-hidden="true"
-        >
+      <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="pl-12">
+        <div className="absolute pointer-events-none opacity-0 -z-10" aria-hidden="true">
           {entries.map(([name, prob], index) => (
             <div
               key={`${name}-measure`}
-              ref={(el) => {
-                measureRefs.current[index] = el;
-              }}
-              className="inline-flex items-center gap-1.5 bg-gray-50 border border-gray-200 rounded-lg px-3 py-1.5 mr-3"
+              ref={(el) => { measureRefs.current[index] = el; }}
+              className="inline-flex items-center gap-1.5 bg-overlay border border-edge rounded-lg px-3 py-1.5 mr-3"
             >
-              <span className="text-sm font-medium text-gray-800">{name}</span>
-              <span className="text-sm text-purple-600 font-mono">
-                {(prob * 100).toFixed(1)}%
-              </span>
+              <span className="text-sm font-medium text-primary">{name}</span>
+              <span className="text-sm text-accent font-mono">{(prob * 100).toFixed(1)}%</span>
             </div>
           ))}
         </div>
-        <div className="bg-white border border-purple-200 rounded-xl px-5 py-4 shadow-sm">
-          <p className="text-xs text-purple-600 font-medium mb-2">
-            Final Forecast
-          </p>
+        <div className="bg-surface border border-accent/30 rounded-lg px-5 py-4">
+          <p className="text-xs text-accent font-medium mb-2">Final Forecast</p>
           <div ref={rowRef} className="flex items-center gap-3 flex-wrap">
             {preview.map(([name, prob]) => (
-              <div
-                key={name}
-                className="flex items-center gap-1.5 bg-gray-50 border border-gray-200 rounded-lg px-3 py-1.5"
-              >
-                <span className="text-sm font-medium text-gray-800">
-                  {name}
-                </span>
-                <span className="text-sm text-purple-600 font-mono">
-                  {(prob * 100).toFixed(1)}%
-                </span>
+              <div key={name} className="flex items-center gap-1.5 bg-overlay border border-edge rounded-lg px-3 py-1.5">
+                <span className="text-sm font-medium text-primary">{name}</span>
+                <span className="text-sm text-accent font-mono">{(prob * 100).toFixed(1)}%</span>
               </div>
             ))}
             {entries.length > visibleCount && (
-              <span className="text-xs text-gray-400">
-                +{entries.length - visibleCount} more
-              </span>
+              <span className="text-xs text-muted">+{entries.length - visibleCount} more</span>
             )}
             <button
               onClick={() => setViewOpen(true)}
-              className="ml-auto px-4 py-1.5 text-sm font-medium rounded-lg bg-amber-100 text-amber-800 hover:bg-amber-200 transition-colors"
+              className="ml-auto px-4 py-1.5 text-sm font-medium rounded-lg bg-accent/10 text-accent hover:bg-accent/20 transition-colors"
             >
               View
             </button>
           </div>
         </div>
       </motion.div>
-      {viewOpen && (
-        <ForecastModal
-          mode="view"
-          submission={submission}
-          onClose={() => setViewOpen(false)}
-        />
-      )}
+      {viewOpen && <ForecastModal mode="view" submission={submission} onClose={() => setViewOpen(false)} />}
     </>
   );
 }
