@@ -192,7 +192,7 @@ body {
   margin-bottom: 2em !important;
 }
 .prose thead {
-  background-color: var(--color-surface) !important;
+  background-color: transparent !important;
 }
 .prose thead tr {
   border-bottom: 2px solid var(--color-edge) !important;
@@ -204,7 +204,7 @@ body {
   font-size: 0.8125rem !important;
   letter-spacing: 0.01em !important;
   color: var(--color-primary) !important;
-  background-color: var(--color-surface) !important;
+  background-color: transparent !important;
   border-bottom: 2px solid var(--color-edge) !important;
 }
 .prose td {
