@@ -34,15 +34,15 @@
 
 /* ── Light mode overrides ── */
 html.light {
-  --color-ground: #f8f8f6;
+  --color-ground: #f5f5f3;
   --color-surface: #ffffff;
-  --color-surface-hover: #f0f0ec;
-  --color-overlay: #e8e8e4;
-  --color-primary: #333333;
-  --color-secondary: #4d545c;
-  --color-muted: #8a8a8a;
-  --color-edge: #e0e0dc;
-  --color-edge-subtle: #eeeeea;
+  --color-surface-hover: #eeeee9;
+  --color-overlay: #e4e4df;
+  --color-primary: #1a1a1a;
+  --color-secondary: #444b53;
+  --color-muted: #727272;
+  --color-edge: #d0d0cb;
+  --color-edge-subtle: #e2e2dd;
   --color-accent: #055CA3;
   --color-accent-dim: #044a8a;
   --color-danger: #ef4444;
@@ -53,9 +53,9 @@ html.light {
   --color-accent-tertiary: #E0E9F5;
   --color-accent-quaternary: #DFE9F4;
   --color-bg-primary: #ffffff;
-  --color-bg-secondary: #FFFEFE;
-  --color-text-primary: #333333;
-  --color-text-secondary: #4d545c;
+  --color-bg-secondary: #f5f5f3;
+  --color-text-primary: #1a1a1a;
+  --color-text-secondary: #444b53;
   --color-code-bg: #F0F4F8;
   --color-heat-green: #DEF7DE;
   --color-heat-red: #F0A29C;
