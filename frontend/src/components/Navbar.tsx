@@ -81,7 +81,7 @@ export default function Navbar({ onToggleHistory, historyOpen, onLogoDoubleClick
                 height={24}
                 className="rounded-md"
               />
-              <span className="hidden sm:inline">AI Prophet</span>
+              <span>AI Prophet</span>
             </Link>
 
             {/* Desktop nav */}
