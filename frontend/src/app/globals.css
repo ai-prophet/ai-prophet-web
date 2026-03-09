@@ -134,3 +134,27 @@ body {
 .bar-animated {
   animation: barGrow 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
+
+/* Prose table styling for research posts */
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+  overflow-x: auto;
+  display: block;
+  font-size: 0.875rem;
+}
+.prose thead {
+  border-bottom: 2px solid var(--color-edge);
+}
+.prose th {
+  padding: 0.625rem 0.75rem;
+  text-align: left;
+  font-weight: 600;
+}
+.prose td {
+  padding: 0.5rem 0.75rem;
+  border-top: 1px solid var(--color-edge);
+}
+.prose tbody tr:hover {
+  background-color: var(--color-surface-hover);
+}
