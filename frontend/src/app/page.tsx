@@ -519,13 +519,13 @@ export default function Home() {
 
   /* ── Chat + sidebar view ── */
   return (
-    <div className="h-screen flex flex-col">
+    <div className="h-dvh flex flex-col">
       <Navbar onToggleHistory={user ? () => setHistoryOpen((v) => !v) : undefined} historyOpen={historyOpen} onLogoDoubleClick={handleNewForecast} />
       <div ref={layoutRef} className="flex-1 flex overflow-hidden min-h-0">
         {historyOpen && user && (
           <ForecastHistory history={forecastHistory} onSelect={handleHistorySelect} onDelete={handleHistoryDelete} onClose={() => setHistoryOpen(false)} />
         )}
-        <div className="flex-1 min-w-0">
+        <div className="flex-1 min-w-0 min-h-0 overflow-hidden">
           <ChatInterface
             initialQuery={initialQuery}
             settings={settings}
