@@ -9,6 +9,20 @@ const nextConfig: NextConfig = {
       { hostname: "*.wp.com" },
       { hostname: "s.gravatar.com" },
     ],
+    formats: ["image/avif", "image/webp"],
+  },
+  experimental: {
+    optimizePackageImports: ["recharts", "framer-motion", "date-fns"],
+  },
+  async headers() {
+    return [
+      {
+        source: "/assets/:path*",
+        headers: [
+          { key: "Cache-Control", value: "public, max-age=31536000, immutable" },
+        ],
+      },
+    ];
   },
 };
 

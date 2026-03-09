@@ -1,15 +1,14 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import dynamic from "next/dynamic";
 import { useUser } from "@auth0/nextjs-auth0";
 import ChatInterface from "@/components/ChatInterface";
-import Sidebar from "@/components/Sidebar";
-import SettingsModal from "@/components/SettingsModal";
 import Navbar from "@/components/Navbar";
 import type { SearchGroup, BoardEntry, UserSettings, ForecastHistoryEntry } from "@/types";
 import { DEFAULT_SETTINGS } from "@/types";
 import { getApiUrl } from "@/config/api";
-import ForecastHistory, { fetchHistory, saveToHistory, deleteFromHistory } from "@/components/ForecastHistory";
+import { fetchHistory, saveToHistory, deleteFromHistory } from "@/components/ForecastHistory";
 import {
   DEFAULT_SIDEBAR_WIDTH,
   MIN_SIDEBAR_WIDTH,
@@ -18,6 +17,10 @@ import {
 } from "@/lib/constants";
 import HeroLanding from "./components/HeroLanding";
 import ForecastViewer from "./components/ForecastViewer";
+
+const Sidebar = dynamic(() => import("@/components/Sidebar"), { ssr: false });
+const SettingsModal = dynamic(() => import("@/components/SettingsModal"), { ssr: false });
+const ForecastHistory = dynamic(() => import("@/components/ForecastHistory"), { ssr: false });
 
 const SETTINGS_KEY = "prophet_settings";
 const SESSION_KEY = "prophet_session";

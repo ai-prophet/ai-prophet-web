@@ -1,5 +1,3 @@
-"use client";
-
 import ArenaLayout from "@/components/arena/ArenaLayout";
 
 const TEAM = {

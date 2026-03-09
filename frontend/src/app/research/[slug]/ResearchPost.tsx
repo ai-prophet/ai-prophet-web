@@ -158,33 +158,36 @@ export default function ResearchPost({
   const articleRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
-    // Load KaTeX auto-render to process LaTeX in the article
+    // Load KaTeX CSS
     const link = document.createElement("link");
     link.rel = "stylesheet";
     link.href = KATEX_CSS_URL;
     document.head.appendChild(link);
 
-    const script = document.createElement("script");
-    script.src = KATEX_JS_URL;
-    script.onload = () => {
-      const renderScript = document.createElement("script");
-      renderScript.src = KATEX_AUTO_RENDER_URL;
-      renderScript.onload = () => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const win = window as any;
-        if (articleRef.current && win.renderMathInElement) {
-          win.renderMathInElement(articleRef.current, {
-            delimiters: [
-              { left: "$$", right: "$$", display: true },
-              { left: "$", right: "$", display: false },
-            ],
-            throwOnError: false,
-          });
-        }
-      };
-      document.head.appendChild(renderScript);
-    };
-    document.head.appendChild(script);
+    // Load KaTeX JS and auto-render in parallel, then render
+    const loadScript = (src: string): Promise<void> =>
+      new Promise((resolve, reject) => {
+        const s = document.createElement("script");
+        s.src = src;
+        s.async = true;
+        s.onload = () => resolve();
+        s.onerror = reject;
+        document.head.appendChild(s);
+      });
+
+    Promise.all([loadScript(KATEX_JS_URL), loadScript(KATEX_AUTO_RENDER_URL)]).then(() => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const win = window as any;
+      if (articleRef.current && win.renderMathInElement) {
+        win.renderMathInElement(articleRef.current, {
+          delimiters: [
+            { left: "$$", right: "$$", display: true },
+            { left: "$", right: "$", display: false },
+          ],
+          throwOnError: false,
+        });
+      }
+    });
   }, [contentHtml]);
 
   const formattedDate = new Date(date).toLocaleDateString("en-US", {
@@ -268,6 +271,7 @@ export default function ResearchPost({
               src={heroImage}
               alt={title}
               fill
+              sizes="(max-width: 1024px) 100vw, 80vw"
               className="object-cover"
               priority
             />

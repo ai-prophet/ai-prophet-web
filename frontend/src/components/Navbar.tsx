@@ -85,10 +85,12 @@ export default function Navbar({ onToggleHistory, historyOpen, onLogoDoubleClick
               className="flex items-center gap-2 text-sm font-bold text-primary hover:text-accent transition-colors"
             >
               <Image
-                src="/assets/logo.png"
+                src="/assets/logo-sm.png"
                 alt="AI Prophet"
                 width={24}
                 height={24}
+                priority
+                quality={75}
                 className="rounded-md"
               />
               <span>AI Prophet</span>

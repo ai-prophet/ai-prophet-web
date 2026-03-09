@@ -4,7 +4,7 @@ import { Auth0Provider } from "@auth0/nextjs-auth0";
 import "./globals.css";
 import ThemeProvider from "@/components/ThemeProvider";
 
-const dmSans = DM_Sans({ subsets: ["latin"], weight: ["400", "500", "600", "700"] });
+const dmSans = DM_Sans({ subsets: ["latin"], weight: ["400", "500", "600", "700"], display: "swap" });
 
 export const metadata: Metadata = {
   title: "AI Prophet",
