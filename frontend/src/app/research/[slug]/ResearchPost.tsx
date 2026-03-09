@@ -95,13 +95,12 @@ export default function ResearchPost({
 
         {/* Article content */}
         <article
-          className="prose prose-lg max-w-none
-            text-text-primary
+          className="prose prose-lg max-w-none text-text-primary
             prose-headings:text-text-primary prose-headings:font-bold
-            prose-h2:text-2xl prose-h2:mt-14 prose-h2:mb-5 prose-h2:pb-2 prose-h2:border-b prose-h2:border-edge
-            prose-h3:text-xl prose-h3:mt-10 prose-h3:mb-4
-            prose-p:text-text-primary prose-p:leading-[1.8]
-            prose-li:text-text-primary prose-li:leading-[1.8]
+            prose-h2:text-2xl prose-h2:pb-2 prose-h2:border-b prose-h2:border-edge
+            prose-h3:text-xl
+            prose-p:text-text-primary
+            prose-li:text-text-primary
             prose-a:text-accent-primary hover:prose-a:text-accent-highlight prose-a:no-underline hover:prose-a:underline
             prose-strong:text-text-primary prose-strong:font-semibold
             prose-code:text-accent-highlight prose-code:bg-code-bg prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded-md prose-code:text-sm prose-code:font-normal prose-code:before:content-[''] prose-code:after:content-['']

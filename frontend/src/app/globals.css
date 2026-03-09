@@ -135,18 +135,48 @@ body {
   animation: barGrow 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
-/* Prose spacing improvements */
+/* Prose spacing — airy, Anthropic-style rhythm */
 .prose p {
-  margin-top: 1.5em;
-  margin-bottom: 1.5em;
+  margin-top: 1.75em !important;
+  margin-bottom: 1.75em !important;
+  line-height: 1.85 !important;
 }
 .prose li {
-  margin-top: 0.5em;
-  margin-bottom: 0.5em;
+  margin-top: 0.6em !important;
+  margin-bottom: 0.6em !important;
+  line-height: 1.8 !important;
 }
 .prose > ul, .prose > ol {
-  margin-top: 1.5em;
-  margin-bottom: 1.5em;
+  margin-top: 1.75em !important;
+  margin-bottom: 1.75em !important;
+}
+.prose h2 {
+  margin-top: 2.5em !important;
+  margin-bottom: 1em !important;
+}
+.prose h3 {
+  margin-top: 2em !important;
+  margin-bottom: 0.75em !important;
+}
+.prose blockquote {
+  margin-top: 2em !important;
+  margin-bottom: 2em !important;
+}
+.prose blockquote p {
+  margin-top: 0.75em !important;
+  margin-bottom: 0.75em !important;
+}
+.prose pre {
+  margin-top: 2em !important;
+  margin-bottom: 2em !important;
+}
+.prose img {
+  margin-top: 2em !important;
+  margin-bottom: 2em !important;
+}
+.prose hr {
+  margin-top: 3em !important;
+  margin-bottom: 3em !important;
 }
 
 /* Prose table styling for research posts — !important to override typography plugin */
