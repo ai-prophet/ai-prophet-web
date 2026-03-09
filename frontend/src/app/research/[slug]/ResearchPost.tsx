@@ -10,13 +10,6 @@ import {
   KATEX_AUTO_RENDER_URL,
 } from "@/lib/constants";
 
-const TYPE_LABELS: Record<string, string> = {
-  analysis: "Analysis",
-  post: "Post",
-  guide: "Guide",
-  experiment: "Experiment",
-};
-
 function TableOfContents({
   toc,
 }: {
@@ -149,7 +142,6 @@ export default function ResearchPost({
   title,
   date,
   author,
-  type,
   heroImage,
   contentHtml,
   toc,
@@ -158,7 +150,6 @@ export default function ResearchPost({
   title: string;
   date: string;
   author: string;
-  type: string;
   heroImage: string | null;
   contentHtml: string;
   toc: { id: string; text: string; level: number }[];
@@ -201,8 +192,6 @@ export default function ResearchPost({
     month: "long",
     day: "numeric",
   });
-  const typeLabel = TYPE_LABELS[type.toLowerCase()] || type;
-
   return (
     <ArenaLayout>
       <TableOfContents toc={toc} />
