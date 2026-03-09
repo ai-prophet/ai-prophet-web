@@ -82,7 +82,7 @@ export default function Navbar({ onToggleHistory, historyOpen, onLogoDoubleClick
                   }
                 }
               }}
-              className="flex items-center gap-2 text-sm font-semibold text-primary hover:text-accent transition-colors"
+              className="flex items-center gap-2 text-sm font-bold text-primary hover:text-accent transition-colors"
             >
               <Image
                 src="/assets/logo.png"
@@ -102,7 +102,7 @@ export default function Navbar({ onToggleHistory, historyOpen, onLogoDoubleClick
                   <div key={link.label} className="relative" ref={dropdownRef}>
                     <button
                       onClick={() => setDropdownOpen((v) => !v)}
-                      className={`px-3 py-1.5 text-xs font-medium transition-colors rounded-md flex items-center gap-1 ${
+                      className={`px-3 py-1.5 text-[13px] font-semibold transition-colors rounded-md flex items-center gap-1 ${
                         isActive(link.href) || link.children.some(c => isActive(c.href))
                           ? "text-accent"
                           : "text-secondary hover:text-primary hover:bg-surface-hover"
@@ -120,7 +120,7 @@ export default function Navbar({ onToggleHistory, historyOpen, onLogoDoubleClick
                             key={child.label}
                             href={child.href}
                             onClick={() => setDropdownOpen(false)}
-                            className={`block px-4 py-2 text-xs font-medium transition-colors ${
+                            className={`block px-4 py-2 text-[13px] font-semibold transition-colors ${
                               isActive(child.href)
                                 ? "text-accent bg-surface-hover"
                                 : "text-secondary hover:text-primary hover:bg-surface-hover"
@@ -136,7 +136,7 @@ export default function Navbar({ onToggleHistory, historyOpen, onLogoDoubleClick
                   <Link
                     key={link.label}
                     href={link.href}
-                    className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors ${
+                    className={`px-3 py-1.5 text-[13px] font-semibold rounded-md transition-colors ${
                       isActive(link.href)
                         ? "text-accent"
                         : "text-secondary hover:text-primary hover:bg-surface-hover"
@@ -193,7 +193,7 @@ export default function Navbar({ onToggleHistory, historyOpen, onLogoDoubleClick
                       </div>
                       <a
                         href="/auth/logout"
-                        className="flex items-center gap-2 px-3 py-2 text-xs text-secondary hover:text-primary hover:bg-surface-hover transition-colors"
+                        className="flex items-center gap-2 px-3 py-2 text-xs font-medium text-secondary hover:text-primary hover:bg-surface-hover transition-colors"
                       >
                         <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                           <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9" />
@@ -206,7 +206,7 @@ export default function Navbar({ onToggleHistory, historyOpen, onLogoDoubleClick
               ) : (
                 <a
                   href="/auth/login"
-                  className="hidden sm:block px-3.5 py-1.5 text-xs font-medium rounded-lg bg-accent text-ground hover:bg-accent-dim transition-colors"
+                  className="hidden sm:block px-3.5 py-1.5 text-[13px] font-semibold rounded-lg bg-accent text-ground hover:bg-accent-dim transition-colors"
                 >
                   Login
                 </a>
@@ -244,16 +244,16 @@ export default function Navbar({ onToggleHistory, historyOpen, onLogoDoubleClick
               {NAV_LINKS.map((link) =>
                 link.children ? (
                   <div key={link.label} className="space-y-1">
-                    <span className="block px-3 py-2 text-xs font-medium text-muted uppercase tracking-wider">
+                    <span className="block px-3 py-2 text-xs font-semibold text-muted uppercase tracking-wider">
                       {link.label}
                     </span>
                     {link.children.map((child) => (
                       <Link
                         key={child.label}
                         href={child.href}
-                        className={`block px-3 py-2 pl-6 text-sm rounded-lg transition-colors ${
+                        className={`block px-3 py-2 pl-6 text-sm font-medium rounded-lg transition-colors ${
                           isActive(child.href)
-                            ? "text-accent font-medium"
+                            ? "text-accent font-semibold"
                             : "text-secondary hover:text-primary hover:bg-surface-hover"
                         }`}
                         onClick={() => setMobileOpen(false)}
@@ -266,9 +266,9 @@ export default function Navbar({ onToggleHistory, historyOpen, onLogoDoubleClick
                   <Link
                     key={link.label}
                     href={link.href}
-                    className={`block px-3 py-2 text-sm rounded-lg transition-colors ${
+                    className={`block px-3 py-2 text-sm font-medium rounded-lg transition-colors ${
                       isActive(link.href)
-                        ? "text-accent font-medium"
+                        ? "text-accent font-semibold"
                         : "text-secondary hover:text-primary hover:bg-surface-hover"
                     }`}
                     onClick={() => setMobileOpen(false)}
@@ -281,7 +281,7 @@ export default function Navbar({ onToggleHistory, historyOpen, onLogoDoubleClick
                 {user ? (
                   <a
                     href="/auth/logout"
-                    className="block px-3 py-2 text-sm text-secondary hover:text-primary hover:bg-surface-hover rounded-lg transition-colors"
+                    className="block px-3 py-2 text-sm font-medium text-secondary hover:text-primary hover:bg-surface-hover rounded-lg transition-colors"
                     onClick={() => setMobileOpen(false)}
                   >
                     Logout
@@ -289,7 +289,7 @@ export default function Navbar({ onToggleHistory, historyOpen, onLogoDoubleClick
                 ) : (
                   <a
                     href="/auth/login"
-                    className="block px-3 py-2 text-sm text-secondary hover:text-primary hover:bg-surface-hover rounded-lg transition-colors"
+                    className="block px-3 py-2 text-sm font-medium text-secondary hover:text-primary hover:bg-surface-hover rounded-lg transition-colors"
                     onClick={() => setMobileOpen(false)}
                   >
                     Login

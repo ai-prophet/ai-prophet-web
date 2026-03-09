@@ -186,7 +186,7 @@ export default function Markets() {
           <div className="flex items-center gap-3 sm:gap-4 flex-wrap md:flex-nowrap flex-1">
             {/* Topic Filter */}
             <div className="flex items-center gap-1 sm:gap-2 w-full sm:w-auto">
-              <label className="text-sm font-medium text-text-primary hidden sm:block md:inline md:whitespace-nowrap">
+              <label className="text-sm font-semibold text-text-primary hidden sm:block md:inline md:whitespace-nowrap">
                 Topic:
               </label>
               <DropdownSelector
@@ -205,7 +205,7 @@ export default function Markets() {
 
             {/* Sort By */}
             <div className="flex items-center gap-1 sm:gap-2 w-full sm:w-auto">
-              <label className="text-sm font-medium text-text-primary hidden sm:block md:inline md:whitespace-nowrap">
+              <label className="text-sm font-semibold text-text-primary hidden sm:block md:inline md:whitespace-nowrap">
                 Sort by:
               </label>
               <select
@@ -222,7 +222,7 @@ export default function Markets() {
 
             {/* Sort Order */}
             <div className="flex items-center gap-1 sm:gap-2 w-full sm:w-auto">
-              <label className="text-sm font-medium text-text-primary hidden sm:block md:inline md:whitespace-nowrap">
+              <label className="text-sm font-semibold text-text-primary hidden sm:block md:inline md:whitespace-nowrap">
                 Order:
               </label>
               <select
@@ -240,7 +240,7 @@ export default function Markets() {
           <div className="hidden md:flex items-center">
             <label className="flex items-center">
               <span
-                className={`mr-2 text-sm font-medium ${
+                className={`mr-2 text-sm font-semibold ${
                   eventType === "live"
                     ? "text-accent-primary"
                     : "text-text-primary"
@@ -256,7 +256,7 @@ export default function Markets() {
               />
               <div className="relative w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-accent-primary"></div>
               <span
-                className={`ms-3 text-sm font-medium ${
+                className={`ms-3 text-sm font-semibold ${
                   eventType === "historical"
                     ? "text-accent-primary"
                     : "text-text-primary"
@@ -277,7 +277,7 @@ export default function Markets() {
                 key={option.key}
                 onClick={() => setEventType(option.key as 'live' | 'historical')}
                 className={`
-                  flex-1 px-3 py-2 text-sm font-medium transition-colors
+                  flex-1 px-3 py-2 text-sm font-semibold transition-colors
                   ${eventType === option.key 
                     ? 'bg-accent-primary text-white' 
                     : 'bg-bg-primary text-text-primary hover:bg-accent-quaternary'
