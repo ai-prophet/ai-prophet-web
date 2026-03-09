@@ -158,22 +158,40 @@ export default function Navbar({ onToggleHistory, historyOpen, onLogoDoubleClick
             </button>
             {!authLoading && (
               user ? (
-                <div className="hidden sm:flex items-center gap-2">
-                  {user.picture && (
-                    <Image
-                      src={user.picture as string}
-                      alt={user.name as string}
-                      width={24}
-                      height={24}
-                      className="rounded-full"
-                    />
-                  )}
-                  <a
-                    href="/auth/logout"
-                    className="px-3 py-1.5 text-xs font-medium rounded-lg text-secondary hover:text-primary hover:bg-surface-hover transition-colors"
-                  >
-                    Logout
-                  </a>
+                <div className="hidden sm:block relative group">
+                  <button className="flex items-center p-0.5 rounded-full hover:ring-2 hover:ring-accent/40 transition-all">
+                    {user.picture ? (
+                      <Image
+                        src={user.picture as string}
+                        alt={user.name as string}
+                        width={26}
+                        height={26}
+                        className="rounded-full"
+                      />
+                    ) : (
+                      <div className="w-[26px] h-[26px] rounded-full bg-accent/20 flex items-center justify-center text-xs font-medium text-accent">
+                        {(user.name as string)?.[0]?.toUpperCase() || "?"}
+                      </div>
+                    )}
+                  </button>
+                  {/* Hover dropdown */}
+                  <div className="absolute right-0 top-full pt-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 z-50">
+                    <div className="w-48 bg-surface rounded-lg shadow-lg shadow-black/30 border border-edge py-2">
+                      <div className="px-3 py-2 border-b border-edge">
+                        <p className="text-xs font-medium text-primary truncate">{user.name as string}</p>
+                        <p className="text-[11px] text-muted truncate">{user.email as string}</p>
+                      </div>
+                      <a
+                        href="/auth/logout"
+                        className="flex items-center gap-2 px-3 py-2 text-xs text-secondary hover:text-primary hover:bg-surface-hover transition-colors"
+                      >
+                        <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9" />
+                        </svg>
+                        Logout
+                      </a>
+                    </div>
+                  </div>
                 </div>
               ) : (
                 <a
