@@ -137,18 +137,18 @@ body {
 
 /* Prose spacing */
 .prose p {
-  margin-top: 1.25em !important;
-  margin-bottom: 1.25em !important;
-  line-height: 1.7 !important;
+  margin-top: 0.75em !important;
+  margin-bottom: 0.75em !important;
+  line-height: 1.6 !important;
 }
 .prose li {
-  margin-top: 0.4em !important;
-  margin-bottom: 0.4em !important;
-  line-height: 1.7 !important;
+  margin-top: 0.2em !important;
+  margin-bottom: 0.2em !important;
+  line-height: 1.6 !important;
 }
 .prose > ul, .prose > ol {
-  margin-top: 1.25em !important;
-  margin-bottom: 1.25em !important;
+  margin-top: 0.75em !important;
+  margin-bottom: 0.75em !important;
 }
 .prose h1 {
   font-size: 1.625rem !important;
@@ -177,28 +177,28 @@ body {
   color: var(--color-secondary) !important;
 }
 .prose blockquote {
-  margin-top: 1.5em !important;
-  margin-bottom: 1.5em !important;
+  margin-top: 1em !important;
+  margin-bottom: 1em !important;
 }
 .prose blockquote p {
-  margin-top: 0.5em !important;
-  margin-bottom: 0.5em !important;
+  margin-top: 0.35em !important;
+  margin-bottom: 0.35em !important;
 }
 .prose pre {
-  margin-top: 1.5em !important;
-  margin-bottom: 1.5em !important;
+  margin-top: 1em !important;
+  margin-bottom: 1em !important;
 }
 .prose img {
-  margin-top: 1.5em !important;
-  margin-bottom: 1.5em !important;
+  margin-top: 1em !important;
+  margin-bottom: 1em !important;
   margin-left: -2rem !important;
   margin-right: -2rem !important;
   max-width: calc(100% + 4rem) !important;
   width: calc(100% + 4rem) !important;
 }
 .prose hr {
-  margin-top: 2.5em !important;
-  margin-bottom: 2.5em !important;
+  margin-top: 1.5em !important;
+  margin-bottom: 1.5em !important;
 }
 
 /* Prose table styling for research posts — !important to override typography plugin */
