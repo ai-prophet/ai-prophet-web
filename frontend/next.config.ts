@@ -10,14 +10,6 @@ const nextConfig: NextConfig = {
       { hostname: "s.gravatar.com" },
     ],
   },
-  async rewrites() {
-    return [
-      {
-        source: "/api/proxy/:path*",
-        destination: "https://api.prophetarena.co/api/:path*",
-      },
-    ];
-  },
 };
 
 export default nextConfig;
