@@ -3,6 +3,7 @@ import path from "path";
 import matter from "gray-matter";
 import { remark } from "remark";
 import html from "remark-html";
+import gfm from "remark-gfm";
 import { notFound } from "next/navigation";
 import ResearchPost from "./ResearchPost";
 
@@ -41,7 +42,7 @@ export default async function ResearchPostPage({
     .replace(/:::llm-quote\{[^}]*\}\n/g, "> ")
     .replace(/^:::\s*$/gm, "");
 
-  const result = await remark().use(html, { sanitize: false }).process(cleaned);
+  const result = await remark().use(gfm).use(html, { sanitize: false }).process(cleaned);
   const contentHtml = result.toString();
 
   return (
