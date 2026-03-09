@@ -101,7 +101,7 @@ export default function About() {
               contact@prophetarena.co
             </a>
           </div>
-          <p className="text-text-primary/60 max-w-2xl mx-auto">
+          <p className="text-text-primary/60 whitespace-nowrap">
             AI Prophet is powered by{" "}
             <a
               href="https://kalshi.com"
