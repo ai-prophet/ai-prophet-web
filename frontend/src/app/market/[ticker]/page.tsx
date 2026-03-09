@@ -143,7 +143,7 @@ export default function MarketDetail() {
   if (loading) {
     return (
       <ArenaLayout>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12">
+        <div className="max-w-screen-2xl mx-auto px-3 sm:px-6 lg:px-8 py-12">
           <div className="flex items-center gap-3 text-muted">
             <div className="w-2 h-2 rounded-full bg-accent animate-pulse" />
             <span className="text-sm">Loading event...</span>
@@ -156,7 +156,7 @@ export default function MarketDetail() {
   if (error || !event) {
     return (
       <ArenaLayout>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12">
+        <div className="max-w-screen-2xl mx-auto px-3 sm:px-6 lg:px-8 py-12">
           <p className="text-danger text-sm mb-4">{error || "Event not found"}</p>
           <Link href="/markets" className="text-accent text-sm hover:underline">&larr; Back to Events</Link>
         </div>
@@ -168,7 +168,7 @@ export default function MarketDetail() {
 
   return (
     <ArenaLayout>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-8 space-y-6">
+      <div className="max-w-screen-2xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-8 space-y-6">
         {/* Top bar */}
         <div className="flex items-center justify-between">
           <Link
@@ -245,7 +245,7 @@ export default function MarketDetail() {
               <div className="flex">
                 {/* Sticky left column — market names */}
                 <div className="flex-shrink-0 z-10 bg-surface">
-                  <div className="h-14 w-28 sm:w-40 border-b border-r border-edge flex items-center justify-center">
+                  <div className="h-14 w-32 sm:w-48 border-b border-r border-edge flex items-center justify-center">
                     <span className="text-xs font-medium text-muted">Markets</span>
                   </div>
                   {visibleMarkets.map((mkt, r) => {
@@ -253,7 +253,7 @@ export default function MarketDetail() {
                     return (
                       <div
                         key={mkt}
-                        className={`h-14 w-28 sm:w-40 border-r border-edge flex items-center px-2 sm:px-3 bg-surface ${r < visibleMarkets.length - 1 ? "border-b" : ""}`}
+                        className={`h-14 w-32 sm:w-48 border-r border-edge flex items-center px-2 sm:px-3 bg-surface ${r < visibleMarkets.length - 1 ? "border-b" : ""}`}
                       >
                         <span className="text-xs sm:text-sm font-medium text-primary truncate flex-1" title={mkt}>{mkt}</span>
                         {isWinner && (
@@ -271,7 +271,7 @@ export default function MarketDetail() {
                   <div
                     className="grid"
                     style={{
-                      gridTemplateColumns: `repeat(${llmNames.length}, minmax(90px, 130px))`,
+                      gridTemplateColumns: `repeat(${llmNames.length}, minmax(100px, 150px))`,
                       gridTemplateRows: `56px repeat(${visibleMarkets.length}, 56px)`,
                     }}
                   >
