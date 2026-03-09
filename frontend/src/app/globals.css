@@ -173,6 +173,10 @@ body {
 .prose img {
   margin-top: 1.5em !important;
   margin-bottom: 1.5em !important;
+  margin-left: -2rem !important;
+  margin-right: -2rem !important;
+  max-width: calc(100% + 4rem) !important;
+  width: calc(100% + 4rem) !important;
 }
 .prose hr {
   margin-top: 2.5em !important;
