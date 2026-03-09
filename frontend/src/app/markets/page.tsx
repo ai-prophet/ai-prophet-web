@@ -291,7 +291,7 @@ export default function Markets() {
         </div>
 
         {/* Markets Grid */}
-        <div className="bg-bg-primary rounded-lg sm:rounded-2xl">
+        <div className="rounded-lg sm:rounded-2xl">
           <div className="p-0 sm:p-6">
             <EventLoader
               initialTopic={selectedTopic}
