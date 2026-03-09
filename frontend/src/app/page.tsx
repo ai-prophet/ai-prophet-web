@@ -545,6 +545,7 @@ export default function Home() {
             onNewForecast={handleNewForecast}
           />
         </div>
+        {/* Desktop sidebar */}
         {sidebarOpen && (
           <>
             <div
@@ -563,6 +564,38 @@ export default function Home() {
                 highlightStep={highlightStep}
                 highlightBoardId={highlightBoardId}
               />
+            </div>
+          </>
+        )}
+        {/* Mobile sidebar overlay */}
+        {sidebarOpen && (
+          <>
+            <div className="fixed inset-0 z-30 bg-black/40 md:hidden" onClick={() => setSidebarOpen(false)} />
+            <div className="fixed inset-y-0 right-0 z-40 w-80 max-w-[85vw] md:hidden border-l border-edge">
+              <div className="h-full flex flex-col bg-surface">
+                <div className="flex items-center justify-between px-4 h-11 border-b border-edge flex-shrink-0">
+                  <span className="text-[11px] font-semibold text-muted uppercase tracking-wider">Research</span>
+                  <button
+                    onClick={() => setSidebarOpen(false)}
+                    className="p-1 rounded-md text-muted hover:text-primary hover:bg-surface-hover transition-colors"
+                    aria-label="Close panel"
+                  >
+                    <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
+                <div className="flex-1 overflow-hidden">
+                  <Sidebar
+                    searchGroups={searchGroups}
+                    boardEntries={boardEntries}
+                    activeTab={activeTab}
+                    onTabChange={handleTabChange}
+                    highlightStep={highlightStep}
+                    highlightBoardId={highlightBoardId}
+                  />
+                </div>
+              </div>
             </div>
           </>
         )}
