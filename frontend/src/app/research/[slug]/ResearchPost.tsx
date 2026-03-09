@@ -95,19 +95,19 @@ export default function ResearchPost({
 
         {/* Article content */}
         <article
-          className="prose prose-lg prose-invert max-w-none
+          className="prose prose-lg max-w-none
+            text-text-primary
             prose-headings:text-text-primary prose-headings:font-bold
-            prose-h2:text-2xl prose-h2:mt-12 prose-h2:mb-4 prose-h2:pb-2 prose-h2:border-b prose-h2:border-edge
-            prose-h3:text-xl prose-h3:mt-8 prose-h3:mb-3
-            prose-p:text-text-primary prose-p:leading-relaxed
-            prose-li:text-text-primary
+            prose-h2:text-2xl prose-h2:mt-14 prose-h2:mb-5 prose-h2:pb-2 prose-h2:border-b prose-h2:border-edge
+            prose-h3:text-xl prose-h3:mt-10 prose-h3:mb-4
+            prose-p:text-text-primary prose-p:leading-[1.8]
+            prose-li:text-text-primary prose-li:leading-[1.8]
             prose-a:text-accent-primary hover:prose-a:text-accent-highlight prose-a:no-underline hover:prose-a:underline
             prose-strong:text-text-primary prose-strong:font-semibold
             prose-code:text-accent-highlight prose-code:bg-code-bg prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded-md prose-code:text-sm prose-code:font-normal prose-code:before:content-[''] prose-code:after:content-['']
-            prose-pre:bg-code-bg prose-pre:border prose-pre:border-accent-quaternary prose-pre:rounded-xl
+            prose-pre:bg-code-bg prose-pre:border prose-pre:border-edge prose-pre:rounded-xl
             prose-blockquote:border-l-2 prose-blockquote:border-accent-primary prose-blockquote:bg-accent-primary/5 prose-blockquote:rounded-r-lg prose-blockquote:py-1 prose-blockquote:px-5 prose-blockquote:text-text-primary prose-blockquote:not-italic
             prose-img:rounded-xl prose-img:border prose-img:border-edge prose-img:shadow-lg prose-img:shadow-black/20 prose-img:mx-auto
-            prose-table:text-text-primary prose-th:text-text-primary prose-td:text-text-primary prose-td:border-edge prose-th:border-edge
             prose-hr:border-edge"
           dangerouslySetInnerHTML={{ __html: contentHtml }}
         />
