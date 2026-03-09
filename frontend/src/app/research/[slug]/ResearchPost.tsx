@@ -97,8 +97,8 @@ export default function ResearchPost({
         <article
           className="prose prose-lg max-w-none text-text-primary
             prose-headings:text-text-primary prose-headings:font-bold
-            prose-h2:text-lg prose-h2:pb-2 prose-h2:border-b prose-h2:border-edge
-            prose-h3:text-base
+            prose-h2:text-base prose-h2:pb-1.5 prose-h2:border-b prose-h2:border-edge
+            prose-h3:text-sm
             prose-p:text-text-primary
             prose-li:text-text-primary
             prose-a:text-accent-primary hover:prose-a:text-accent-highlight prose-a:no-underline hover:prose-a:underline
