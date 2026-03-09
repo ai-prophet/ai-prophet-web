@@ -139,22 +139,38 @@ body {
 .prose table {
   width: 100%;
   border-collapse: collapse;
-  overflow-x: auto;
-  display: block;
   font-size: 0.875rem;
+  border: 1px solid var(--color-edge);
+  border-radius: 0.75rem;
+  overflow: hidden;
 }
 .prose thead {
+  background-color: var(--color-surface);
   border-bottom: 2px solid var(--color-edge);
 }
 .prose th {
-  padding: 0.625rem 0.75rem;
+  padding: 0.75rem 1rem;
   text-align: left;
   font-weight: 600;
+  font-size: 0.8125rem;
+  letter-spacing: 0.01em;
 }
 .prose td {
-  padding: 0.5rem 0.75rem;
+  padding: 0.625rem 1rem;
   border-top: 1px solid var(--color-edge);
 }
 .prose tbody tr:hover {
   background-color: var(--color-surface-hover);
+}
+.prose table + * {
+  margin-top: 1.5rem;
+}
+
+/* Prose image hover effect */
+.prose img {
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.prose img:hover {
+  transform: scale(1.01);
 }

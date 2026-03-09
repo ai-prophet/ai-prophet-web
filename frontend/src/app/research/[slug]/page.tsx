@@ -45,11 +45,17 @@ export default async function ResearchPostPage({
   const result = await remark().use(gfm).use(html, { sanitize: false }).process(cleaned);
   const contentHtml = result.toString();
 
+  const heroImg = post.frontmatter.hero_img
+    ? `/research/${slug}/${post.frontmatter.hero_img}`
+    : null;
+
   return (
     <ResearchPost
       title={post.frontmatter.title as string}
       date={post.frontmatter.date as string}
       author={post.frontmatter.author as string}
+      type={(post.frontmatter.type as string) || "Post"}
+      heroImage={heroImg}
       contentHtml={contentHtml}
     />
   );
