@@ -193,17 +193,17 @@ function FiltersPanel({
   idSuffix?: string;
 }) {
   return (
-    <div className="bg-bg-primary rounded-2xl border border-accent-quaternary p-6">
-      <h3 className="text-lg font-semibold text-text-primary mb-2">Filters</h3>
+    <div className="bg-surface rounded-2xl border border-edge p-6">
+      <h3 className="text-lg font-semibold text-primary mb-2">Filters</h3>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Topic Filter */}
         <div>
-          <label htmlFor={`topic-filter${idSuffix}`} className="block text-sm font-medium text-text-primary mb-2">Topic</label>
+          <label htmlFor={`topic-filter${idSuffix}`} className="block text-sm font-medium text-primary mb-2">Topic</label>
           <select
             id={`topic-filter${idSuffix}`}
             value={query.topic}
             onChange={(e) => updateFilter('topic', e.target.value)}
-            className="w-full px-3 py-2 border border-accent-quaternary rounded-lg bg-bg-primary text-text-primary focus:outline-none focus:ring-2 focus:ring-accent-primary focus:border-transparent"
+            className="w-full px-3 py-2 border border-edge rounded-lg bg-surface text-primary focus:outline-none focus:ring-2 focus:ring-accent-primary focus:border-transparent"
           >
             {topics.map((topic) => (
               <option key={topic} value={topic}>{topic}</option>
@@ -213,12 +213,12 @@ function FiltersPanel({
 
         {/* Sort By */}
         <div>
-          <label htmlFor={`sort-by-filter${idSuffix}`} className="block text-sm font-medium text-text-primary mb-2">Sort By</label>
+          <label htmlFor={`sort-by-filter${idSuffix}`} className="block text-sm font-medium text-primary mb-2">Sort By</label>
           <select
             id={`sort-by-filter${idSuffix}`}
             value={query.sortBy}
             onChange={(e) => updateFilter('sortBy', e.target.value)}
-            className="w-full px-3 py-2 border border-accent-quaternary rounded-lg bg-bg-primary text-text-primary focus:outline-none focus:ring-2 focus:ring-accent-primary focus:border-transparent"
+            className="w-full px-3 py-2 border border-edge rounded-lg bg-surface text-primary focus:outline-none focus:ring-2 focus:ring-accent-primary focus:border-transparent"
           >
             {sortOptions.map((option) => (
               <option key={option.value} value={option.value}>{option.label}</option>
@@ -228,11 +228,11 @@ function FiltersPanel({
 
         {/* Sort Order */}
         <div>
-          <label htmlFor={`sort-order-filter${idSuffix}`} className="block text-sm font-medium text-text-primary mb-2">Order</label>
+          <label htmlFor={`sort-order-filter${idSuffix}`} className="block text-sm font-medium text-primary mb-2">Order</label>
           <button
             id={`sort-order-filter${idSuffix}`}
             onClick={toggleSortOrder}
-            className="w-full px-3 py-2 border border-accent-quaternary rounded-lg bg-bg-primary text-text-primary hover:bg-accent-quaternary transition-colors focus:outline-none focus:ring-2 focus:ring-accent-primary"
+            className="w-full px-3 py-2 border border-edge rounded-lg bg-surface text-primary hover:bg-overlay transition-colors focus:outline-none focus:ring-2 focus:ring-accent-primary"
           >
             {query.order === 'asc' ? 'Ascending' : 'Descending'}
           </button>
@@ -240,12 +240,12 @@ function FiltersPanel({
 
         {/* Resolved Type */}
         <div>
-          <label htmlFor={`status-filter${idSuffix}`} className="block text-sm font-medium text-text-primary mb-2">Status</label>
+          <label htmlFor={`status-filter${idSuffix}`} className="block text-sm font-medium text-primary mb-2">Status</label>
           <select
             id={`status-filter${idSuffix}`}
             value={query.resolvedType}
             onChange={(e) => updateFilter('resolvedType', e.target.value)}
-            className="w-full px-3 py-2 border border-accent-quaternary rounded-lg bg-bg-primary text-text-primary focus:outline-none focus:ring-2 focus:ring-accent-primary focus:border-transparent"
+            className="w-full px-3 py-2 border border-edge rounded-lg bg-surface text-primary focus:outline-none focus:ring-2 focus:ring-accent-primary focus:border-transparent"
           >
             {resolvedOptions.map((option) => (
               <option key={option.value} value={option.value}>{option.label}</option>
@@ -494,13 +494,13 @@ export default function EventLoader({
         )}
         
         <div className="text-center py-12">
-          <div className="w-16 h-16 bg-accent-quaternary rounded-full flex items-center justify-center mx-auto mb-4">
-            <svg className="w-8 h-8 text-text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="w-16 h-16 bg-overlay rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg className="w-8 h-8 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.172 16.172a4 4 0 015.656 0M9 12h6m-6-4h6m2 5.291A7.962 7.962 0 0112 15c-2.34 0-4.469.901-6.062 2.375M6 15v1.5" />
             </svg>
           </div>
-          <h3 className="text-lg font-semibold text-text-primary mb-2">Service Temporarily Unavailable</h3>
-          <p className="text-text-secondary mb-4">
+          <h3 className="text-lg font-semibold text-primary mb-2">Service Temporarily Unavailable</h3>
+          <p className="text-secondary mb-4">
             We&apos;re having trouble connecting to our servers. Please try again later.
           </p>
           <button
@@ -577,8 +577,8 @@ export default function EventLoader({
             
             {/* Loading overlay for existing content - only show if not searching */}
             {selectors.isLoading && !selectors.isInitial && !selectors.isSearching && (
-              <div className="absolute inset-0 bg-bg-secondary/20 backdrop-blur-sm flex items-center justify-center z-10">
-                <div className="bg-bg-primary/90 rounded-lg p-4 shadow-lg border border-accent-quaternary">
+              <div className="absolute inset-0 bg-ground/20 backdrop-blur-sm flex items-center justify-center z-10">
+                <div className="bg-surface/90 rounded-lg p-4 shadow-lg border border-edge">
                   <LoadingSpinner size="sm" showText={true} text="Updating..." />
                 </div>
               </div>
@@ -599,7 +599,7 @@ export default function EventLoader({
         </div>
       ) : !selectors.isInitial && !selectors.hasError && !selectors.isBackendDown && !selectors.isSearching && !selectors.isLoading ? (
         <div className="text-center py-12">
-          <p className="text-text-primary text-lg">
+          <p className="text-primary text-lg">
             {state.query.search ? 
               <>No events found matching &quot;{state.query.search}&quot;</> : 
               "No events found matching your filters."
@@ -633,7 +633,7 @@ export default function EventLoader({
 
       {/* Events Count */}
       {state.events.length > 0 && !selectors.isSearching && (
-        <div className="text-center text-sm text-text-secondary">
+        <div className="text-center text-sm text-secondary">
           {state.query.search ? (
             <>
               Showing {state.events.length} event{state.events.length !== 1 ? 's' : ''} matching &quot;{state.query.search}&quot;

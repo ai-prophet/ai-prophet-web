@@ -41,8 +41,8 @@ export default function LiveStatusIndicator({
       <span
         className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
           isResolved
-            ? "bg-heat-green text-text-primary"
-            : "bg-heat-red text-text-primary"
+            ? "bg-heat-green text-primary"
+            : "bg-heat-red text-primary"
         }`}
       >
         {isResolved ? "Resolved" : "Closed"}
@@ -57,6 +57,6 @@ export default function LiveStatusIndicator({
       <span className="text-green-600 font-medium">LIVE</span>
     </>
   ) : (
-    <span className="text-text-primary">CLOSED</span>
+    <span className="text-primary">CLOSED</span>
   );
 } 

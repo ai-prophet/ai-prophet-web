@@ -216,8 +216,8 @@ const CustomTimeSeriesChart: React.FC<CustomTimeSeriesChartProps> = ({
   const CustomTooltip = ({ active, payload, label }: TooltipProps) => {
     if (active && payload && payload.length) {
       return (
-        <div className="bg-bg-primary border border-accent-secondary rounded-lg p-3 shadow-lg">
-          <p className="font-semibold text-text-primary mb-2">{label}</p>
+        <div className="bg-surface border border-accent-secondary rounded-lg p-3 shadow-lg">
+          <p className="font-semibold text-primary mb-2">{label}</p>
           {payload
             .sort((a, b) => b.value - a.value) // Higher is better for both metrics
             .map((entry, index) => {
@@ -281,13 +281,13 @@ const CustomTimeSeriesChart: React.FC<CustomTimeSeriesChartProps> = ({
       <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-end">
         {/* Metric Selector */}
         <div className="w-full lg:w-48">
-          <label className="block text-sm font-medium text-text-primary mb-2">
+          <label className="block text-sm font-medium text-primary mb-2">
             Metric
           </label>
           <select
             value={metric}
             onChange={(e) => setMetric(e.target.value as 'brier' | 'average-return')}
-            className="w-full px-4 py-2 bg-bg-primary border border-accent-quaternary rounded-lg text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-accent-primary hover:border-accent-secondary transition-colors"
+            className="w-full px-4 py-2 bg-surface border border-edge rounded-lg text-sm text-primary focus:outline-none focus:ring-2 focus:ring-accent-primary hover:border-accent-secondary transition-colors"
           >
             <option value="brier">Brier Score</option>
             <option value="average-return">Market Return</option>
@@ -296,13 +296,13 @@ const CustomTimeSeriesChart: React.FC<CustomTimeSeriesChartProps> = ({
 
         {/* Time Range Selector */}
         <div className="w-full lg:w-48">
-          <label className="block text-sm font-medium text-text-primary mb-2">
+          <label className="block text-sm font-medium text-primary mb-2">
             Time Range
           </label>
           <select
             value={dateRange}
             onChange={(e) => setDateRange(e.target.value as '4w' | '8w' | '12w' | 'all')}
-            className="w-full px-4 py-2 bg-bg-primary border border-accent-quaternary rounded-lg text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-accent-primary hover:border-accent-secondary transition-colors"
+            className="w-full px-4 py-2 bg-surface border border-edge rounded-lg text-sm text-primary focus:outline-none focus:ring-2 focus:ring-accent-primary hover:border-accent-secondary transition-colors"
           >
             <option value="4w">Last 4 weeks</option>
             <option value="8w">Last 8 weeks</option>
@@ -313,15 +313,15 @@ const CustomTimeSeriesChart: React.FC<CustomTimeSeriesChartProps> = ({
 
         {/* Model Selector */}
         <div className="flex-1 w-full lg:w-auto">
-          <label className="block text-sm font-medium text-text-primary mb-2">
+          <label className="block text-sm font-medium text-primary mb-2">
             Select Models
           </label>
           <div className="relative model-selector-dropdown">
             <button
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-              className="w-full px-4 py-2 bg-bg-primary border border-accent-quaternary rounded-lg text-left flex items-center justify-between hover:border-accent-secondary transition-colors"
+              className="w-full px-4 py-2 bg-surface border border-edge rounded-lg text-left flex items-center justify-between hover:border-accent-secondary transition-colors"
             >
-              <span className="text-sm text-text-primary">
+              <span className="text-sm text-primary">
                 {selectedModels.length === 0 
                   ? 'Select models...'
                   : `${selectedModels.length} model${selectedModels.length > 1 ? 's' : ''} selected`
@@ -338,7 +338,7 @@ const CustomTimeSeriesChart: React.FC<CustomTimeSeriesChartProps> = ({
             </button>
             
             {isDropdownOpen && (
-              <div className="absolute z-50 w-full mt-1 bg-bg-primary border border-accent-quaternary rounded-lg shadow-lg max-h-80 overflow-y-auto">
+              <div className="absolute z-50 w-full mt-1 bg-surface border border-edge rounded-lg shadow-lg max-h-80 overflow-y-auto">
                 {sortedModels.map(model => {
                   const isSelected = selectedModels.includes(model.name);
                   
@@ -368,7 +368,7 @@ const CustomTimeSeriesChart: React.FC<CustomTimeSeriesChartProps> = ({
                           />
                         </div>
                       )}
-                      <span className="text-sm font-medium text-text-primary flex-1">
+                      <span className="text-sm font-medium text-primary flex-1">
                         {niceName(model.name) || model.name}
                       </span>
                     </button>
@@ -383,11 +383,11 @@ const CustomTimeSeriesChart: React.FC<CustomTimeSeriesChartProps> = ({
       {/* Chart */}
       {selectedModels.length === 0 ? (
         <div className="flex justify-center items-center h-96 bg-accent-tertiary rounded-lg">
-          <p className="text-text-primary">Please select at least one model to display</p>
+          <p className="text-primary">Please select at least one model to display</p>
         </div>
       ) : chartData.length === 0 ? (
         <div className="flex justify-center items-center h-96 bg-accent-tertiary rounded-lg">
-          <p className="text-text-primary">No data available for the selected date range</p>
+          <p className="text-primary">No data available for the selected date range</p>
         </div>
       ) : (
         <div className="h-96 w-full">

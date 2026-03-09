@@ -436,7 +436,7 @@ export default function Leaderboard() {
       <div className="flex flex-col sm:flex-row justify-between items-start gap-4 mb-6">
         {/* Title and Link - Left Side */}
         <div className="text-left">
-          <h2 className="text-3xl sm:text-3xl font-bold text-text-primary">
+          <h2 className="text-3xl sm:text-3xl font-bold text-primary">
             Model Leaderboard
           </h2>
           <p className="text-xs sm:text-sm text-gray-600 mt-1">
@@ -485,9 +485,9 @@ export default function Leaderboard() {
       {/* Stacked cards for Brier Score and Average Return */}
       <div className="space-y-6">
         {/* Brier Score Card */}
-        <div className="relative bg-bg-primary rounded-xl p-4 sm:p-6 shadow-sm border border-accent-quaternary">
+        <div className="relative bg-surface rounded-xl p-4 sm:p-6 shadow-sm border border-edge">
           <div className="mb-4">
-            <h2 className="text-base sm:text-lg font-semibold text-text-primary mb-2">
+            <h2 className="text-base sm:text-lg font-semibold text-primary mb-2">
               Brier Score
             </h2>
             <p 
@@ -508,9 +508,9 @@ export default function Leaderboard() {
         </div>
 
         {/* Average Return Card */}
-        <div className="relative bg-bg-primary rounded-xl p-4 sm:p-6 shadow-sm border border-accent-quaternary">
+        <div className="relative bg-surface rounded-xl p-4 sm:p-6 shadow-sm border border-edge">
           <div className="mb-4">
-            <h2 className="text-base sm:text-lg font-semibold text-text-primary mb-2">
+            <h2 className="text-base sm:text-lg font-semibold text-primary mb-2">
               Market Return
             </h2>
             <p 
@@ -541,7 +541,7 @@ export default function Leaderboard() {
       {/* Custom Time Series Analysis Section */}
       <div className="mt-12 px-2 sm:px-6">
         <div className="mb-8">
-          <h2 className="text-2xl sm:text-2xl font-bold text-text-primary mb-2">
+          <h2 className="text-2xl sm:text-2xl font-bold text-primary mb-2">
             Time Series Analysis
           </h2>
           <p className="text-xs sm:text-sm text-gray-600">
@@ -550,7 +550,7 @@ export default function Leaderboard() {
         </div>
 
         {/* Time Series Chart with Metric Selector */}
-        <div className="bg-bg-primary rounded-xl p-4 sm:p-6 shadow-sm border border-accent-quaternary">
+        <div className="bg-surface rounded-xl p-4 sm:p-6 shadow-sm border border-edge">
           <CustomTimeSeriesChart
             brierData={processedBrierCategoryStream}
             marketReturnData={processedAverageReturnCategoryStream()}
@@ -565,10 +565,10 @@ export default function Leaderboard() {
       <div className="mt-8 sm:mt-12">
         <div className="max-w-4xl mx-auto">
           <div className="p-4 sm:p-8">
-            <h2 className="text-xl sm:text-2xl font-semibold text-text-primary mb-4 text-center">
+            <h2 className="text-xl sm:text-2xl font-semibold text-primary mb-4 text-center">
               About Our Scoring System
             </h2>
-            <p className="text-text-primary text-lg leading-relaxed text-center">
+            <p className="text-primary text-lg leading-relaxed text-center">
               We evaluate AI models on real-world forecasting according to its
               statistical accuracy (Brier score) and decision value (averaged
               return).

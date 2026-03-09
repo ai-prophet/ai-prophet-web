@@ -169,7 +169,7 @@ export default function Markets() {
 
   return (
     <ArenaLayout>
-    <div className="bg-bg-secondary">
+    <div className="bg-ground">
       <div className="max-w-screen-2xl mx-auto px-3 sm:px-6 lg:px-8 py-2 sm:py-3">
         {/* Top Row: Search Bar Only */}
         <div className="mb-3 sm:mb-4">
@@ -186,7 +186,7 @@ export default function Markets() {
           <div className="flex items-center gap-3 sm:gap-4 flex-wrap md:flex-nowrap flex-1">
             {/* Topic Filter */}
             <div className="flex items-center gap-1 sm:gap-2 w-full sm:w-auto">
-              <label className="text-sm font-semibold text-text-primary hidden sm:block md:inline md:whitespace-nowrap">
+              <label className="text-sm font-semibold text-primary hidden sm:block md:inline md:whitespace-nowrap">
                 Topic:
               </label>
               <DropdownSelector
@@ -205,13 +205,13 @@ export default function Markets() {
 
             {/* Sort By */}
             <div className="flex items-center gap-1 sm:gap-2 w-full sm:w-auto">
-              <label className="text-sm font-semibold text-text-primary hidden sm:block md:inline md:whitespace-nowrap">
+              <label className="text-sm font-semibold text-primary hidden sm:block md:inline md:whitespace-nowrap">
                 Sort by:
               </label>
               <select
                 value={sortBy}
                 onChange={(e) => handleSortByChange(e.target.value)}
-                className="px-3 py-2 rounded-lg bg-bg-primary text-text-primary border border-accent-quaternary focus:outline-none focus:ring-2 focus:ring-accent-primary w-full sm:min-w-[140px]"
+                className="px-3 py-2 rounded-lg bg-surface text-primary border border-edge focus:outline-none focus:ring-2 focus:ring-accent-primary w-full sm:min-w-[140px]"
               >
                 <option value="volume">Volume</option>
                 <option value="close_time">Close Time</option>
@@ -222,13 +222,13 @@ export default function Markets() {
 
             {/* Sort Order */}
             <div className="flex items-center gap-1 sm:gap-2 w-full sm:w-auto">
-              <label className="text-sm font-semibold text-text-primary hidden sm:block md:inline md:whitespace-nowrap">
+              <label className="text-sm font-semibold text-primary hidden sm:block md:inline md:whitespace-nowrap">
                 Order:
               </label>
               <select
                 value={sortOrder}
                 onChange={(e) => handleSortOrderChange(e.target.value)}
-                className="px-3 py-2 rounded-lg bg-bg-primary text-text-primary border border-accent-quaternary focus:outline-none focus:ring-2 focus:ring-accent-primary w-full sm:min-w-[120px]"
+                className="px-3 py-2 rounded-lg bg-surface text-primary border border-edge focus:outline-none focus:ring-2 focus:ring-accent-primary w-full sm:min-w-[120px]"
               >
                 <option value="desc">High to Low</option>
                 <option value="asc">Low to High</option>
@@ -243,7 +243,7 @@ export default function Markets() {
                 className={`mr-2 text-sm font-semibold ${
                   eventType === "live"
                     ? "text-accent-primary"
-                    : "text-text-primary"
+                    : "text-primary"
                 }`}
               >
                 Live
@@ -259,7 +259,7 @@ export default function Markets() {
                 className={`ms-3 text-sm font-semibold ${
                   eventType === "historical"
                     ? "text-accent-primary"
-                    : "text-text-primary"
+                    : "text-primary"
                 }`}
               >
                 Historical
@@ -268,7 +268,7 @@ export default function Markets() {
           </div>
 
           {/* Live/Historical Toggle - Mobile */}
-          <div className="flex md:hidden w-full sm:w-auto rounded-lg overflow-hidden border border-accent-quaternary">
+          <div className="flex md:hidden w-full sm:w-auto rounded-lg overflow-hidden border border-edge">
             {[
               { key: 'live', label: 'Live' },
               { key: 'historical', label: 'Past' }
@@ -280,7 +280,7 @@ export default function Markets() {
                   flex-1 px-3 py-2 text-sm font-semibold transition-colors
                   ${eventType === option.key 
                     ? 'bg-accent-primary text-white' 
-                    : 'bg-bg-primary text-text-primary hover:bg-accent-quaternary'
+                    : 'bg-surface text-primary hover:bg-overlay'
                   }
                 `}
               >

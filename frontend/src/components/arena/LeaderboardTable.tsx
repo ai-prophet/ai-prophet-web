@@ -132,26 +132,26 @@ export default function LeaderboardTable({
   return (
     <div className="overflow-x-auto">
       <table className="w-full">
-        <thead className="sticky top-0 bg-bg-primary z-10">
-          <tr className="border-b-2 border-accent-quaternary">
+        <thead className="sticky top-0 bg-surface z-10">
+          <tr className="border-b-2 border-edge">
             {showRank && (
-              <th className="px-4 py-3 text-left text-sm font-semibold text-text-primary">
+              <th className="px-4 py-3 text-left text-sm font-semibold text-primary">
                 Rank
               </th>
             )}
-            <th className="px-4 py-3 text-left text-sm font-semibold text-text-primary">
+            <th className="px-4 py-3 text-left text-sm font-semibold text-primary">
               Model
             </th>
-            <th className="px-4 py-3 text-left text-sm font-semibold text-text-primary">
+            <th className="px-4 py-3 text-left text-sm font-semibold text-primary">
               Provider
             </th>
-            <th className="px-4 py-3 text-right text-sm font-semibold text-text-primary">
+            <th className="px-4 py-3 text-right text-sm font-semibold text-primary">
               Events
             </th>
-            <th className="px-4 py-3 text-right text-sm font-semibold text-text-primary">
+            <th className="px-4 py-3 text-right text-sm font-semibold text-primary">
               {scoreLabel}
             </th>
-            <th className="px-4 py-3 text-right text-sm font-semibold text-text-primary">
+            <th className="px-4 py-3 text-right text-sm font-semibold text-primary">
               {confidenceLabel}
             </th>
           </tr>
@@ -163,11 +163,11 @@ export default function LeaderboardTable({
             return (
               <tr
                 key={model.name}
-                className="border-b border-accent-quaternary hover:bg-accent-tertiary transition-colors"
+                className="border-b border-edge hover:bg-accent-tertiary transition-colors"
               >
                 {showRank && (
                   <td className="px-4 py-3">
-                    <span className="text-text-primary text-sm font-semibold">
+                    <span className="text-primary text-sm font-semibold">
                       {rank}
                     </span>
                   </td>
@@ -185,7 +185,7 @@ export default function LeaderboardTable({
                         />
                       </div>
                     )}
-                    <span className="text-text-primary text-sm text-left">
+                    <span className="text-primary text-sm text-left">
                       {niceName(model.name) || model.name}
                     </span>
                   </div>
@@ -203,7 +203,7 @@ export default function LeaderboardTable({
                   </span>
                 </td>
                 <td className="px-4 py-3 text-right">
-                  <span className="text-text-primary text-sm font-semibold">
+                  <span className="text-primary text-sm font-semibold">
                     {metric === 'average-return'
                       ? `${model.score.toFixed(2)}%`
                       : model.score.toFixed(4)}

@@ -50,7 +50,7 @@ export default function LoadingSpinner({
       )}
       
       {showText && (
-        <p className="text-text-primary mt-3 text-sm font-medium">
+        <p className="text-primary mt-3 text-sm font-medium">
           {text}
         </p>
       )}

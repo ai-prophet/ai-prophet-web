@@ -75,7 +75,7 @@ const DropdownSelector: React.FC<DropdownSelectorProps> = ({
     <div className={`relative ${className}`} ref={dropdownRef}>
       {/* Label */}
       {label && (
-        <label className="block text-sm font-medium text-text-primary mb-2">
+        <label className="block text-sm font-medium text-primary mb-2">
           {label}
         </label>
       )}
@@ -87,7 +87,7 @@ const DropdownSelector: React.FC<DropdownSelectorProps> = ({
         disabled={disabled}
         className={`
           w-full flex items-center justify-between px-4 py-2.5 text-sm font-medium
-          bg-bg-primary border border-accent-quaternary rounded-lg
+          bg-surface border border-edge rounded-lg
           transition-all duration-200 hover:border-accent-secondary
           focus:outline-none focus:ring-2 focus:ring-accent-primary focus:ring-opacity-20
           ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
@@ -102,7 +102,7 @@ const DropdownSelector: React.FC<DropdownSelectorProps> = ({
               {selectedOption.icon}
             </div>
           )}
-          <span className={`truncate ${selectedOption ? 'text-text-primary' : 'text-gray-500'}`}>
+          <span className={`truncate ${selectedOption ? 'text-primary' : 'text-gray-500'}`}>
             {selectedOption?.displayName || placeholder}
           </span>
         </div>
@@ -127,7 +127,7 @@ const DropdownSelector: React.FC<DropdownSelectorProps> = ({
 
       {/* Dropdown Menu */}
       {isOpen && (
-        <div className="absolute z-50 w-full mt-1 bg-bg-primary border border-accent-quaternary rounded-lg shadow-lg max-h-60 overflow-auto">
+        <div className="absolute z-50 w-full mt-1 bg-surface border border-edge rounded-lg shadow-lg max-h-60 overflow-auto">
           <div className="py-1" role="listbox">
             {options.map((option) => (
               <button
@@ -140,7 +140,7 @@ const DropdownSelector: React.FC<DropdownSelectorProps> = ({
                   ${
                     selectedValue === option.value
                       ? 'bg-accent-primary/10 text-accent-primary'
-                      : 'text-text-primary'
+                      : 'text-primary'
                   }
                 `}
                 role="option"

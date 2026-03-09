@@ -246,8 +246,8 @@ const LeaderboardChart: React.FC<LeaderboardChartProps> = ({
       const isMarketBaseline = data.name === 'llm-market-baseline' || data.name === 'agent-market-baseline';
 
       return (
-        <div className="bg-bg-primary border border-accent-secondary rounded-lg p-3 shadow-lg max-w-sm">
-          <p className="font-semibold text-text-primary">{label}</p>
+        <div className="bg-surface border border-accent-secondary rounded-lg p-3 shadow-lg max-w-sm">
+          <p className="font-semibold text-primary">{label}</p>
           <p className="text-sm text-gray-600">
             {data.providerConfig?.displayName || data.details.provider}
             {data.details.release_year && ` • ${data.details.release_year}`}
@@ -288,7 +288,7 @@ const LeaderboardChart: React.FC<LeaderboardChartProps> = ({
               unoptimized
             />
           </div>
-          <div className="text-text-primary text-lg">
+          <div className="text-primary text-lg">
             Loading leaderboard data...
           </div>
         </div>
@@ -314,7 +314,7 @@ const LeaderboardChart: React.FC<LeaderboardChartProps> = ({
     return (
       <div className="w-full space-y-6">
         <div className="flex justify-center items-center h-96">
-          <div className="text-text-primary">No predictor data available</div>
+          <div className="text-primary">No predictor data available</div>
         </div>
       </div>
     );

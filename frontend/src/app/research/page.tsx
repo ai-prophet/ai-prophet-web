@@ -45,8 +45,8 @@ export default function ResearchPage() {
   return (
     <ArenaLayout>
     <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <h1 className="text-3xl font-bold text-text-primary mb-2">Research</h1>
-      <p className="text-text-secondary mb-10">
+      <h1 className="text-3xl font-bold text-primary mb-2">Research</h1>
+      <p className="text-secondary mb-10">
         Papers, experiments, and analyses from the Prophet Arena team.
       </p>
 
@@ -55,9 +55,9 @@ export default function ResearchPage() {
           <Link
             key={post.slug}
             href={`/research/${post.slug}`}
-            className="group rounded-xl border border-accent-quaternary bg-bg-primary overflow-hidden hover:border-accent-primary transition-colors"
+            className="group rounded-xl border border-edge bg-surface overflow-hidden hover:border-accent-primary transition-colors"
           >
-            <div className="relative h-48 bg-accent-quaternary/20">
+            <div className="relative h-48 bg-overlay/20">
               <Image
                 src={post.heroImage}
                 alt={post.title}
@@ -72,7 +72,7 @@ export default function ResearchPage() {
                 >
                   {post.type}
                 </span>
-                <span className="text-xs text-text-secondary">
+                <span className="text-xs text-secondary">
                   {new Date(post.date).toLocaleDateString("en-US", {
                     year: "numeric",
                     month: "long",
@@ -80,10 +80,10 @@ export default function ResearchPage() {
                   })}
                 </span>
               </div>
-              <h2 className="text-lg font-semibold text-text-primary group-hover:text-accent-primary transition-colors">
+              <h2 className="text-lg font-semibold text-primary group-hover:text-accent-primary transition-colors">
                 {post.title}
               </h2>
-              <p className="text-sm text-text-secondary line-clamp-2">
+              <p className="text-sm text-secondary line-clamp-2">
                 {post.excerpt}
               </p>
             </div>

@@ -3,8 +3,8 @@
 
 @theme {
   /* ── Dark mode (default) ── */
-  --color-ground: #111316;
-  --color-surface: #191c22;
+  --color-ground: #000000;
+  --color-surface: #000000;
   --color-surface-hover: #21252d;
   --color-overlay: #2a2f38;
   --color-primary: #e4e8ee;
@@ -22,8 +22,8 @@
   --color-accent-secondary: #3d87d1;
   --color-accent-tertiary: #1d2d42;
   --color-accent-quaternary: #272c36;
-  --color-bg-primary: #191c22;
-  --color-bg-secondary: #111316;
+  --color-bg-primary: #000000;
+  --color-bg-secondary: #000000;
   --color-text-primary: #e4e8ee;
   --color-text-secondary: #9ba3b5;
   --color-code-bg: #21252d;
@@ -34,7 +34,7 @@
 
 /* ── Light mode overrides ── */
 html.light {
-  --color-ground: #f5f6f8;
+  --color-ground: #ffffff;
   --color-surface: #ffffff;
   --color-surface-hover: #ebedf1;
   --color-overlay: #e0e3e8;
@@ -53,7 +53,7 @@ html.light {
   --color-accent-tertiary: #dce8f5;
   --color-accent-quaternary: #d1d5dc;
   --color-bg-primary: #ffffff;
-  --color-bg-secondary: #f5f6f8;
+  --color-bg-secondary: #ffffff;
   --color-text-primary: #111316;
   --color-text-secondary: #464d5e;
   --color-code-bg: #edf1f7;
@@ -160,7 +160,7 @@ body {
   color: var(--color-primary) !important;
 }
 .prose h2 {
-  font-size: 1.125rem !important;
+  font-size: 1.5rem !important;
   font-weight: 600 !important;
   margin-top: 1.25em !important;
   margin-bottom: 0.25em !important;
@@ -170,19 +170,50 @@ body {
   letter-spacing: 0.04em !important;
 }
 .prose h3 {
-  font-size: 0.875rem !important;
+  font-size: 1.25rem !important;
   font-weight: 600 !important;
   margin-top: 1em !important;
   margin-bottom: 0.2em !important;
   color: var(--color-secondary) !important;
 }
-.prose blockquote {
-  margin-top: 1em !important;
-  margin-bottom: 1em !important;
+.prose blockquote:not(.llm-quote) {
+  position: relative !important;
+  text-align: center !important;
+  letter-spacing: 0.02em !important;
+  color: var(--color-accent-primary) !important;
+  background: transparent !important;
+  border: none !important;
+  border-left: none !important;
+  max-width: 90% !important;
+  margin: 1.5rem auto !important;
+  padding: 1.5rem 3rem !important;
+  font-size: 1.25rem !important;
+  font-style: italic !important;
+  line-height: 1.6 !important;
 }
-.prose blockquote p {
+.prose blockquote:not(.llm-quote)::before,
+.prose blockquote:not(.llm-quote)::after {
+  content: "" !important;
+  color: var(--color-accent-primary) !important;
+  opacity: 0.3 !important;
+  font-family: Palatino, "Book Antiqua", Georgia, serif !important;
+  font-size: 4rem !important;
+  font-style: normal !important;
+  line-height: 1 !important;
+  position: absolute !important;
+}
+.prose blockquote:not(.llm-quote)::before {
+  top: 0.5rem !important;
+  left: 1rem !important;
+}
+.prose blockquote:not(.llm-quote)::after {
+  bottom: -1rem !important;
+  right: 1rem !important;
+}
+.prose blockquote:not(.llm-quote) p {
   margin-top: 0.35em !important;
   margin-bottom: 0.35em !important;
+  color: var(--color-accent-primary) !important;
 }
 .prose pre {
   margin-top: 1em !important;
@@ -196,10 +227,10 @@ body {
 .prose img {
   margin-top: 1em !important;
   margin-bottom: 1em !important;
-  margin-left: -2rem !important;
-  margin-right: -2rem !important;
-  max-width: calc(100% + 4rem) !important;
-  width: calc(100% + 4rem) !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  max-width: 100% !important;
+  width: 100% !important;
 }
 .prose hr {
   margin-top: 1.5em !important;
@@ -250,9 +281,183 @@ body {
 
 /* Prose image hover effect */
 .prose img {
-  cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: default;
 }
-.prose img:hover {
-  transform: scale(1.01);
+
+/* Prose note callouts (_Note that ..._) */
+.prose .prose-note {
+  border-left: 3px solid var(--color-warning) !important;
+  border-radius: 0 4px 4px 0;
+  margin: 1rem 0 !important;
+  padding: 0.75rem 1rem !important;
+  background: color-mix(in srgb, var(--color-warning) 8%, transparent) !important;
+  font-size: 1rem !important;
+  font-style: italic !important;
+  line-height: 1.6 !important;
+  color: var(--color-secondary) !important;
+}
+.prose .prose-note strong {
+  color: var(--color-primary) !important;
+  font-weight: 600 !important;
+}
+.prose .prose-note a {
+  color: var(--color-accent-primary) !important;
+}
+
+/* Callout boxes */
+.prose .callout {
+  border-left: 4px solid;
+  border-radius: 8px;
+  margin: 1.5rem 0 !important;
+  padding: 1rem 1.25rem !important;
+}
+.prose .callout p {
+  margin: 0 !important;
+  padding: 0 !important;
+  font-size: 1rem !important;
+  line-height: 1.6 !important;
+  color: var(--color-primary) !important;
+}
+.prose .callout strong {
+  color: var(--color-primary) !important;
+  font-weight: 600 !important;
+}
+.prose .callout a {
+  color: var(--color-accent-primary) !important;
+  text-decoration: none !important;
+}
+.prose .callout a:hover {
+  text-decoration: underline !important;
+}
+.prose .callout-info {
+  background: var(--color-overlay) !important;
+  border-left-color: var(--color-accent-primary) !important;
+}
+.prose .callout-warning {
+  background: color-mix(in srgb, var(--color-warning) 10%, transparent) !important;
+  border-left-color: var(--color-warning) !important;
+}
+.prose .callout-error {
+  background: color-mix(in srgb, var(--color-danger) 10%, transparent) !important;
+  border-left-color: var(--color-danger) !important;
+}
+
+/* Prophet remark boxes */
+.prose .prophet-remark {
+  border-left: 3px solid var(--color-accent-primary) !important;
+  opacity: 0.8;
+  border-radius: 0 4px 4px 0;
+  margin: 0.5rem 0 !important;
+  padding: 0.75rem 1rem !important;
+  background: var(--color-overlay) !important;
+}
+.prose .prophet-remark p {
+  margin: 0 !important;
+  padding: 0 !important;
+  font-size: 1rem !important;
+  line-height: 1.6 !important;
+  color: var(--color-secondary) !important;
+}
+.prose .prophet-remark strong {
+  color: var(--color-primary) !important;
+}
+
+/* LLM quote blocks — matches prophetarena.co style */
+blockquote.llm-quote,
+.prose blockquote.llm-quote,
+.prose blockquote.llm-quote[data-model] {
+  all: unset !important;
+  display: block !important;
+  position: relative !important;
+  font-size: 0.95em !important;
+  font-style: normal !important;
+  line-height: 1.6 !important;
+  color: inherit !important;
+  border: 1px solid var(--color-accent-secondary) !important;
+  border-radius: 4px !important;
+  padding: 1rem 1.25rem 1.25rem !important;
+  margin: 2rem 0 3rem !important;
+}
+.prose blockquote.llm-quote::before {
+  content: attr(data-model);
+  position: absolute;
+  top: -12px;
+  left: 12px;
+  background: var(--color-ground);
+  color: var(--color-accent-primary);
+  letter-spacing: 0.02em;
+  padding: 1px 9px;
+  font-size: 14px;
+  font-weight: 200;
+  font-style: normal !important;
+}
+.prose blockquote.llm-quote p,
+.prose blockquote.llm-quote strong {
+  color: var(--color-secondary) !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  font-style: italic !important;
+}
+
+/* Reference superscript links */
+.prose sup.ref-link {
+  font-size: 0.7em !important;
+  line-height: 0 !important;
+  vertical-align: super !important;
+}
+.prose sup.ref-link a {
+  color: var(--color-accent) !important;
+  text-decoration: none !important;
+  font-weight: 600 !important;
+  padding: 0 1px;
+}
+.prose sup.ref-link a:hover {
+  text-decoration: underline !important;
+}
+
+/* References section at bottom */
+.prose .references-section {
+  margin-top: 3em !important;
+  padding-top: 1.5em !important;
+  border-top: 1px solid var(--color-edge) !important;
+}
+.prose .references-section h2 {
+  font-size: 1.125rem !important;
+  font-weight: 600 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.04em !important;
+  color: var(--color-secondary) !important;
+  margin-bottom: 0.75em !important;
+  border-bottom: none !important;
+}
+.prose .references-list {
+  list-style: none !important;
+  padding-left: 0 !important;
+  counter-reset: ref-counter;
+}
+.prose .references-list li {
+  font-size: 0.9375rem !important;
+  line-height: 1.5 !important;
+  color: var(--color-secondary) !important;
+  padding: 0.4em 0 !important;
+  padding-left: 2em !important;
+  position: relative;
+  counter-increment: ref-counter;
+}
+.prose .references-list li::before {
+  content: "[" counter(ref-counter) "]";
+  position: absolute;
+  left: 0;
+  font-weight: 600;
+  color: var(--color-accent);
+  font-size: 0.9375rem;
+}
+.prose .references-list .ref-back {
+  color: var(--color-accent) !important;
+  text-decoration: none !important;
+  margin-right: 0.4em;
+  font-size: 0.75rem;
+}
+.prose .references-list .ref-back:hover {
+  text-decoration: underline !important;
 }

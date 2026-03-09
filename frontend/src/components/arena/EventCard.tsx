@@ -195,7 +195,7 @@ export default function EventCard({ event, imageUrl, index = 0 }: EventCardProps
   return (
     <Link 
       href={`/market/${event.event_ticker}`}
-      className={`block bg-bg-primary rounded-2xl shadow-lg shadow-gray-300/60 hover:shadow-xl hover:shadow-gray-400/70 border border-gray-100/50 group min-h-[280px] transition-all duration-300 ease-out ${
+      className={`block bg-surface rounded-2xl shadow-lg shadow-black/20 hover:shadow-xl hover:shadow-black/30 border border-edge group min-h-[280px] transition-all duration-300 ease-out ${
         isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'
       }`}
     >
@@ -222,7 +222,7 @@ export default function EventCard({ event, imageUrl, index = 0 }: EventCardProps
             </div>
 
             <div className="flex-grow">
-              <h3 className="text-lg font-semibold text-text-primary group-hover:text-accent-primary transition-colors duration-200 line-clamp-2">
+              <h3 className="text-lg font-semibold text-primary group-hover:text-accent-primary transition-colors duration-200 line-clamp-2">
                 {displayTitle}
               </h3>
             </div>
@@ -234,7 +234,7 @@ export default function EventCard({ event, imageUrl, index = 0 }: EventCardProps
             {/* Result Section */}
             {event.event_result && event.event_result !== 'null' && (
               <div>
-                <div className="text-sm text-text-primary">
+                <div className="text-sm text-primary">
                   <span className="font-medium">Result: </span>
                   <span className="text-accent-primary font-medium">
                     {(() => {
@@ -280,7 +280,7 @@ export default function EventCard({ event, imageUrl, index = 0 }: EventCardProps
                           {/* Top Predictions Section */}
               {event.top_markets && event.top_markets.length > 0 && (
                 <div  className="mb-4">
-                  <div className="text-sm font-medium text-text-primary mb-1">
+                  <div className="text-sm font-medium text-primary mb-1">
                     {(() => {
                       // Check if there are multiple outcomes in the result
                       if (event.event_result && event.event_result !== 'null') {
@@ -334,7 +334,7 @@ export default function EventCard({ event, imageUrl, index = 0 }: EventCardProps
                        .slice(0, 3)
                        .map((predictor, index) => (
                          <div key={index} className="flex justify-between items-center">
-                           <span className="text-sm text-text-primary">
+                           <span className="text-sm text-primary">
                              {niceName(predictor.predictor_name) || predictor.predictor_name}
                            </span>
                            <span className="text-sm font-medium text-accent-primary">
@@ -358,13 +358,13 @@ export default function EventCard({ event, imageUrl, index = 0 }: EventCardProps
                   {event.options.slice(0, 3).map((option, index) => (
                     <span 
                       key={index}
-                      className="inline-flex items-center px-2 py-1 rounded-md text-xs bg-accent-secondary/20 text-text-primary"
+                      className="inline-flex items-center px-2 py-1 rounded-md text-xs bg-accent-secondary/20 text-primary"
                     >
                       {option.trim()}
                     </span>
                   ))}
                   {event.options.length > 3 && (
-                    <span className="inline-flex items-center px-2 py-1 rounded-md text-xs bg-accent-secondary/20 text-text-primary">
+                    <span className="inline-flex items-center px-2 py-1 rounded-md text-xs bg-accent-secondary/20 text-primary">
                       +{event.options.length - 3} more
                     </span>
                   )}
@@ -376,14 +376,14 @@ export default function EventCard({ event, imageUrl, index = 0 }: EventCardProps
             {event.top_markets && event.top_markets.length > 0 && (
               <div className="mb-2">
                 {/* Single header for all predictions */}
-                <div className="text-sm font-medium text-text-primary mb-2">Top predictions for:</div>
+                <div className="text-sm font-medium text-primary mb-2">Top predictions for:</div>
                 <div className="border-t border-accent-secondary/30 mb-3"></div>
                 
                 <div className="space-y-3">
                   {event.top_markets.slice(0, 2).map((market, marketIndex) => (
                     <div key={marketIndex}>
                       {/* Market bucket name */}
-                      <div className="text-sm text-text-primary font-medium mb-1">
+                      <div className="text-sm text-primary font-medium mb-1">
                         {market.market.length > 25 ? `${market.market.substring(0, 25)}...` : market.market}
                       </div>
                       
@@ -395,7 +395,7 @@ export default function EventCard({ event, imageUrl, index = 0 }: EventCardProps
                           .slice(0, 2)
                           .map((predictor, predIndex) => (
                             <div key={predIndex} className="flex justify-between items-center px-1 py-0">
-                              <span className="text-xs text-text-primary">
+                              <span className="text-xs text-primary">
                                 {niceName(predictor.predictor_name) || predictor.predictor_name}
                               </span>
                               <span className="text-xs font-medium text-accent-primary">
@@ -417,7 +417,7 @@ export default function EventCard({ event, imageUrl, index = 0 }: EventCardProps
         </div>
 
         {/* Fixed Footer with Live Status and Close Time */}
-        <div className="flex items-center justify-between text-sm text-text-secondary pt-1 mt-auto border-t border-accent-secondary/30">
+        <div className="flex items-center justify-between text-sm text-secondary pt-1 mt-auto border-t border-accent-secondary/30">
           {/* Live Signal - only show when event is actually live */}
           <div className="flex items-center gap-2">
             {!isClosedOrResolved && (

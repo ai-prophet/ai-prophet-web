@@ -82,7 +82,7 @@ export default function SearchBar({
       <form onSubmit={handleSubmit} className="relative">
         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
           <svg 
-            className="h-5 w-5 text-text-secondary"
+            className="h-5 w-5 text-secondary"
             fill="none" 
             stroke="currentColor" 
             viewBox="0 0 24 24"
@@ -101,14 +101,14 @@ export default function SearchBar({
           onChange={handleInputChange}
           onKeyDown={handleKeyDown}
           placeholder={placeholder}
-          className="w-full pl-10 pr-20 py-3 border border-accent-quaternary rounded-lg bg-bg-primary text-text-primary placeholder-text-secondary focus:outline-none focus:ring-2 focus:ring-accent-primary focus:border-transparent transition-colors"
+          className="w-full pl-10 pr-20 py-3 border border-edge rounded-lg bg-surface text-primary placeholder-text-secondary focus:outline-none focus:ring-2 focus:ring-accent-primary focus:border-transparent transition-colors"
         />
         <div className="absolute inset-y-0 right-0 flex items-center">
           {query && (
             <button
               type="button"
               onClick={handleClear}
-              className="pr-2 text-text-primary hover:text-accent-primary transition-colors"
+              className="pr-2 text-primary hover:text-accent-primary transition-colors"
             >
               <svg 
                 className="h-4 w-4" 
@@ -128,7 +128,7 @@ export default function SearchBar({
           <button
             type="submit"
             onClick={handleSearchClick}
-            className="pr-3 text-text-primary hover:text-accent-primary transition-colors"
+            className="pr-3 text-primary hover:text-accent-primary transition-colors"
           >
             <svg 
               className="h-5 w-5" 
