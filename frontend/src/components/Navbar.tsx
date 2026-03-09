@@ -32,6 +32,7 @@ export default function Navbar({ onToggleHistory, historyOpen, onLogoDoubleClick
   const [mobileOpen, setMobileOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const logoTapRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const pathname = usePathname();
   const { theme, toggle: toggleTheme } = useTheme();
   const { user, isLoading: authLoading } = useUser();
@@ -64,12 +65,21 @@ export default function Navbar({ onToggleHistory, historyOpen, onLogoDoubleClick
         <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 flex items-center justify-between h-12">
           {/* Left: logo + brand + nav links */}
           <div className="flex items-center gap-6">
-            <Link
+            <a
               href="/"
-              onDoubleClick={(e) => {
+              onClick={(e) => {
                 if (onLogoDoubleClick) {
                   e.preventDefault();
-                  onLogoDoubleClick();
+                  if (logoTapRef.current) {
+                    clearTimeout(logoTapRef.current);
+                    logoTapRef.current = null;
+                    onLogoDoubleClick();
+                  } else {
+                    logoTapRef.current = setTimeout(() => {
+                      logoTapRef.current = null;
+                      window.location.href = "/";
+                    }, 300);
+                  }
                 }
               }}
               className="flex items-center gap-2 text-sm font-semibold text-primary hover:text-accent transition-colors"
@@ -82,7 +92,7 @@ export default function Navbar({ onToggleHistory, historyOpen, onLogoDoubleClick
                 className="rounded-md"
               />
               <span>AI Prophet</span>
-            </Link>
+            </a>
 
             {/* Desktop nav */}
             <div className="hidden md:flex items-center gap-1">
