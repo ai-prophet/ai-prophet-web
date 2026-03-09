@@ -21,7 +21,7 @@ export default function About() {
         {/* Hero */}
         <div className="relative overflow-hidden border-b border-edge">
           <div className="absolute inset-0 bg-gradient-to-br from-accent/[0.04] via-transparent to-accent/[0.02]" />
-          <div className="relative max-w-4xl mx-auto px-6 py-20 sm:py-28 text-center">
+          <div className="relative max-w-4xl mx-auto px-4 sm:px-6 py-12 sm:py-28 text-center">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-edge bg-surface text-xs font-medium text-muted mb-6">
               <div className="w-1.5 h-1.5 rounded-full bg-accent" />
               About
@@ -36,7 +36,7 @@ export default function About() {
         </div>
 
         {/* Mission */}
-        <div className="max-w-4xl mx-auto px-6 py-16 sm:py-20">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 py-12 sm:py-20">
           <div className="flex items-start gap-5">
             <div className="hidden sm:block w-1 flex-shrink-0 rounded-full bg-gradient-to-b from-accent to-accent/10 self-stretch" />
             <div>
@@ -60,7 +60,7 @@ export default function About() {
 
         {/* Team */}
         <div className="border-t border-edge bg-surface">
-          <div className="max-w-4xl mx-auto px-6 py-16 sm:py-20">
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 py-12 sm:py-20">
             <h2 className="text-2xl sm:text-3xl font-bold text-primary mb-10">
               Team
             </h2>
@@ -120,7 +120,7 @@ export default function About() {
           </a>
 
           <div className="mt-12 pt-8 border-t border-edge">
-            <p className="text-sm text-muted whitespace-nowrap">
+            <p className="text-sm text-muted">
               AI Prophet is powered by{" "}
               <a
                 href="https://kalshi.com"

@@ -140,8 +140,8 @@ function OverviewTab() {
 
       <div>
         <h4 className="text-sm font-semibold text-primary mb-3">Rate limits</h4>
-        <div className="rounded-xl border border-edge bg-surface overflow-hidden">
-          <table className="w-full text-xs">
+        <div className="rounded-xl border border-edge bg-surface overflow-x-auto">
+          <table className="w-full text-xs min-w-[400px]">
             <thead>
               <tr className="border-b border-edge text-left text-muted">
                 <th className="px-4 py-2.5 font-medium">Plan</th>
@@ -269,8 +269,8 @@ function ApiReferenceTab() {
 
       <div>
         <h4 className="text-sm font-semibold text-primary mb-3">Request body — POST /v1/forecasts</h4>
-        <div className="rounded-xl border border-edge bg-surface overflow-hidden">
-          <table className="w-full text-xs">
+        <div className="rounded-xl border border-edge bg-surface overflow-x-auto">
+          <table className="w-full text-xs min-w-[500px]">
             <thead>
               <tr className="border-b border-edge text-left text-muted">
                 <th className="px-4 py-2.5 font-medium">Field</th>
@@ -402,9 +402,9 @@ export default function DeveloperContent() {
   const [activeTab, setActiveTab] = useState<Tab>("Overview");
 
   return (
-    <div className="w-full max-w-4xl mx-auto px-6 pt-8 pb-16">
+    <div className="w-full max-w-4xl mx-auto px-4 sm:px-6 pt-8 pb-16">
       {/* Tab bar */}
-      <div className="flex items-center gap-1 border-b border-edge mb-8">
+      <div className="flex items-center gap-1 border-b border-edge mb-8 overflow-x-auto">
         {TABS.map((tab) => (
           <button
             key={tab}
