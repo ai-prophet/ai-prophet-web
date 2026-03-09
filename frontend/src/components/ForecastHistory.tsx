@@ -76,7 +76,12 @@ export default function ForecastHistory({
   onClose,
 }: ForecastHistoryProps) {
   return (
-    <div className="w-64 flex-shrink-0 border-r border-edge bg-surface flex flex-col">
+    <>
+    {/* Mobile backdrop */}
+    {onClose && (
+      <div className="fixed inset-0 z-30 bg-black/40 sm:hidden" onClick={onClose} />
+    )}
+    <div className="fixed inset-y-0 left-0 z-40 w-72 sm:relative sm:inset-auto sm:w-64 flex-shrink-0 border-r border-edge bg-surface flex flex-col">
       {/* Header */}
       <div className="px-4 h-11 border-b border-edge flex items-center justify-between flex-shrink-0">
         <span className="text-[11px] font-semibold text-muted uppercase tracking-wider">
@@ -155,5 +160,6 @@ export default function ForecastHistory({
         )}
       </div>
     </div>
+    </>
   );
 }

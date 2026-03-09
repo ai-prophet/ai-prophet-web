@@ -121,7 +121,7 @@ export default function StepMessage({ message, onStepClick, onAddSourceClick }: 
   })();
 
   return (
-    <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="pl-12">
+    <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="pl-4 sm:pl-12">
       {inner}
     </motion.div>
   );

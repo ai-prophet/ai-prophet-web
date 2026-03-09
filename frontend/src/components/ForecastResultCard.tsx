@@ -63,7 +63,7 @@ export default function ForecastResultCard({ submission, exitStatus }: ForecastR
 
   if (!submission || Object.keys(submission).length === 0) {
     return (
-      <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="pl-12">
+      <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="pl-4 sm:pl-12">
         <div className="bg-warning/10 border border-warning/20 rounded-lg px-5 py-4">
           <p className="text-sm text-warning">
             Agent exited without submitting a forecast.
@@ -76,7 +76,7 @@ export default function ForecastResultCard({ submission, exitStatus }: ForecastR
 
   return (
     <>
-      <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="pl-12">
+      <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="pl-4 sm:pl-12">
         <div className="absolute pointer-events-none opacity-0 -z-10" aria-hidden="true">
           {entries.map(([name, prob], index) => (
             <div

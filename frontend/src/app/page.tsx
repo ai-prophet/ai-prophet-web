@@ -330,14 +330,14 @@ export default function Home() {
 
             {/* Forecast detail */}
             <div className="flex-1 overflow-y-auto custom-scrollbar">
-              <div className="max-w-xl mx-auto px-6 py-12">
+              <div className="max-w-xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
                 {/* Header */}
                 <div className="mb-8">
                   <div className="flex items-center gap-2 mb-3">
                     <div className="w-2 h-2 rounded-full bg-accent" />
                     <span className="text-[11px] font-medium text-accent uppercase tracking-wider">Forecast Result</span>
                   </div>
-                  <h2 className="text-2xl font-bold text-primary leading-snug mb-2">{viewingEntry.title}</h2>
+                  <h2 className="text-xl sm:text-2xl font-bold text-primary leading-snug mb-2">{viewingEntry.title}</h2>
                   <p className="text-xs text-muted">
                     {new Date(viewingEntry.timestamp).toLocaleDateString("en-US", {
                       weekday: "long",
@@ -399,18 +399,18 @@ export default function Home() {
         <div className="flex-1 flex items-center justify-center relative overflow-hidden">
           {/* Animated background orbs */}
           <div className="absolute inset-0 overflow-hidden pointer-events-none">
-            <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] rounded-full bg-accent/[0.03] blur-[100px] animate-[drift_20s_ease-in-out_infinite]" />
-            <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] rounded-full bg-accent-primary/[0.04] blur-[100px] animate-[drift_25s_ease-in-out_infinite_reverse]" />
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-accent/[0.02] blur-[120px] animate-[pulse_8s_ease-in-out_infinite]" />
+            <div className="absolute top-1/4 left-1/4 w-[300px] sm:w-[500px] h-[300px] sm:h-[500px] rounded-full bg-accent/[0.03] blur-[80px] sm:blur-[100px] animate-[drift_20s_ease-in-out_infinite]" />
+            <div className="absolute bottom-1/4 right-1/4 w-[250px] sm:w-[400px] h-[250px] sm:h-[400px] rounded-full bg-accent-primary/[0.04] blur-[80px] sm:blur-[100px] animate-[drift_25s_ease-in-out_infinite_reverse]" />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[350px] sm:w-[600px] h-[350px] sm:h-[600px] rounded-full bg-accent/[0.02] blur-[100px] sm:blur-[120px] animate-[pulse_8s_ease-in-out_infinite]" />
           </div>
 
-          <div className="w-full max-w-2xl px-6 relative z-10">
+          <div className="w-full max-w-2xl px-4 sm:px-6 relative z-10">
             {/* Heading */}
-            <div className="text-center mb-10">
-              <p className="text-[11px] font-medium tracking-[0.25em] uppercase text-accent mb-5 animate-[fadeIn_0.6s_ease-out]">
+            <div className="text-center mb-8 sm:mb-10">
+              <p className="text-[10px] sm:text-[11px] font-medium tracking-[0.25em] uppercase text-accent mb-4 sm:mb-5 animate-[fadeIn_0.6s_ease-out]">
                 AI-Powered Forecasting
               </p>
-              <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-primary mb-5 animate-[fadeIn_0.8s_ease-out] leading-[1.1]">
+              <h1 className="text-3xl sm:text-5xl md:text-6xl font-bold tracking-tight text-primary mb-4 sm:mb-5 animate-[fadeIn_0.8s_ease-out] leading-[1.1]">
                 Forecast anything,
                 <br />
                 <span className="bg-gradient-to-r from-accent via-accent-primary to-accent bg-clip-text text-transparent">
@@ -432,7 +432,7 @@ export default function Home() {
                   onChange={(e) => setHeroInput(e.target.value)}
                   placeholder="What do you want to forecast?"
                   autoFocus
-                  className="relative w-full px-5 py-4 bg-surface border border-edge rounded-2xl text-sm text-primary focus:ring-1 focus:ring-accent focus:border-accent outline-none placeholder:text-muted pr-14 transition-shadow duration-300"
+                  className="relative w-full px-4 sm:px-5 py-3.5 sm:py-4 bg-surface border border-edge rounded-2xl text-sm text-primary focus:ring-1 focus:ring-accent focus:border-accent outline-none placeholder:text-muted pr-14 transition-shadow duration-300"
                 />
                 <button
                   type="submit"
@@ -464,12 +464,12 @@ export default function Home() {
             )}
 
             {/* Suggestion chips */}
-            <div className="flex flex-wrap items-center justify-center gap-2 mt-6 animate-[fadeSlideUp_1s_ease-out] min-h-[36px]">
+            <div className="flex flex-wrap items-center justify-center gap-2 mt-5 sm:mt-6 animate-[fadeSlideUp_1s_ease-out] min-h-[36px] px-1">
               {suggestions.map((s) => (
                 <button
                   key={s}
                   onClick={() => { setHeroInput(s); }}
-                  className="px-3 py-1.5 text-xs text-muted hover:text-primary bg-surface hover:bg-surface-hover border border-edge hover:border-accent/30 rounded-full transition-all duration-200 hover:scale-[1.02] animate-[chipIn_0.4s_ease-out]"
+                  className="px-2.5 sm:px-3 py-1.5 text-[11px] sm:text-xs text-muted hover:text-primary bg-surface hover:bg-surface-hover border border-edge hover:border-accent/30 rounded-full transition-all duration-200 hover:scale-[1.02] animate-[chipIn_0.4s_ease-out] text-left"
                 >
                   {s}
                 </button>
@@ -477,7 +477,7 @@ export default function Home() {
             </div>
 
             {/* Settings + info row */}
-            <div className="flex items-center justify-center gap-6 mt-8 animate-[fadeIn_1.2s_ease-out]">
+            <div className="flex items-center justify-center gap-4 sm:gap-6 mt-6 sm:mt-8 animate-[fadeIn_1.2s_ease-out] flex-wrap">
               {user && (
                 <>
                   <button

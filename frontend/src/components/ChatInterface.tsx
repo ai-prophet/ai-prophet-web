@@ -230,7 +230,7 @@ export default function ChatInterface({
 
       {/* ── Messages ── */}
       <div className="flex-1 overflow-y-auto custom-scrollbar">
-        <div className="max-w-3xl mx-auto px-6 py-6 space-y-4">
+        <div className="max-w-3xl mx-auto px-3 sm:px-6 py-4 sm:py-6 space-y-4">
           {/* Empty state */}
           {!hasMessages && !isPlanning && (
             <div className="flex items-center justify-center pt-32">
@@ -287,7 +287,7 @@ export default function ChatInterface({
                     key={msg.id}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    className="pl-12"
+                    className="pl-4 sm:pl-12"
                   >
                     <div className="bg-danger/10 border border-danger/20 rounded-lg px-4 py-3 text-sm text-danger">
                       {msg.content}
@@ -303,7 +303,7 @@ export default function ChatInterface({
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="pl-12 flex items-center gap-2.5 py-2"
+              className="pl-4 sm:pl-12 flex items-center gap-2.5 py-2"
             >
               <div className="flex gap-1">
                 <span className="w-1.5 h-1.5 bg-accent rounded-full animate-bounce [animation-delay:0ms]" />
@@ -322,7 +322,7 @@ export default function ChatInterface({
 
       {/* ── Input ── */}
       <div className="flex-shrink-0 border-t border-edge bg-surface/80 backdrop-blur-sm">
-        <div className="max-w-3xl mx-auto px-6 py-3">
+        <div className="max-w-3xl mx-auto px-3 sm:px-6 py-3">
           <form onSubmit={handleSubmit} className="relative">
             <div className="relative group">
               <div className="absolute -inset-0.5 bg-gradient-to-r from-accent/10 via-accent-primary/10 to-accent/10 rounded-xl blur-sm opacity-0 group-focus-within:opacity-100 transition-opacity duration-500" />
