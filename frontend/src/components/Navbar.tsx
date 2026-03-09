@@ -141,22 +141,6 @@ export default function Navbar({ onToggleHistory, historyOpen, onLogoDoubleClick
 
           {/* Right: history + theme toggle + login + hamburger */}
           <div className="flex items-center gap-2">
-            {!authLoading && user && onToggleHistory && (
-              <button
-                onClick={onToggleHistory}
-                className={`p-1.5 rounded-lg transition-colors ${
-                  historyOpen
-                    ? "text-accent bg-accent/10"
-                    : "text-secondary hover:text-primary hover:bg-surface-hover"
-                }`}
-                aria-label="Forecast history"
-                title="Forecast history"
-              >
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-              </button>
-            )}
             <button
               onClick={toggleTheme}
               className="p-1.5 rounded-lg text-secondary hover:text-primary hover:bg-surface-hover transition-colors"
