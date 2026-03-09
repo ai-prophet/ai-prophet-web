@@ -3,63 +3,63 @@
 
 @theme {
   /* ── Dark mode (default) ── */
-  --color-ground: #1a1a17;
-  --color-surface: #242422;
-  --color-surface-hover: #2d2d2a;
-  --color-overlay: #333330;
-  --color-primary: #e8e6e3;
-  --color-secondary: #9a9890;
-  --color-muted: #6b6960;
-  --color-edge: #363632;
-  --color-edge-subtle: #2a2a27;
-  --color-accent: #5b9bd5;
-  --color-accent-dim: #4a88c2;
+  --color-ground: #111316;
+  --color-surface: #191c22;
+  --color-surface-hover: #21252d;
+  --color-overlay: #2a2f38;
+  --color-primary: #e4e8ee;
+  --color-secondary: #8890a0;
+  --color-muted: #5c6374;
+  --color-edge: #272c36;
+  --color-edge-subtle: #1e222b;
+  --color-accent: #4d9ce6;
+  --color-accent-dim: #3d87d1;
   --color-danger: #f87171;
   --color-warning: #fbbf24;
 
   /* ProphetArena component theme */
-  --color-accent-primary: #6397C7;
-  --color-accent-secondary: #4a7aa8;
-  --color-accent-tertiary: #2a3a4a;
-  --color-accent-quaternary: #363632;
-  --color-bg-primary: #242422;
-  --color-bg-secondary: #1a1a17;
-  --color-text-primary: #e8e6e3;
-  --color-text-secondary: #9a9890;
-  --color-code-bg: #2d2d2a;
-  --color-heat-green: #1a3a1a;
-  --color-heat-red: #3a1a1a;
-  --color-accent-highlight: #7ab3e0;
+  --color-accent-primary: #4d9ce6;
+  --color-accent-secondary: #3d87d1;
+  --color-accent-tertiary: #1d2d42;
+  --color-accent-quaternary: #272c36;
+  --color-bg-primary: #191c22;
+  --color-bg-secondary: #111316;
+  --color-text-primary: #e4e8ee;
+  --color-text-secondary: #8890a0;
+  --color-code-bg: #21252d;
+  --color-heat-green: #162816;
+  --color-heat-red: #2e1616;
+  --color-accent-highlight: #6bb3f5;
 }
 
 /* ── Light mode overrides ── */
 html.light {
-  --color-ground: #f5f5f3;
+  --color-ground: #f5f6f8;
   --color-surface: #ffffff;
-  --color-surface-hover: #eeeee9;
-  --color-overlay: #e4e4df;
-  --color-primary: #1a1a1a;
-  --color-secondary: #444b53;
-  --color-muted: #727272;
-  --color-edge: #d0d0cb;
-  --color-edge-subtle: #e2e2dd;
-  --color-accent: #055CA3;
-  --color-accent-dim: #044a8a;
+  --color-surface-hover: #ebedf1;
+  --color-overlay: #e0e3e8;
+  --color-primary: #111316;
+  --color-secondary: #464d5e;
+  --color-muted: #6b7280;
+  --color-edge: #d1d5dc;
+  --color-edge-subtle: #e3e6eb;
+  --color-accent: #1a6bc4;
+  --color-accent-dim: #145ba8;
   --color-danger: #ef4444;
   --color-warning: #f59e0b;
 
-  --color-accent-primary: #6397C7;
-  --color-accent-secondary: #C1D2EB;
-  --color-accent-tertiary: #E0E9F5;
-  --color-accent-quaternary: #DFE9F4;
+  --color-accent-primary: #1a6bc4;
+  --color-accent-secondary: #a8c5e8;
+  --color-accent-tertiary: #dce8f5;
+  --color-accent-quaternary: #d1d5dc;
   --color-bg-primary: #ffffff;
-  --color-bg-secondary: #f5f5f3;
-  --color-text-primary: #1a1a1a;
-  --color-text-secondary: #444b53;
-  --color-code-bg: #F0F4F8;
-  --color-heat-green: #DEF7DE;
-  --color-heat-red: #F0A29C;
-  --color-accent-highlight: #055CA3;
+  --color-bg-secondary: #f5f6f8;
+  --color-text-primary: #111316;
+  --color-text-secondary: #464d5e;
+  --color-code-bg: #edf1f7;
+  --color-heat-green: #dff5df;
+  --color-heat-red: #f5d0cc;
+  --color-accent-highlight: #1a6bc4;
 }
 
 * {
