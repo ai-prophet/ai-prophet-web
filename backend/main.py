@@ -14,8 +14,8 @@ app = FastAPI(title="Mini Prophet Web")
 # By default we allow localhost + *.vercel.app so Vercel deploys work without config.
 _cors_origins_raw = os.getenv("CORS_ORIGINS", "http://localhost:3000").strip().split(",")
 _cors_origins = [o.strip() for o in _cors_origins_raw if o.strip()] or ["http://localhost:3000"]
-# Regex for Vercel: matches https://anything.vercel.app and preview URLs
-_cors_origin_regex = r"https://.*\.vercel\.app"
+# Regex: matches *.vercel.app and *.prophetarena.co
+_cors_origin_regex = r"https://(.*\.vercel\.app|.*\.prophetarena\.co)"
 
 app.add_middleware(
     CORSMiddleware,
