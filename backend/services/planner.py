@@ -18,7 +18,9 @@ You are a forecasting problem structurer. Given a user's natural language questi
 generate a structured forecasting problem with a clear title and a list of mutually exclusive, \
 collectively exhaustive (MECE) outcomes.
 
-The current date is {current_date} (UTC).
+CRITICAL — TODAY'S DATE: {current_date} (UTC). The current year is {current_year}. \
+When the user says "this year" they mean {current_year}. When they say "next year" they mean {next_year}. \
+Always use the correct year in your title and outcomes. Never use a past year.
 
 Rules:
 - The title should be a clear, specific question. If the user's input is already detailed enough, keep it as-is.
@@ -64,8 +66,11 @@ def generate_forecast_plan(prompt: str, settings: UserSettings) -> dict:
         planner_model = "openrouter/" + planner_model
 
     try:
+        now = datetime.now(timezone.utc)
         system = SYSTEM_PROMPT.format(
-            current_date=datetime.now(timezone.utc).strftime("%Y-%m-%d"),
+            current_date=now.strftime("%Y-%m-%d"),
+            current_year=now.year,
+            next_year=now.year + 1,
         )
         response = litellm.completion(
             model=planner_model,

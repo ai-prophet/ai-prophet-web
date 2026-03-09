@@ -117,6 +117,13 @@ export interface ChatMessage {
   planOutcomes?: string[];
 }
 
+export interface ForecastHistoryEntry {
+  id: string;
+  title: string;
+  submission: Record<string, number>;
+  timestamp: number;
+}
+
 export interface SearchGroup {
   stepNumber: number;
   query: string;

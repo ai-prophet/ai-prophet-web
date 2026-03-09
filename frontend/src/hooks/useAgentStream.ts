@@ -341,12 +341,22 @@ export default function useAgentStream() {
     [addMessage, handleEvent]
   );
 
+  const clearMessages = useCallback(() => {
+    setMessages([]);
+    stepRef.current = 0;
+    searchGroupsRef.current = [];
+    boardRef.current = [];
+    sourceRegistryRef.current = {};
+    try { sessionStorage.removeItem(SESSION_KEY); } catch {}
+  }, []);
+
   return {
     messages,
     isRunning,
     isPlanning,
     plan,
     startRun,
+    clearMessages,
     onSearchResult,
     onBoardUpdate,
   };

@@ -5,6 +5,9 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       { hostname: "images.unsplash.com" },
       { hostname: "api.prophetarena.co" },
+      { hostname: "lh3.googleusercontent.com" },
+      { hostname: "*.wp.com" },
+      { hostname: "s.gravatar.com" },
     ],
   },
   async rewrites() {

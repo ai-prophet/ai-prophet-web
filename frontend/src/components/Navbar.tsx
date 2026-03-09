@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useTheme } from "@/components/ThemeProvider";
+import { useUser } from "@auth0/nextjs-auth0";
 
 const NAV_LINKS = [
   { label: "Events", href: "/markets" },
@@ -21,14 +22,19 @@ const NAV_LINKS = [
   { label: "About", href: "/about" },
 ];
 
-const SITE = "https://www.prophetarena.co";
+interface NavbarProps {
+  onToggleHistory?: () => void;
+  historyOpen?: boolean;
+  onLogoDoubleClick?: () => void;
+}
 
-export default function Navbar() {
+export default function Navbar({ onToggleHistory, historyOpen, onLogoDoubleClick }: NavbarProps = {}) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
   const { theme, toggle: toggleTheme } = useTheme();
+  const { user, isLoading: authLoading } = useUser();
 
   // Close dropdown on outside click
   useEffect(() => {
@@ -60,6 +66,12 @@ export default function Navbar() {
           <div className="flex items-center gap-6">
             <Link
               href="/"
+              onDoubleClick={(e) => {
+                if (onLogoDoubleClick) {
+                  e.preventDefault();
+                  onLogoDoubleClick();
+                }
+              }}
               className="flex items-center gap-2 text-sm font-semibold text-primary hover:text-accent transition-colors"
             >
               <Image
@@ -127,8 +139,24 @@ export default function Navbar() {
             </div>
           </div>
 
-          {/* Right: theme toggle + login + hamburger */}
-          <div className="flex items-center gap-3">
+          {/* Right: history + theme toggle + login + hamburger */}
+          <div className="flex items-center gap-2">
+            {!authLoading && user && onToggleHistory && (
+              <button
+                onClick={onToggleHistory}
+                className={`p-1.5 rounded-lg transition-colors ${
+                  historyOpen
+                    ? "text-accent bg-accent/10"
+                    : "text-secondary hover:text-primary hover:bg-surface-hover"
+                }`}
+                aria-label="Forecast history"
+                title="Forecast history"
+              >
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </button>
+            )}
             <button
               onClick={toggleTheme}
               className="p-1.5 rounded-lg text-secondary hover:text-primary hover:bg-surface-hover transition-colors"
@@ -144,12 +172,34 @@ export default function Navbar() {
                 </svg>
               )}
             </button>
-            <a
-              href={`${SITE}/auth/login`}
-              className="hidden sm:block px-3.5 py-1.5 text-xs font-medium rounded-lg bg-accent text-ground hover:bg-accent-dim transition-colors"
-            >
-              Login
-            </a>
+            {!authLoading && (
+              user ? (
+                <div className="hidden sm:flex items-center gap-2">
+                  {user.picture && (
+                    <Image
+                      src={user.picture as string}
+                      alt={user.name as string}
+                      width={24}
+                      height={24}
+                      className="rounded-full"
+                    />
+                  )}
+                  <a
+                    href="/auth/logout"
+                    className="px-3 py-1.5 text-xs font-medium rounded-lg text-secondary hover:text-primary hover:bg-surface-hover transition-colors"
+                  >
+                    Logout
+                  </a>
+                </div>
+              ) : (
+                <a
+                  href="/auth/login"
+                  className="hidden sm:block px-3.5 py-1.5 text-xs font-medium rounded-lg bg-accent text-ground hover:bg-accent-dim transition-colors"
+                >
+                  Login
+                </a>
+              )
+            )}
             {/* Mobile hamburger */}
             <button
               onClick={() => setMobileOpen((v) => !v)}
@@ -216,13 +266,23 @@ export default function Navbar() {
                 )
               )}
               <div className="pt-3 border-t border-edge mt-3">
-                <a
-                  href={`${SITE}/auth/login`}
-                  className="block px-3 py-2 text-sm text-secondary hover:text-primary hover:bg-surface-hover rounded-lg transition-colors"
-                  onClick={() => setMobileOpen(false)}
-                >
-                  Login
-                </a>
+                {user ? (
+                  <a
+                    href="/auth/logout"
+                    className="block px-3 py-2 text-sm text-secondary hover:text-primary hover:bg-surface-hover rounded-lg transition-colors"
+                    onClick={() => setMobileOpen(false)}
+                  >
+                    Logout
+                  </a>
+                ) : (
+                  <a
+                    href="/auth/login"
+                    className="block px-3 py-2 text-sm text-secondary hover:text-primary hover:bg-surface-hover rounded-lg transition-colors"
+                    onClick={() => setMobileOpen(false)}
+                  >
+                    Login
+                  </a>
+                )}
               </div>
             </div>
           </div>
