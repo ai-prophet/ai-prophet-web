@@ -37,13 +37,14 @@ export default function ResearchPost({
         </div>
         <article
           className="prose prose-invert max-w-none
-            prose-headings:text-text-primary prose-p:text-text-secondary
+            prose-headings:text-text-primary
+            prose-p:text-text-primary prose-li:text-text-primary
             prose-a:text-accent-primary prose-strong:text-text-primary
             prose-code:text-accent-highlight prose-code:bg-code-bg prose-code:px-1 prose-code:py-0.5 prose-code:rounded
             prose-pre:bg-code-bg prose-pre:border prose-pre:border-accent-quaternary
-            prose-blockquote:border-accent-primary prose-blockquote:text-text-secondary
+            prose-blockquote:border-accent-primary prose-blockquote:text-text-primary
             prose-img:rounded-lg prose-img:border prose-img:border-accent-quaternary
-            prose-table:text-text-secondary prose-th:text-text-primary prose-td:border-accent-quaternary prose-th:border-accent-quaternary"
+            prose-table:text-text-primary prose-th:text-text-primary prose-td:text-text-primary prose-td:border-accent-quaternary prose-th:border-accent-quaternary"
           dangerouslySetInnerHTML={{ __html: contentHtml }}
         />
       </div>
