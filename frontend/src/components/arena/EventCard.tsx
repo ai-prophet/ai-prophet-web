@@ -5,7 +5,7 @@ import Image from 'next/image';
 import React, { useState, useEffect } from 'react';
 import { niceName, isModelConfigured } from "@/config/models";
 import LiveStatusIndicator from "@/components/arena/LiveStatusIndicator";
-import { formatDateTime, formatDateSimple } from "@/lib/date-utils";
+import { formatDateSimple } from "@/lib/date-utils";
 import {
   UNSPLASH_ACCESS_KEY,
   UNSPLASH_FALLBACK_IMAGE,
