@@ -169,7 +169,7 @@ export default function ChatInterface({
               </svg>
             </button>
           )}
-          <div className="w-px h-4 bg-edge mx-1" />
+          {onToggleHistory && <div className="w-px h-4 bg-edge mx-1" />}
           <button
             onClick={handleNewForecast}
             disabled={isRunning || isPlanning || !hasMessages}
@@ -207,7 +207,7 @@ export default function ChatInterface({
             </svg>
           </button>
           {onToggleSidebar && (
-            <>
+            <div className="hidden md:flex items-center">
               <div className="w-px h-4 bg-edge mx-1" />
               <button
                 onClick={onToggleSidebar}
@@ -223,7 +223,7 @@ export default function ChatInterface({
                   <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25H12" />
                 </svg>
               </button>
-            </>
+            </div>
           )}
         </div>
       </div>
