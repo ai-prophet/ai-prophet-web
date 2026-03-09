@@ -18,7 +18,6 @@
     "date-fns": "^4.1.0",
     "framer-motion": "^12.34.3",
     "gray-matter": "^4.0.3",
-    "lightningcss-darwin-arm64": "^1.31.1",
     "next": "16.1.6",
     "react": "19.2.3",
     "react-dom": "19.2.3",
@@ -27,6 +26,9 @@
     "remark-gfm": "^4.0.1",
     "remark-html": "^16.0.1",
     "tailwind-merge": "^3.5.0"
+  },
+  "optionalDependencies": {
+    "lightningcss-darwin-arm64": "^1.31.1"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
