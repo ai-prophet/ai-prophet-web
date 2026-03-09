@@ -37,21 +37,29 @@ def get_db():
 
 
 def init_db():
-    with get_db() as conn:
-        with conn.cursor() as cur:
-            cur.execute("""
-                CREATE TABLE IF NOT EXISTS forecast_history (
-                    id TEXT PRIMARY KEY,
-                    user_id TEXT NOT NULL,
-                    title TEXT NOT NULL,
-                    submission JSONB NOT NULL,
-                    created_at DOUBLE PRECISION NOT NULL
-                )
-            """)
-            cur.execute("""
-                CREATE INDEX IF NOT EXISTS idx_forecast_user
-                ON forecast_history(user_id, created_at DESC)
-            """)
+    if not DATABASE_URL:
+        import logging
+        logging.getLogger("prophet_web.db").warning("DATABASE_URL not set — skipping DB init")
+        return
+    try:
+        with get_db() as conn:
+            with conn.cursor() as cur:
+                cur.execute("""
+                    CREATE TABLE IF NOT EXISTS forecast_history (
+                        id TEXT PRIMARY KEY,
+                        user_id TEXT NOT NULL,
+                        title TEXT NOT NULL,
+                        submission JSONB NOT NULL,
+                        created_at DOUBLE PRECISION NOT NULL
+                    )
+                """)
+                cur.execute("""
+                    CREATE INDEX IF NOT EXISTS idx_forecast_user
+                    ON forecast_history(user_id, created_at DESC)
+                """)
+    except Exception as exc:
+        import logging
+        logging.getLogger("prophet_web.db").warning("DB init failed: %s", exc)
 
 
 init_db()
