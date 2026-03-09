@@ -143,7 +143,7 @@ export default function MarketDetail() {
   if (loading) {
     return (
       <ArenaLayout>
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 py-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12">
           <div className="flex items-center gap-3 text-muted">
             <div className="w-2 h-2 rounded-full bg-accent animate-pulse" />
             <span className="text-sm">Loading event...</span>
@@ -156,7 +156,7 @@ export default function MarketDetail() {
   if (error || !event) {
     return (
       <ArenaLayout>
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 py-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12">
           <p className="text-danger text-sm mb-4">{error || "Event not found"}</p>
           <Link href="/markets" className="text-accent text-sm hover:underline">&larr; Back to Events</Link>
         </div>
@@ -168,7 +168,7 @@ export default function MarketDetail() {
 
   return (
     <ArenaLayout>
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-4 sm:py-8 space-y-6">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-8 space-y-6">
         {/* Top bar */}
         <div className="flex items-center justify-between">
           <Link
