@@ -82,7 +82,7 @@ export default function ResearchPost({
 
         {/* Hero image */}
         {heroImage && (
-          <div className="relative w-full aspect-[2/1] rounded-xl overflow-hidden border border-edge mb-10">
+          <div className="relative aspect-[2/1] rounded-xl overflow-hidden border border-edge mb-10 -mx-8 sm:-mx-12 lg:-mx-20">
             <Image
               src={heroImage}
               alt={title}
