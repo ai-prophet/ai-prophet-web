@@ -5,53 +5,14 @@ import LeaderboardView from "@/components/arena/LeaderboardView";
 import { getApiUrl } from "@/config/api";
 import {
   getProviderConfig,
+  getProviderFromModelName,
   DEFAULT_PROVIDER_CONFIG,
 } from "@/config/providers";
+import type { CiData, TimeSeriesData, CategoryStream } from "@/types";
 import { isModelConfigured, MODEL_CONFIG } from "@/config/models";
 import { getTooltipConfig } from "@/config/tooltips";
 import Link from 'next/link';
 import ArenaLayout from "@/components/arena/ArenaLayout";
-
-// Helper function to extract provider from model name
-const getProviderFromModelName = (modelName: string): string => {
-  // Handle agent- prefixed models
-  if (modelName.startsWith('agent-')) {
-    const withoutAgentPrefix = modelName.substring(6); // Remove 'agent-' prefix
-    if (withoutAgentPrefix.startsWith('google/')) return 'google';
-    if (withoutAgentPrefix.startsWith('gemini')) return 'google';
-    if (withoutAgentPrefix.startsWith('anthropic/')) return 'anthropic';
-    if (withoutAgentPrefix.startsWith('x-ai/')) return 'xai';
-    if (withoutAgentPrefix.startsWith('meta-llama/')) return 'meta';
-    if (withoutAgentPrefix.startsWith('deepseek/')) return 'deepseek';
-    if (withoutAgentPrefix.startsWith('qwen/')) return 'qwen';
-    if (withoutAgentPrefix.startsWith('moonshotai/')) return 'moonshotai';
-    if (withoutAgentPrefix.startsWith('glm')) return 'zhipu';
-  }
-
-  // Handle regular models
-  if (modelName.startsWith('google/')) return 'google';
-  if (modelName.startsWith('meta-llama/')) return 'meta';
-  if (modelName.startsWith('deepseek/')) return 'deepseek';
-  if (modelName.startsWith('qwen/')) return 'qwen';
-  if (modelName.startsWith('x-ai/')) return 'xai';
-  if (modelName.startsWith('moonshotai/')) return 'moonshotai';
-  if (modelName.startsWith('anthropic/')) return 'anthropic';
-
-  return '';
-};
-
-type CiData = Record<string, string | number>;
-
-// Types for the time-series data
-interface TimeSeriesData {
-  score: number;
-  rank: number;
-  ci?: CiData;
-}
-
-interface CategoryStream {
-  [date: string]: TimeSeriesData;
-}
 
 // Types for the API response - Agent LLMs
 interface AgentModelData {

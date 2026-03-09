@@ -4,6 +4,11 @@ import ArenaLayout from "@/components/arena/ArenaLayout";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState, useCallback } from "react";
+import {
+  KATEX_CSS_URL,
+  KATEX_JS_URL,
+  KATEX_AUTO_RENDER_URL,
+} from "@/lib/constants";
 
 const TYPE_LABELS: Record<string, string> = {
   analysis: "Analysis",
@@ -165,14 +170,14 @@ export default function ResearchPost({
     // Load KaTeX auto-render to process LaTeX in the article
     const link = document.createElement("link");
     link.rel = "stylesheet";
-    link.href = "https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css";
+    link.href = KATEX_CSS_URL;
     document.head.appendChild(link);
 
     const script = document.createElement("script");
-    script.src = "https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js";
+    script.src = KATEX_JS_URL;
     script.onload = () => {
       const renderScript = document.createElement("script");
-      renderScript.src = "https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js";
+      renderScript.src = KATEX_AUTO_RENDER_URL;
       renderScript.onload = () => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const win = window as any;

@@ -5,9 +5,12 @@ import Image from 'next/image';
 import React, { useState, useEffect } from 'react';
 import { niceName, isModelConfigured } from "@/config/models";
 import LiveStatusIndicator from "@/components/arena/LiveStatusIndicator";
-
-// Add fetchUnsplashImageClient function
-const UNSPLASH_ACCESS_KEY = "eEHiw4CWDSz9swFt162d2liFAOYeCuO-QyY9PYGlIpg";
+import { formatDateTime, formatDateSimple } from "@/lib/date-utils";
+import {
+  UNSPLASH_ACCESS_KEY,
+  UNSPLASH_FALLBACK_IMAGE,
+  EVENT_CARD_FALLBACK_IMAGE,
+} from "@/lib/constants";
 
 interface UnsplashResponse {
   results: {
@@ -30,7 +33,7 @@ async function fetchUnsplashImageClient(
 
     const response = await fetch(UNSPLASH_URL);
     if (!response.ok) {
-      return "https://images.unsplash.com/photo-1416339306562-f3d12fefd36f";
+      return UNSPLASH_FALLBACK_IMAGE;
     }
 
     const data = (await response.json()) as UnsplashResponse;
@@ -42,7 +45,7 @@ async function fetchUnsplashImageClient(
     return data.results[0].urls.thumb;
   } catch (error) {
     console.error("Error fetching image:", error);
-    return "https://images.unsplash.com/photo-1416339306562-f3d12fefd36f";
+    return UNSPLASH_FALLBACK_IMAGE;
   }
 }
 
@@ -107,36 +110,6 @@ export default function EventCard({ event, imageUrl, index = 0 }: EventCardProps
     loadImage();
   }, [imageUrl, event.title, event.question, event.event_ticker]);
 
-  const formatDate = (dateString: string | null) => {
-    if (!dateString) return 'No date';
-    try {
-      const date = new Date(dateString);
-      return date.toLocaleDateString('en-US', {
-        month: 'short',
-        day: 'numeric',
-        year: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-      });
-    } catch {
-      return 'Invalid date';
-    }
-  };
-
-  // Add a function to format date simply (just date, no time)
-  const formatDateSimple = (dateString: string | null) => {
-    if (!dateString) return 'No date';
-    try {
-      const date = new Date(dateString);
-      return date.toLocaleDateString('en-US', {
-        month: 'short',
-        day: 'numeric',
-        year: 'numeric',
-      });
-    } catch {
-      return 'Invalid date';
-    }
-  };
 
   // Helper function to calculate how close a predictor was to the actual outcome
   const calculateAccuracy = (predictor: any, eventResult: string | null, marketName: string) => {
@@ -210,13 +183,13 @@ export default function EventCard({ event, imageUrl, index = 0 }: EventCardProps
                 className="object-cover w-14 h-14 rounded-md shadow-sm"
                 src={
                   image ||
-                  "https://images.unsplash.com/photo-1614741118887-7a4ee193a5fa?q=80&w=600"
+                  EVENT_CARD_FALLBACK_IMAGE
                 }
                 width={56}
                 height={56}
                 onError={(e) => {
                   const target = e.target as HTMLImageElement;
-                  target.src = "https://images.unsplash.com/photo-1614741118887-7a4ee193a5fa?q=80&w=600";
+                  target.src = EVENT_CARD_FALLBACK_IMAGE;
                 }}
               />
             </div>
