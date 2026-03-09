@@ -495,12 +495,12 @@ export default function EventLoader({
         
         <div className="text-center py-12">
           <div className="w-16 h-16 bg-accent-quaternary rounded-full flex items-center justify-center mx-auto mb-4">
-            <svg className="w-8 h-8 text-text-primary opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-8 h-8 text-text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.172 16.172a4 4 0 015.656 0M9 12h6m-6-4h6m2 5.291A7.962 7.962 0 0112 15c-2.34 0-4.469.901-6.062 2.375M6 15v1.5" />
             </svg>
           </div>
           <h3 className="text-lg font-semibold text-text-primary mb-2">Service Temporarily Unavailable</h3>
-          <p className="text-text-primary opacity-70 mb-4">
+          <p className="text-text-secondary mb-4">
             We&apos;re having trouble connecting to our servers. Please try again later.
           </p>
           <button
@@ -633,7 +633,7 @@ export default function EventLoader({
 
       {/* Events Count */}
       {state.events.length > 0 && !selectors.isSearching && (
-        <div className="text-center text-sm text-text-primary opacity-70">
+        <div className="text-center text-sm text-text-secondary">
           {state.query.search ? (
             <>
               Showing {state.events.length} event{state.events.length !== 1 ? 's' : ''} matching &quot;{state.query.search}&quot;

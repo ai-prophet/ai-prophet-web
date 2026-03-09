@@ -46,7 +46,7 @@ export default function ResearchPage() {
     <ArenaLayout>
     <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <h1 className="text-3xl font-bold text-text-primary mb-2">Research</h1>
-      <p className="text-text-primary opacity-60 mb-10">
+      <p className="text-text-secondary mb-10">
         Papers, experiments, and analyses from the Prophet Arena team.
       </p>
 
@@ -72,7 +72,7 @@ export default function ResearchPage() {
                 >
                   {post.type}
                 </span>
-                <span className="text-xs text-text-primary opacity-40">
+                <span className="text-xs text-text-secondary">
                   {new Date(post.date).toLocaleDateString("en-US", {
                     year: "numeric",
                     month: "long",
@@ -83,7 +83,7 @@ export default function ResearchPage() {
               <h2 className="text-lg font-semibold text-text-primary group-hover:text-accent-primary transition-colors">
                 {post.title}
               </h2>
-              <p className="text-sm text-text-primary opacity-60 line-clamp-2">
+              <p className="text-sm text-text-secondary line-clamp-2">
                 {post.excerpt}
               </p>
             </div>

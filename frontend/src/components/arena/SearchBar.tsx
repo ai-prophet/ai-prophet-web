@@ -82,7 +82,7 @@ export default function SearchBar({
       <form onSubmit={handleSubmit} className="relative">
         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
           <svg 
-            className="h-5 w-5 text-text-primary opacity-50" 
+            className="h-5 w-5 text-text-secondary"
             fill="none" 
             stroke="currentColor" 
             viewBox="0 0 24 24"
@@ -101,7 +101,7 @@ export default function SearchBar({
           onChange={handleInputChange}
           onKeyDown={handleKeyDown}
           placeholder={placeholder}
-          className="w-full pl-10 pr-20 py-3 border border-accent-quaternary rounded-lg bg-bg-primary text-text-primary placeholder-text-primary/50 focus:outline-none focus:ring-2 focus:ring-accent-primary focus:border-transparent transition-colors"
+          className="w-full pl-10 pr-20 py-3 border border-accent-quaternary rounded-lg bg-bg-primary text-text-primary placeholder-text-secondary focus:outline-none focus:ring-2 focus:ring-accent-primary focus:border-transparent transition-colors"
         />
         <div className="absolute inset-y-0 right-0 flex items-center">
           {query && (

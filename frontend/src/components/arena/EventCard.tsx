@@ -417,7 +417,7 @@ export default function EventCard({ event, imageUrl, index = 0 }: EventCardProps
         </div>
 
         {/* Fixed Footer with Live Status and Close Time */}
-        <div className="flex items-center justify-between text-sm text-text-primary opacity-70 pt-1 mt-auto border-t border-accent-secondary/30">
+        <div className="flex items-center justify-between text-sm text-text-secondary pt-1 mt-auto border-t border-accent-secondary/30">
           {/* Live Signal - only show when event is actually live */}
           <div className="flex items-center gap-2">
             {!isClosedOrResolved && (

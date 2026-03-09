@@ -26,7 +26,7 @@ export default function ResearchPost({
         <h1 className="text-3xl font-bold text-text-primary mb-3">{title}</h1>
         <div className="flex items-center gap-3 text-sm text-text-secondary mb-8">
           <span>{author}</span>
-          <span className="text-text-primary opacity-30">&middot;</span>
+          <span className="text-text-secondary">&middot;</span>
           <span>
             {new Date(date).toLocaleDateString("en-US", {
               year: "numeric",
