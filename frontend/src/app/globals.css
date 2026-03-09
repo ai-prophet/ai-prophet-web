@@ -151,14 +151,19 @@ body {
   margin-bottom: 1.25em !important;
 }
 .prose h2 {
-  font-size: 1.25rem !important;
-  margin-top: 1.25em !important;
+  font-size: 1.125rem !important;
+  font-weight: 600 !important;
+  margin-top: 1.5em !important;
   margin-bottom: 0.4em !important;
+  border-bottom: none !important;
+  color: var(--color-secondary) !important;
 }
 .prose h3 {
-  font-size: 1.1rem !important;
-  margin-top: 1em !important;
+  font-size: 1rem !important;
+  font-weight: 600 !important;
+  margin-top: 1.25em !important;
   margin-bottom: 0.25em !important;
+  color: var(--color-secondary) !important;
 }
 .prose blockquote {
   margin-top: 1.5em !important;

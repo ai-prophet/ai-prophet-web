@@ -96,8 +96,8 @@ export default function ResearchPost({
         {/* Article content */}
         <article
           className="prose prose-lg max-w-none text-text-primary
-            prose-headings:text-text-primary prose-headings:font-bold
-            prose-h2:text-base prose-h2:pb-1.5 prose-h2:border-b prose-h2:border-edge
+            prose-headings:text-text-primary prose-headings:font-semibold
+            prose-h2:text-base prose-h2:pb-0
             prose-h3:text-sm
             prose-p:text-text-primary
             prose-li:text-text-primary
