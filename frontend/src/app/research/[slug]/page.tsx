@@ -34,13 +34,17 @@ export default async function ResearchPostPage({
   const post = getPost(slug);
   if (!post) notFound();
 
-  // Strip custom directives (:::quote, :::callout, :::remark, :::llm-quote) into blockquotes
-  let cleaned = post.content
-    .replace(/:::quote\n/g, "> ")
-    .replace(/:::remark\n/g, "> **Note:** ")
-    .replace(/:::callout\{[^}]*\}\n/g, "> ")
-    .replace(/:::llm-quote\{[^}]*\}\n/g, "> ")
-    .replace(/^:::\s*$/gm, "");
+  // Convert custom directives (:::quote, :::callout, :::remark, :::llm-quote) into blockquotes
+  let cleaned = post.content.replace(
+    /:::(quote|remark|callout(?:\{[^}]*\})?|llm-quote(?:\{[^}]*\})?)\n([\s\S]*?)^:::\s*$/gm,
+    (_match, type: string, body: string) => {
+      const prefix = type === "remark" ? "> **Note:** " : "> ";
+      return body
+        .split("\n")
+        .map((line) => (line.trim() ? prefix + line : ">"))
+        .join("\n");
+    }
+  );
 
   const result = await remark().use(gfm).use(html, { sanitize: false }).process(cleaned);
   const contentHtml = result.toString();
