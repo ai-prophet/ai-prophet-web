@@ -187,6 +187,11 @@ body {
 .prose pre {
   margin-top: 1em !important;
   margin-bottom: 1em !important;
+  line-height: 1.4 !important;
+}
+.prose pre code {
+  line-height: 1.4 !important;
+  font-size: 0.8125rem !important;
 }
 .prose img {
   margin-top: 1em !important;
