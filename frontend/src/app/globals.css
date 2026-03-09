@@ -149,45 +149,46 @@ body {
   margin-bottom: 1.5em;
 }
 
-/* Prose table styling for research posts */
+/* Prose table styling for research posts — !important to override typography plugin */
 .prose table {
-  width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
-  font-size: 0.875rem;
-  border: 1px solid var(--color-edge);
-  border-radius: 0.75rem;
-  overflow: hidden;
-  margin-top: 2em;
-  margin-bottom: 2em;
+  width: 100% !important;
+  border-collapse: separate !important;
+  border-spacing: 0 !important;
+  font-size: 0.875rem !important;
+  border: 1px solid var(--color-edge) !important;
+  border-radius: 0.75rem !important;
+  overflow: hidden !important;
+  margin-top: 2em !important;
+  margin-bottom: 2em !important;
 }
 .prose thead {
-  background-color: var(--color-surface);
+  background-color: var(--color-surface) !important;
 }
 .prose thead tr {
-  border-bottom: 2px solid var(--color-edge);
+  border-bottom: 2px solid var(--color-edge) !important;
 }
 .prose th {
-  padding: 0.75rem 1rem;
-  text-align: left;
-  font-weight: 600;
-  font-size: 0.8125rem;
-  letter-spacing: 0.01em;
-  color: var(--color-primary);
-  background-color: var(--color-surface);
-  border-bottom: 2px solid var(--color-edge);
+  padding: 0.75rem 1rem !important;
+  text-align: left !important;
+  font-weight: 600 !important;
+  font-size: 0.8125rem !important;
+  letter-spacing: 0.01em !important;
+  color: var(--color-primary) !important;
+  background-color: var(--color-surface) !important;
+  border-bottom: 2px solid var(--color-edge) !important;
 }
 .prose td {
-  padding: 0.625rem 1rem;
-  border-top: 1px solid var(--color-edge);
-  color: var(--color-primary);
-  background-color: transparent;
+  padding: 0.625rem 1rem !important;
+  border-top: 1px solid var(--color-edge) !important;
+  border-bottom: none !important;
+  color: var(--color-primary) !important;
+  background-color: transparent !important;
 }
 .prose tbody tr {
-  background-color: transparent;
+  background-color: transparent !important;
 }
 .prose tbody tr:hover {
-  background-color: var(--color-surface-hover);
+  background-color: var(--color-surface-hover) !important;
 }
 
 /* Prose image hover effect */
