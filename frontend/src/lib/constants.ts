@@ -10,7 +10,9 @@ export const KATEX_AUTO_RENDER_URL = `https://cdn.jsdelivr.net/npm/katex@${KATEX
 
 // ── Unsplash ──
 export const UNSPLASH_ACCESS_KEY =
-  process.env.NEXT_PUBLIC_UNSPLASH_ACCESS_KEY || "";
+  process.env.NEXT_PUBLIC_UNSPLASH_ACCESS_KEY ||
+  process.env.UNSPLASH_ACCESS_KEY ||
+  "";
 export const UNSPLASH_FALLBACK_IMAGE =
   "https://images.unsplash.com/photo-1416339306562-f3d12fefd36f";
 export const EVENT_CARD_FALLBACK_IMAGE =
