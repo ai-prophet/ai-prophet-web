@@ -8,6 +8,7 @@ const nextConfig: NextConfig = {
       { hostname: "lh3.googleusercontent.com" },
       { hostname: "*.wp.com" },
       { hostname: "s.gravatar.com" },
+      { hostname: "cdn.auth0.com" },
     ],
     formats: ["image/avif", "image/webp"],
   },

@@ -134,6 +134,7 @@ export interface ForecastHistoryEntry {
   id: string;
   title: string;
   submission: Record<string, number>;
+  outcomes?: string[];
   timestamp: number;
 }
 

@@ -21,12 +21,15 @@ interface ChatInterfaceProps {
   onOpenSettings: () => void;
   onToggleSettings: () => void;
   settingsOpen: boolean;
+  onPlanSave?: (title: string, outcomes: string[]) => void;
   onForecastComplete?: (title: string, submission: Record<string, number>) => void;
   onToggleHistory?: () => void;
   onToggleSidebar?: () => void;
   historyOpen?: boolean;
   sidebarOpen?: boolean;
   onNewForecast?: () => void;
+  userPicture?: string;
+  userName?: string;
 }
 
 export default function ChatInterface({
@@ -40,12 +43,15 @@ export default function ChatInterface({
   onOpenSettings,
   onToggleSettings,
   settingsOpen,
+  onPlanSave,
   onForecastComplete,
   onToggleHistory,
   onToggleSidebar,
   historyOpen,
   sidebarOpen,
   onNewForecast,
+  userPicture,
+  userName,
 }: ChatInterfaceProps) {
   const [input, setInput] = useState("");
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -74,29 +80,39 @@ export default function ChatInterface({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const savedResultIdsRef = useRef<Set<string>>(new Set());
-  const hydratedResultsRef = useRef(false);
+  const savedIdsRef = useRef<Set<string>>(new Set());
+  const hydratedRef = useRef(false);
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-    if (!hydratedResultsRef.current) {
-      hydratedResultsRef.current = true;
+
+    // On first render, mark all existing messages as already saved
+    if (!hydratedRef.current) {
+      hydratedRef.current = true;
       for (const m of messages) {
-        if (m.type === "result" && m.submission && Object.keys(m.submission).length > 0) {
-          savedResultIdsRef.current.add(m.id);
+        if (m.type === "plan" || m.type === "result") {
+          savedIdsRef.current.add(m.id);
         }
       }
       return;
     }
-    const resultMsgs = messages.filter((m) => m.type === "result" && m.submission && Object.keys(m.submission).length > 0);
-    for (const msg of resultMsgs) {
-      if (savedResultIdsRef.current.has(msg.id)) continue;
-      savedResultIdsRef.current.add(msg.id);
-      const planMsg = [...messages].reverse().find((m) => m.type === "plan" && m.planTitle);
-      if (msg.submission && onForecastComplete) {
-        onForecastComplete(planMsg?.planTitle || "Untitled Forecast", msg.submission);
+
+    // Save new plan messages to history
+    for (const msg of messages) {
+      if (msg.type === "plan" && msg.planTitle && msg.planOutcomes && !savedIdsRef.current.has(msg.id)) {
+        savedIdsRef.current.add(msg.id);
+        onPlanSave?.(msg.planTitle, msg.planOutcomes);
       }
     }
-  }, [messages, onForecastComplete]);
+
+    // Update history when run results arrive
+    for (const msg of messages) {
+      if (msg.type === "result" && msg.submission && Object.keys(msg.submission).length > 0 && !savedIdsRef.current.has(msg.id)) {
+        savedIdsRef.current.add(msg.id);
+        const planMsg = [...messages].reverse().find((m) => m.type === "plan" && m.planTitle);
+        onForecastComplete?.(planMsg?.planTitle || "Untitled Forecast", msg.submission);
+      }
+    }
+  }, [messages, onPlanSave, onForecastComplete]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -115,8 +131,8 @@ export default function ChatInterface({
   const handleNewForecast = () => {
     if (isRunning || isPlanning) return;
     clearMessages();
-    savedResultIdsRef.current.clear();
-    hydratedResultsRef.current = true;
+    savedIdsRef.current.clear();
+    hydratedRef.current = true;
     onNewForecast?.();
   };
 
@@ -249,7 +265,7 @@ export default function ChatInterface({
           {messages.map((msg) => {
             switch (msg.type) {
               case "user":
-                return <UserMessage key={msg.id} content={msg.content} />;
+                return <UserMessage key={msg.id} content={msg.content} userPicture={userPicture} userName={userName} />;
               case "plan":
                 return (
                   <ForecastPlan

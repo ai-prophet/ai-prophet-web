@@ -8,7 +8,7 @@ import Navbar from "@/components/Navbar";
 import type { SearchGroup, BoardEntry, UserSettings, ForecastHistoryEntry } from "@/types";
 import { DEFAULT_SETTINGS } from "@/types";
 import { getApiUrl } from "@/config/api";
-import { fetchHistory, saveToHistory, deleteFromHistory } from "@/components/ForecastHistory";
+import { fetchHistory, saveToHistory, updateHistorySubmission, deleteFromHistory } from "@/components/ForecastHistory";
 import {
   DEFAULT_SIDEBAR_WIDTH,
   MIN_SIDEBAR_WIDTH,
@@ -24,6 +24,15 @@ const ForecastHistory = dynamic(() => import("@/components/ForecastHistory"), { 
 
 const SETTINGS_KEY = "prophet_settings";
 const SESSION_KEY = "prophet_session";
+const HERO_INPUT_KEY = "prophet_hero_input";
+const CHAT_MESSAGES_KEY = "prophet_chat_messages";
+
+/** Clear all transient session state atomically. */
+function clearSessionState() {
+  try { sessionStorage.removeItem(SESSION_KEY); } catch {}
+  try { sessionStorage.removeItem(HERO_INPUT_KEY); } catch {}
+  try { sessionStorage.removeItem(CHAT_MESSAGES_KEY); } catch {}
+}
 
 interface SessionState {
   started: boolean;
@@ -67,7 +76,21 @@ export default function Home() {
   const [started, setStarted] = useState(false);
   const [showLoginPrompt, setShowLoginPrompt] = useState(false);
   const [initialQuery, setInitialQuery] = useState("");
-  const [heroInput, setHeroInput] = useState("");
+  const [chatKey, setChatKey] = useState(0);
+  const [heroInput, setHeroInputRaw] = useState("");
+  const heroHydratedRef = useRef(false);
+  useEffect(() => {
+    if (heroHydratedRef.current) return;
+    heroHydratedRef.current = true;
+    try {
+      const saved = sessionStorage.getItem(HERO_INPUT_KEY);
+      if (saved) setHeroInputRaw(saved);
+    } catch {}
+  }, []);
+  const setHeroInput = useCallback((value: string) => {
+    setHeroInputRaw(value);
+    try { sessionStorage.setItem(HERO_INPUT_KEY, value); } catch {}
+  }, []);
   const [searchGroups, setSearchGroups] = useState<SearchGroup[]>([]);
   const [boardEntries, setBoardEntries] = useState<BoardEntry[]>([]);
   const [activeTab, setActiveTab] = useState<"board" | "searches">("board");
@@ -83,6 +106,7 @@ export default function Home() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const layoutRef = useRef<HTMLDivElement>(null);
   const resizingRef = useRef(false);
+  const currentHistoryIdRef = useRef<string | null>(null);
 
   useEffect(() => {
     setSettings(loadSettings());
@@ -145,22 +169,85 @@ export default function Home() {
     setSettingsOpen((prev) => !prev);
   }, []);
 
-  const handleForecastComplete = useCallback(async (title: string, submission: Record<string, number>) => {
+  const handlePlanSave = useCallback(async (title: string, outcomes: string[]) => {
     if (!user?.sub) return;
-    const result = await saveToHistory(user.sub as string, title, submission);
+    // Deduplicate: don't save if a plan with this title already exists
+    const existing = forecastHistory.find((e) => e.title === title);
+    if (existing) {
+      currentHistoryIdRef.current = existing.id;
+      return;
+    }
+    const result = await saveToHistory(user.sub as string, title, {}, outcomes);
     if (result) {
+      currentHistoryIdRef.current = result.id;
       const entry: ForecastHistoryEntry = {
         id: result.id,
         title,
-        submission,
+        submission: {},
+        outcomes,
         timestamp: result.timestamp,
       };
       setForecastHistory((prev) => [entry, ...prev]);
     }
+  }, [user, forecastHistory]);
+
+  const handleForecastComplete = useCallback(async (title: string, submission: Record<string, number>) => {
+    const entryId = currentHistoryIdRef.current;
+    if (!entryId) {
+      // Fallback: save new entry if no tracked plan
+      if (!user?.sub) return;
+      const result = await saveToHistory(user.sub as string, title, submission);
+      if (result) {
+        setForecastHistory((prev) => {
+          const exists = prev.some((e) => e.id === result.id);
+          if (exists) return prev;
+          return [{ id: result.id, title, submission, timestamp: result.timestamp }, ...prev];
+        });
+      }
+      return;
+    }
+    // Update existing plan entry with results
+    const ok = await updateHistorySubmission(entryId, submission);
+    if (ok) {
+      setForecastHistory((prev) =>
+        prev.map((e) => (e.id === entryId ? { ...e, submission } : e))
+      );
+    }
   }, [user]);
 
   const handleHistorySelect = useCallback((entry: ForecastHistoryEntry) => {
-    setViewingEntry(entry);
+    const hasResults = Object.keys(entry.submission).length > 0;
+    if (hasResults) {
+      // Completed forecast → show in viewer
+      setViewingEntry(entry);
+      return;
+    }
+    // Unrun forecast → load plan into chat so user can run it
+    const now = Date.now();
+    const seedMessages = [
+      {
+        id: `msg_seed_user_${now}`,
+        type: "user" as const,
+        content: entry.title,
+        timestamp: now,
+      },
+      {
+        id: `msg_seed_plan_${now}`,
+        type: "plan" as const,
+        content: "",
+        timestamp: now + 1,
+        planTitle: entry.title,
+        planOutcomes: entry.outcomes || [],
+      },
+    ];
+    try {
+      sessionStorage.setItem(CHAT_MESSAGES_KEY, JSON.stringify(seedMessages));
+    } catch {}
+    currentHistoryIdRef.current = entry.id;
+    setViewingEntry(null);
+    setInitialQuery(""); // Don't re-fire the query; plan is already seeded
+    setChatKey((k) => k + 1);
+    setStarted(true);
   }, []);
 
   const handleHistoryDelete = useCallback(async (entryId: string) => {
@@ -190,7 +277,9 @@ export default function Home() {
     setHighlightBoardId(null);
     setActiveTab("board");
     setViewingEntry(null);
-    try { sessionStorage.removeItem(SESSION_KEY); } catch {}
+    currentHistoryIdRef.current = null;
+    setChatKey((k) => k + 1); // Ensure next ChatInterface mount is fresh
+    clearSessionState();
   }, []);
 
   const updateSidebarWidth = useCallback((clientX: number) => {
@@ -305,6 +394,10 @@ export default function Home() {
       setShowLoginPrompt(true);
       return;
     }
+    // Clear any stale chat state before starting fresh
+    try { sessionStorage.removeItem(CHAT_MESSAGES_KEY); } catch {}
+    try { sessionStorage.removeItem(HERO_INPUT_KEY); } catch {}
+    setChatKey((k) => k + 1); // Force fresh ChatInterface mount
     setInitialQuery(text);
     setStarted(true);
   };
@@ -357,6 +450,7 @@ export default function Home() {
         )}
         <div className="flex-1 min-w-0 min-h-0 overflow-hidden">
           <ChatInterface
+            key={chatKey}
             initialQuery={initialQuery}
             settings={settings}
             onSearchResult={handleSearchResult}
@@ -367,12 +461,15 @@ export default function Home() {
             onOpenSettings={() => setSettingsOpen(true)}
             onToggleSettings={handleToggleSettings}
             settingsOpen={settingsOpen}
+            onPlanSave={handlePlanSave}
             onForecastComplete={handleForecastComplete}
             onToggleHistory={user ? () => setHistoryOpen((v) => !v) : undefined}
             onToggleSidebar={() => setSidebarOpen((v) => !v)}
             historyOpen={historyOpen}
             sidebarOpen={sidebarOpen}
             onNewForecast={handleNewForecast}
+            userPicture={user?.picture as string | undefined}
+            userName={user?.name as string | undefined}
           />
         </div>
         {/* Desktop sidebar */}

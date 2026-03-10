@@ -1,29 +1,17 @@
 import ArenaLayout from "@/components/arena/ArenaLayout";
 
-const TEAM: { role: string; members: { name: string; title: string }[] }[] = [
+const TEAM: { role: string; members: string[] }[] = [
+  {
+    role: "Advisors",
+    members: ["Jibang Wu", "Haifeng Xu"],
+  },
   {
     role: "Leads",
-    members: [
-      { name: "Qingchuan Yang", title: "Co-founder" },
-      { name: "Simon Mahns", title: "Co-founder" },
-      { name: "Sida Li", title: "Co-founder" },
-      { name: "Anri Gu", title: "Co-founder" },
-    ],
+    members: ["Qingchuan Yang", "Simon Mahns", "Sida Li", "Anri Gu"],
   },
   {
     role: "Contributors",
-    members: [
-      { name: "Alex Gu", title: "Contributor" },
-      { name: "Chaplin Huang", title: "Contributor" },
-      { name: "Lucien Liu", title: "Contributor" },
-    ],
-  },
-  {
-    role: "Advisors",
-    members: [
-      { name: "Jibang Wu", title: "Advisor" },
-      { name: "Haifeng Xu", title: "Advisor" },
-    ],
+    members: ["Arnav Gurudatt", "Alex Gu", "Chaplin Huang", "Lucien Liu"],
   },
 ];
 
@@ -39,8 +27,18 @@ const PILLARS = [
     description:
       "We benchmark AI systems on their ability to forecast real-world events — a capability that demands reasoning under uncertainty, evidence synthesis, and calibrated probabilistic thinking.",
     icon: (
-      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25m-7.5 0h7.5m-7.5 0l-1 3m8.5-3l1 3m0 0l.5 1.5m-.5-1.5h-9.5m0 0l-.5 1.5m.75-9l3-3 2.148 2.148A12.061 12.061 0 0116.5 7.605" />
+      <svg
+        className="w-5 h-5"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+        strokeWidth={1.5}
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          d="M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25m-7.5 0h7.5m-7.5 0l-1 3m8.5-3l1 3m0 0l.5 1.5m-.5-1.5h-9.5m0 0l-.5 1.5m.75-9l3-3 2.148 2.148A12.061 12.061 0 0116.5 7.605"
+        />
       </svg>
     ),
   },
@@ -49,8 +47,18 @@ const PILLARS = [
     description:
       "Future events can never leak into training data. Prophet Arena is the only benchmark that is inherently immune to test set contamination — because tomorrow's news hasn't happened yet.",
     icon: (
-      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
+      <svg
+        className="w-5 h-5"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+        strokeWidth={1.5}
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"
+        />
       </svg>
     ),
   },
@@ -59,8 +67,18 @@ const PILLARS = [
     description:
       "Our platform enables seamless collaboration between human analysts and AI systems — humans supply curated evidence while AI processes, reasons, and generates calibrated forecasts.",
     icon: (
-      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z" />
+      <svg
+        className="w-5 h-5"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+        strokeWidth={1.5}
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z"
+        />
       </svg>
     ),
   },
@@ -80,18 +98,14 @@ export default function About() {
               About AI Prophet
             </div>
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-primary tracking-tight mb-6 leading-[1.1]">
-              The live benchmark for{" "}
-              <span className="text-accent">predictive intelligence</span>
+              Building the foundation of{" "}
+              <span className="text-accent">AI-driven forecasting</span>
             </h1>
-            <p className="text-lg sm:text-xl text-secondary max-w-2xl mx-auto leading-relaxed">
-              Evaluating how well AI systems can reason about the future through
-              real-world forecasting on live events.
-            </p>
           </div>
         </div>
 
         {/* ── Stats ── */}
-        <div className="border-b border-edge">
+        {/* <div className="border-b border-edge">
           <div className="max-w-4xl mx-auto px-4 sm:px-6">
             <div className="grid grid-cols-3 divide-x divide-edge">
               {STATS.map((stat) => (
@@ -106,17 +120,17 @@ export default function About() {
               ))}
             </div>
           </div>
-        </div>
+        </div> */}
 
         {/* ── Mission ── */}
         <div className="max-w-4xl mx-auto px-4 sm:px-6 py-16 sm:py-24">
-          <div className="max-w-3xl">
+          <div>
             <h2 className="text-[11px] font-semibold text-muted uppercase tracking-wider mb-4">
               Our Mission
             </h2>
-            <p className="text-2xl sm:text-3xl font-semibold text-primary leading-snug mb-6">
-              Can AI systems reliably predict the future by connecting the dots
-              across existing real-world information?
+            <p className="text-lg sm:text-xl font-medium text-accent leading-snug mb-6 whitespace-nowrap">
+              How can AI transform open-domain forecasting and help humans make
+              better decisions?
             </p>
             <p className="text-base sm:text-lg text-secondary leading-relaxed">
               We aim to evaluate and advance the forecasting capabilities of AI
@@ -128,74 +142,59 @@ export default function About() {
           </div>
         </div>
 
-        {/* ── Pillars ── */}
-        <div className="border-t border-edge bg-surface">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 py-16 sm:py-24">
-            <h2 className="text-[11px] font-semibold text-muted uppercase tracking-wider mb-10">
-              Why Prophet Arena
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 sm:gap-10">
-              {PILLARS.map((pillar) => (
-                <div key={pillar.title}>
-                  <div className="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center text-accent mb-4">
-                    {pillar.icon}
-                  </div>
-                  <h3 className="text-base font-semibold text-primary mb-2">
-                    {pillar.title}
-                  </h3>
-                  <p className="text-sm text-secondary leading-relaxed">
-                    {pillar.description}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
         {/* ── Team ── */}
-        <div className="border-t border-edge">
+        {/* <div className="border-t border-edge">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 py-16 sm:py-24">
             <h2 className="text-[11px] font-semibold text-muted uppercase tracking-wider mb-3">
               Team
             </h2>
-            <p className="text-secondary mb-12 max-w-xl">
-              Built by researchers and engineers passionate about advancing
-              AI evaluation and forecasting science.
-            </p>
 
-            <div className="space-y-12">
-              {TEAM.map((group) => (
-                <div key={group.role}>
-                  <h3 className="text-sm font-semibold text-primary mb-5 flex items-center gap-3">
-                    {group.role}
-                    <span className="flex-1 h-px bg-edge" />
-                  </h3>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-                    {group.members.map((member) => (
-                      <div
-                        key={member.name}
-                        className="group rounded-xl border border-edge bg-surface hover:border-accent/30 transition-colors p-4"
-                      >
-                        <div className="w-9 h-9 rounded-full bg-accent/10 flex items-center justify-center text-sm font-semibold text-accent mb-3">
-                          {member.name
-                            .split(" ")
-                            .map((n) => n[0])
-                            .join("")}
-                        </div>
-                        <div className="text-sm font-medium text-primary">
-                          {member.name}
-                        </div>
-                        <div className="text-xs text-muted mt-0.5">
-                          {member.title}
-                        </div>
+            <br />
+
+            <div className="space-y-10">
+              {TEAM.map((group) => {
+                const isHighProfile =
+                  group.role === "Leads" || group.role === "Advisors";
+                return (
+                  <div key={group.role}>
+                    <h3 className="text-sm font-semibold text-primary mb-5 flex items-center gap-3">
+                      {group.role}
+                      <span className="flex-1 h-px bg-edge" />
+                    </h3>
+                    {isHighProfile ? (
+                      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                        {group.members.map((name) => (
+                          <div
+                            key={name}
+                            className="rounded-xl border border-edge bg-surface hover:border-accent/30 transition-colors p-4"
+                          >
+                            <div className="w-9 h-9 rounded-full bg-accent/10 flex items-center justify-center text-sm font-semibold text-accent mb-3">
+                              {name
+                                .split(" ")
+                                .map((n) => n[0])
+                                .join("")}
+                            </div>
+                            <div className="text-sm font-medium text-primary">
+                              {name}
+                            </div>
+                          </div>
+                        ))}
                       </div>
-                    ))}
+                    ) : (
+                      <div className="flex flex-wrap gap-x-6 gap-y-1.5">
+                        {group.members.map((name) => (
+                          <span key={name} className="text-sm text-secondary">
+                            {name}
+                          </span>
+                        ))}
+                      </div>
+                    )}
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
-        </div>
+        </div> */}
 
         {/* ── Contact ── */}
         <div className="border-t border-edge bg-surface">
@@ -203,9 +202,9 @@ export default function About() {
             <h2 className="text-2xl sm:text-3xl font-bold text-primary mb-4">
               Get in Touch
             </h2>
-            <p className="text-secondary mb-8 max-w-md mx-auto">
-              Interested in collaboration, submitting your model, or have questions
-              about our methodology?
+            <p className="text-secondary mb-8">
+              Interested in collaboration, submitting your model, or have
+              questions about our methodology?
             </p>
             <a
               href="mailto:contact@prophetarena.co"

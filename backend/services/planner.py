@@ -13,6 +13,36 @@ from config import UserSettings, resolve_user_settings
 
 logger = logging.getLogger("prophet_web.planner")
 
+
+def _extract_first_json(text: str) -> dict:
+    """Extract the first complete JSON object from text with extra content."""
+    start = text.find("{")
+    if start == -1:
+        raise json.JSONDecodeError("No JSON object found", text, 0)
+    depth = 0
+    in_string = False
+    escape = False
+    for i in range(start, len(text)):
+        ch = text[i]
+        if escape:
+            escape = False
+            continue
+        if ch == "\\":
+            escape = True
+            continue
+        if ch == '"':
+            in_string = not in_string
+            continue
+        if in_string:
+            continue
+        if ch == "{":
+            depth += 1
+        elif ch == "}":
+            depth -= 1
+            if depth == 0:
+                return json.loads(text[start : i + 1])
+    raise json.JSONDecodeError("No complete JSON object found", text, start)
+
 SYSTEM_PROMPT = """\
 You are a forecasting problem structurer. Given a user's natural language question about a future event, \
 generate a structured forecasting problem with a clear title and a list of mutually exclusive, \
@@ -81,12 +111,22 @@ def generate_forecast_plan(prompt: str, settings: UserSettings) -> dict:
             temperature=0.7,
             response_format={"type": "json_object"},
         )
-        raw = response.choices[0].message.content or "{}"
-        result = json.loads(raw)
+        raw = (response.choices[0].message.content or "{}").strip()
+        # Strip markdown code fences if present
+        if raw.startswith("```"):
+            raw = raw.split("\n", 1)[-1] if "\n" in raw else raw[3:]
+            if raw.endswith("```"):
+                raw = raw[:-3].strip()
+        # Try to extract the first complete JSON object from the text
+        try:
+            result = json.loads(raw)
+        except json.JSONDecodeError:
+            result = _extract_first_json(raw)
         if "status" not in result:
             result["status"] = "success"
         return result
     except json.JSONDecodeError:
+        logger.warning("Failed to parse LLM response: %s", raw[:500])
         return {"status": "error", "message": "Failed to parse LLM response as JSON."}
     except Exception as exc:
         logger.error("Planner LLM call failed: %s", exc, exc_info=True)
