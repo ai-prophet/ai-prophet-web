@@ -11,7 +11,7 @@ import litellm
 
 from config import UserSettings, resolve_user_settings
 
-logger = logging.getLogger("prophet_web.planner")
+logger = logging.getLogger("ai_prophet.planner")
 
 
 def _extract_first_json(text: str) -> dict:

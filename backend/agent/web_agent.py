@@ -9,7 +9,7 @@ from queue import Queue
 from miniprophet import ContextManager, Environment, Model
 from miniprophet.agent.default import AgentConfig, DefaultForecastAgent, ForecastResult
 
-logger = logging.getLogger("prophet_web.agent")
+logger = logging.getLogger("ai_prophet.agent")
 
 
 def _serialize_search_results(results: list) -> list[dict]:

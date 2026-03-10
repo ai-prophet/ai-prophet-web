@@ -39,7 +39,7 @@ def get_db():
 def init_db():
     if not DATABASE_URL:
         import logging
-        logging.getLogger("prophet_web.db").warning("DATABASE_URL not set — skipping DB init")
+        logging.getLogger("ai_prophet.db").warning("DATABASE_URL not set — skipping DB init")
         return
     try:
         with get_db() as conn:
@@ -64,7 +64,7 @@ def init_db():
                 """)
     except Exception as exc:
         import logging
-        logging.getLogger("prophet_web.db").warning("DB init failed: %s", exc)
+        logging.getLogger("ai_prophet.db").warning("DB init failed: %s", exc)
 
 
 init_db()

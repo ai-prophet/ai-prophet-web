@@ -5,9 +5,9 @@ import { useState } from "react";
 const TABS = ["Overview", "Quick Start", "API Reference", "SDKs"] as const;
 type Tab = (typeof TABS)[number];
 
-const CODE_EXAMPLE_PYTHON = `import prophetarena as pa
+const CODE_EXAMPLE_PYTHON = `import aiprophet as ap
 
-client = pa.Client(api_key="pa_live_...")
+client = ap.Client(api_key="pa_live_...")
 
 # Create a forecast
 forecast = client.forecasts.create(
@@ -20,9 +20,9 @@ forecast = client.forecasts.create(
 print(forecast.probabilities)
 # {"Yes": 0.42, "No": 0.58}`;
 
-const CODE_EXAMPLE_TS = `import { ProphetArena } from "@prophetarena/sdk";
+const CODE_EXAMPLE_TS = `import { AIprophet } from "@aiprophet/sdk";
 
-const client = new ProphetArena({ apiKey: "pa_live_..." });
+const client = new AIprophet({ apiKey: "pa_live_..." });
 
 const forecast = await client.forecasts.create({
   question: "Will BTC exceed $150k by end of Q2 2026?",
@@ -34,7 +34,7 @@ const forecast = await client.forecasts.create({
 console.log(forecast.probabilities);
 // { Yes: 0.42, No: 0.58 }`;
 
-const CODE_EXAMPLE_CURL = `curl -X POST https://api.prophetarena.co/v1/forecasts \\
+const CODE_EXAMPLE_CURL = `curl -X POST https://api.aiprophet.co/v1/forecasts \\
   -H "Authorization: Bearer pa_live_..." \\
   -H "Content-Type: application/json" \\
   -d '{
@@ -93,7 +93,7 @@ function OverviewTab() {
       <div>
         <h3 className="text-lg font-semibold text-primary mb-2">Build with forecasts</h3>
         <p className="text-sm text-secondary leading-relaxed max-w-2xl">
-          The Prophet Arena API lets you programmatically generate calibrated probability
+          The AI Prophet API lets you programmatically generate calibrated probability
           forecasts for any question. Our agent pipeline searches the web, gathers evidence,
           and produces outcome probabilities — all through a single API call.
         </p>
@@ -196,8 +196,8 @@ function QuickStartTab() {
           <span className="text-sm text-primary font-medium">Install the SDK</span>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <CodeBlock code="pip install prophetarena" lang="pip" />
-          <CodeBlock code="npm install @prophetarena/sdk" lang="npm" />
+          <CodeBlock code="pip install aiprophet" lang="pip" />
+          <CodeBlock code="npm install @aiprophet/sdk" lang="npm" />
         </div>
       </div>
 
@@ -247,7 +247,7 @@ function ApiReferenceTab() {
       <div>
         <h3 className="text-lg font-semibold text-primary mb-2">API Reference</h3>
         <p className="text-sm text-secondary leading-relaxed max-w-2xl">
-          All endpoints are served from <code className="px-1.5 py-0.5 rounded-md bg-ground border border-edge text-xs text-accent font-mono">https://api.prophetarena.co/v1</code>. Authenticate
+          All endpoints are served from <code className="px-1.5 py-0.5 rounded-md bg-ground border border-edge text-xs text-accent font-mono">https://api.aiprophet.co/v1</code>. Authenticate
           with a Bearer token in the Authorization header.
         </p>
       </div>
@@ -325,22 +325,22 @@ function SdksTab() {
   const sdks = [
     {
       name: "Python",
-      pkg: "prophetarena",
-      install: "pip install prophetarena",
+      pkg: "aiprophet",
+      install: "pip install aiprophet",
       version: "0.4.2",
       icon: "py",
     },
     {
       name: "TypeScript / Node",
-      pkg: "@prophetarena/sdk",
-      install: "npm install @prophetarena/sdk",
+      pkg: "@aiprophet/sdk",
+      install: "npm install @aiprophet/sdk",
       version: "0.3.1",
       icon: "ts",
     },
     {
       name: "Go",
-      pkg: "github.com/prophetarena/go-sdk",
-      install: "go get github.com/prophetarena/go-sdk",
+      pkg: "github.com/aiprophet/go-sdk",
+      install: "go get github.com/aiprophet/go-sdk",
       version: "0.2.0",
       icon: "go",
     },
@@ -379,9 +379,9 @@ function SdksTab() {
         <div className="rounded-xl border border-edge bg-surface p-5">
           <div className="space-y-3">
             {[
-              { name: "prophetarena-rs", lang: "Rust", author: "@rustacean42" },
-              { name: "prophet-rb", lang: "Ruby", author: "@forecastgem" },
-              { name: "ProphetArena.jl", lang: "Julia", author: "@juliaforecast" },
+              { name: "aiprophet-rs", lang: "Rust", author: "@rustacean42" },
+              { name: "aiprophet-rb", lang: "Ruby", author: "@forecastgem" },
+              { name: "AIprophet.jl", lang: "Julia", author: "@juliaforecast" },
             ].map((lib) => (
               <div key={lib.name} className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
