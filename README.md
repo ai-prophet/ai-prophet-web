@@ -8,7 +8,7 @@ Web interface for the AI Prophet Project.
 
 ```bash
 # clone mini-prophet to root
-git clone https://github.com/ai-prophet/mini-prophet
+git clone https://github.com/ai-prophet/ai-prophet-web
 
 cd app/backend
 pip install -r requirements.txt
