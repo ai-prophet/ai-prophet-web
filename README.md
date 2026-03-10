@@ -1,6 +1,6 @@
-# Mini Prophet Web
+# AI Prophet Web
 
-Web interface for the mini-prophet forecasting agent.
+Web interface for the AI Prophet Project.
 
 ## Setup
 
