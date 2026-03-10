@@ -8,7 +8,24 @@ const dmSans = DM_Sans({ subsets: ["latin"], weight: ["400", "500", "600", "700"
 
 export const metadata: Metadata = {
   title: "AI Prophet",
-  description: "AI-powered forecasting agent web interface",
+  description: "AI-powered forecasting arena — benchmark AI systems on real-world event prediction",
+  icons: {
+    icon: "/assets/icon-192.png",
+    apple: "/apple-icon.png",
+  },
+  openGraph: {
+    title: "AI Prophet",
+    description: "AI-powered forecasting arena — benchmark AI systems on real-world event prediction",
+    siteName: "AI Prophet",
+    images: [{ url: "/assets/og-image.png", width: 1200, height: 630 }],
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "AI Prophet",
+    description: "AI-powered forecasting arena — benchmark AI systems on real-world event prediction",
+    images: ["/assets/og-image.png"],
+  },
 };
 
 export default function RootLayout({
