@@ -1,3 +1,16 @@
+export type CiData = Record<string, string | number>;
+
+// Types for time-series data used across leaderboard pages and charts
+export interface TimeSeriesData {
+  score: number;
+  rank: number;
+  ci?: CiData;
+}
+
+export interface CategoryStream {
+  [date: string]: TimeSeriesData;
+}
+
 export interface SearchSource {
   id: string;
   title: string;
@@ -121,6 +134,7 @@ export interface ForecastHistoryEntry {
   id: string;
   title: string;
   submission: Record<string, number>;
+  outcomes?: string[];
   timestamp: number;
 }
 

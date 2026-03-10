@@ -17,16 +17,7 @@ import {
   DEFAULT_PROVIDER_CONFIG,
 } from "@/config/providers";
 import { niceName, isModelConfigured } from "@/config/models";
-
-// Types for the time-series data
-interface TimeSeriesData {
-  score: number;
-  rank: number;
-}
-
-interface CategoryStream {
-  [date: string]: TimeSeriesData;
-}
+import type { TimeSeriesData, CategoryStream } from "@/types";
 
 interface ModelProgressData {
   name: string;

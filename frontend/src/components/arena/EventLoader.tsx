@@ -1,170 +1,17 @@
 'use client';
 
 import { useState, useEffect, useCallback, useRef, useMemo, useReducer } from 'react';
-import Image from 'next/image';
 import EventCard, { Event } from "@/components/arena/EventCard";
 import LoadingSpinner from "@/components/arena/LoadingSpinner";
 import SearchBar from "@/components/arena/SearchBar";
+import FiltersPanel from "@/components/arena/FiltersPanel";
 import { getApiUrl } from '@/config/api';
-
-const topics = [
-  'All',
-  'Politics',
-  'Sports', 
-  'Economics',
-  'Technology',
-  'Entertainment',
-  'Science',
-  'Other'
-];
-
-const sortOptions = [
-  { value: 'close_time', label: 'Close Time' },
-  { value: 'volume', label: 'Volume' },
-  { value: 'created_at', label: 'Created' }
-];
-
-const resolvedOptions = [
-  { value: 'all', label: 'All Events' },
-  { value: 'open', label: 'Open Only' },
-  { value: 'resolved', label: 'Resolved Only' }
-];
-
-type Status =
-  | 'initial'
-  | 'refreshing'
-  | 'searching'
-  | 'loadingMore'
-  | 'idle'
-  | 'error'
-  | 'backendDown';
-
-type ResolvedType = 'all' | 'open' | 'resolved';
-
-interface Query {
-  topic: string;
-  sortBy: string;
-  order: 'asc' | 'desc';
-  resolvedType: ResolvedType;
-  search: string;
-}
-
-interface Pagination {
-  cursor: string | null;
-  hasMore: boolean;
-  total: number;
-}
-
-interface NetError {
-  code: 'BACKEND_DOWN' | 'NETWORK' | 'ABORTED' | 'UNKNOWN';
-  message: string;
-}
-
-interface State {
-  status: Status;
-  events: Event[];
-  query: Query;
-  pagination: Pagination;
-  error: NetError | null;
-}
-
-type FetchKind = 'initial' | 'refresh' | 'search' | 'loadMore';
-
-type Action =
-  | { type: 'APPLY_QUERY'; query: Partial<Query>; cause: 'external' | 'user' }
-  | { type: 'START_FETCH'; kind: FetchKind }
-  | {
-      type: 'SUCCESS';
-      payload: {
-        data: Event[];
-        nextCursor: string | null;
-        end: boolean;
-        totalCount: number;
-        reset: boolean;
-      };
-    }
-  | { type: 'FAIL'; error: NetError }
-  | { type: 'CLEAR' };
-
-function dedupeAndAppend(prev: Event[], incoming: Event[], reset: boolean) {
-  const base = reset ? [] : prev;
-  const seen = new Set(base.map(e => e.event_ticker));
-  const toAdd = incoming.filter(e => !seen.has(e.event_ticker));
-  return [...base, ...toAdd];
-}
-
-function reducer(state: State, action: Action): State {
-  switch (action.type) {
-    case 'APPLY_QUERY': {
-      const nextQuery = { ...state.query, ...action.query };
-      // On any query change, reset the list & cursor and pick a status
-      const nextStatus: Status =
-        (action.query.search ?? state.query.search).trim()
-          ? 'searching'
-          : state.status === 'initial'
-          ? 'initial'
-          : 'refreshing';
-
-      return {
-        ...state,
-        query: nextQuery,
-        status: nextStatus,
-        pagination: { ...state.pagination, cursor: null, hasMore: true, total: 0 },
-        events: [], // clear immediately for snappy UI
-        error: null,
-      };
-    }
-
-    case 'START_FETCH': {
-      const map: Record<FetchKind, Status> = {
-        initial: 'initial',
-        refresh: 'refreshing',
-        search: 'searching',
-        loadMore: 'loadingMore',
-      };
-      return { ...state, status: map[action.kind], error: null };
-    }
-
-    case 'SUCCESS': {
-      const { data, nextCursor, end, totalCount, reset } = action.payload;
-      return {
-        ...state,
-        status: 'idle',
-        events: dedupeAndAppend(state.events, data, reset),
-        pagination: {
-          cursor: nextCursor,
-          hasMore: !end,
-          total: totalCount ?? state.pagination.total,
-        },
-        error: null,
-      };
-    }
-
-    case 'FAIL': {
-      const isDown = action.error.code === 'BACKEND_DOWN';
-      return {
-        ...state,
-        status: isDown ? 'backendDown' : 'error',
-        error: action.error,
-        pagination: { ...state.pagination, hasMore: false },
-      };
-    }
-
-    case 'CLEAR': {
-      return {
-        ...state,
-        status: 'initial',
-        query: { topic: 'All', sortBy: 'close_time', order: 'asc', resolvedType: 'all', search: '' },
-        events: [],
-        pagination: { cursor: null, hasMore: true, total: 0 },
-        error: null,
-      };
-    }
-
-    default:
-      return state;
-  }
-}
+import {
+  reducer,
+  type Query,
+  type ResolvedType,
+  type FetchKind,
+} from './eventLoaderState';
 
 interface EventLoaderProps {
   initialTopic?: string;
@@ -180,85 +27,8 @@ interface EventLoaderProps {
   removeContainerPadding?: boolean;
 }
 
-// Extract FiltersPanel to avoid duplication
-function FiltersPanel({ 
-  query, 
-  updateFilter, 
-  toggleSortOrder,
-  idSuffix = ''
-}: { 
-  query: Query; 
-  updateFilter: (key: keyof Query, value: string) => void; 
-  toggleSortOrder: () => void;
-  idSuffix?: string;
-}) {
-  return (
-    <div className="bg-surface rounded-2xl border border-edge p-6">
-      <h3 className="text-lg font-semibold text-primary mb-2">Filters</h3>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {/* Topic Filter */}
-        <div>
-          <label htmlFor={`topic-filter${idSuffix}`} className="block text-sm font-medium text-primary mb-2">Topic</label>
-          <select
-            id={`topic-filter${idSuffix}`}
-            value={query.topic}
-            onChange={(e) => updateFilter('topic', e.target.value)}
-            className="w-full px-3 py-2 border border-edge rounded-lg bg-surface text-primary focus:outline-none focus:ring-2 focus:ring-accent-primary focus:border-transparent"
-          >
-            {topics.map((topic) => (
-              <option key={topic} value={topic}>{topic}</option>
-            ))}
-          </select>
-        </div>
-
-        {/* Sort By */}
-        <div>
-          <label htmlFor={`sort-by-filter${idSuffix}`} className="block text-sm font-medium text-primary mb-2">Sort By</label>
-          <select
-            id={`sort-by-filter${idSuffix}`}
-            value={query.sortBy}
-            onChange={(e) => updateFilter('sortBy', e.target.value)}
-            className="w-full px-3 py-2 border border-edge rounded-lg bg-surface text-primary focus:outline-none focus:ring-2 focus:ring-accent-primary focus:border-transparent"
-          >
-            {sortOptions.map((option) => (
-              <option key={option.value} value={option.value}>{option.label}</option>
-            ))}
-          </select>
-        </div>
-
-        {/* Sort Order */}
-        <div>
-          <label htmlFor={`sort-order-filter${idSuffix}`} className="block text-sm font-medium text-primary mb-2">Order</label>
-          <button
-            id={`sort-order-filter${idSuffix}`}
-            onClick={toggleSortOrder}
-            className="w-full px-3 py-2 border border-edge rounded-lg bg-surface text-primary hover:bg-overlay transition-colors focus:outline-none focus:ring-2 focus:ring-accent-primary"
-          >
-            {query.order === 'asc' ? 'Ascending' : 'Descending'}
-          </button>
-        </div>
-
-        {/* Resolved Type */}
-        <div>
-          <label htmlFor={`status-filter${idSuffix}`} className="block text-sm font-medium text-primary mb-2">Status</label>
-          <select
-            id={`status-filter${idSuffix}`}
-            value={query.resolvedType}
-            onChange={(e) => updateFilter('resolvedType', e.target.value)}
-            className="w-full px-3 py-2 border border-edge rounded-lg bg-surface text-primary focus:outline-none focus:ring-2 focus:ring-accent-primary focus:border-transparent"
-          >
-            {resolvedOptions.map((option) => (
-              <option key={option.value} value={option.value}>{option.label}</option>
-            ))}
-          </select>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-export default function EventLoader({ 
-  initialTopic = 'All', 
+export default function EventLoader({
+  initialTopic = 'All',
   initialSortBy = 'close_time',
   showFilters = true,
   showSearch = false,
@@ -328,26 +98,26 @@ export default function EventLoader({
           limit: '30',
           include_predictions: 'true',
         });
-        
+
         if (state.query.search.trim()) {
           params.set('search', state.query.search.trim());
         }
 
-        
+
         const response = await fetch(`${getApiUrl('/events/paginated')}?${params.toString()}`, {
           signal: controller.signal
         });
 
         if (!response.ok) {
-          dispatch({ 
-            type: 'FAIL', 
-            error: { code: 'BACKEND_DOWN', message: 'Service temporarily unavailable' } 
+          dispatch({
+            type: 'FAIL',
+            error: { code: 'BACKEND_DOWN', message: 'Service temporarily unavailable' }
           });
           return;
         }
 
         const responseJson = await response.json();
-        
+
         // Ignore stale responses
         if (thisReq !== requestIdRef.current) return;
 
@@ -365,8 +135,8 @@ export default function EventLoader({
           updated_at: event.updated_at,
           top_markets: event.top_markets || [],
         }));
-        
-        
+
+
 
         dispatch({
           type: 'SUCCESS',
@@ -380,7 +150,7 @@ export default function EventLoader({
         });
       } catch (error: any) {
         if (error?.name === 'AbortError') return;
-        
+
         console.error('Error fetching events:', error);
         dispatch({
           type: 'FAIL',
@@ -397,29 +167,29 @@ export default function EventLoader({
     let changed = false;
 
     if (externalTopic !== undefined && externalTopic !== state.query.topic) {
-      next.topic = externalTopic; 
+      next.topic = externalTopic;
       changed = true;
     }
     if (externalSortBy !== undefined && externalSortBy !== state.query.sortBy) {
-      next.sortBy = externalSortBy; 
+      next.sortBy = externalSortBy;
       changed = true;
     }
     if (externalSortOrder !== undefined) {
       const order = externalSortOrder === 'desc' ? 'desc' : 'asc';
-      if (order !== state.query.order) { 
-        next.order = order; 
-        changed = true; 
+      if (order !== state.query.order) {
+        next.order = order;
+        changed = true;
       }
     }
     if (externalEventType !== undefined) {
       const resolvedType: ResolvedType = externalEventType === 'historical' ? 'resolved' : 'open';
-      if (resolvedType !== state.query.resolvedType) { 
-        next.resolvedType = resolvedType; 
-        changed = true; 
+      if (resolvedType !== state.query.resolvedType) {
+        next.resolvedType = resolvedType;
+        changed = true;
       }
     }
     if (externalSearchQuery !== undefined && externalSearchQuery !== state.query.search) {
-      next.search = externalSearchQuery; 
+      next.search = externalSearchQuery;
       changed = true;
     }
 
@@ -455,10 +225,10 @@ export default function EventLoader({
   }, []);
 
   const toggleSortOrder = useCallback(() => {
-    dispatch({ 
-      type: 'APPLY_QUERY', 
-      query: { order: state.query.order === 'asc' ? 'desc' : 'asc' }, 
-      cause: 'user' 
+    dispatch({
+      type: 'APPLY_QUERY',
+      query: { order: state.query.order === 'asc' ? 'desc' : 'asc' },
+      cause: 'user'
     });
   }, [state.query.order]);
 
@@ -485,14 +255,14 @@ export default function EventLoader({
     return (
       <div className="space-y-6">
         {showFilters && (
-          <FiltersPanel 
+          <FiltersPanel
             query={state.query}
             updateFilter={updateFilter}
             toggleSortOrder={toggleSortOrder}
             idSuffix="-down"
           />
         )}
-        
+
         <div className="text-center py-12">
           <div className="w-16 h-16 bg-overlay rounded-full flex items-center justify-center mx-auto mb-4">
             <svg className="w-8 h-8 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -526,7 +296,7 @@ export default function EventLoader({
     <div className="space-y-6">
       {/* Search Bar */}
       {showSearch && (
-        <SearchBar 
+        <SearchBar
           value={state.query.search}
           onSearch={handleSearch}
           placeholder="Search events by title, topic, ticker, or markets..."
@@ -540,10 +310,10 @@ export default function EventLoader({
           <LoadingSpinner size="lg" showText={true} text="Searching events..." />
         </div>
       )}
-      
+
       {/* Filters */}
       {showFilters && (
-        <FiltersPanel 
+        <FiltersPanel
           query={state.query}
           updateFilter={updateFilter}
           toggleSortOrder={toggleSortOrder}
@@ -574,7 +344,7 @@ export default function EventLoader({
             {state.events.map((event, index) => (
               <EventCard key={event.event_ticker} event={event} index={index} />
             ))}
-            
+
             {/* Loading overlay for existing content - only show if not searching */}
             {selectors.isLoading && !selectors.isInitial && !selectors.isSearching && (
               <div className="absolute inset-0 bg-ground/20 backdrop-blur-sm flex items-center justify-center z-10">
@@ -584,7 +354,7 @@ export default function EventLoader({
               </div>
             )}
           </div>
-          
+
           {/* Loading more events indicator - only show if not searching */}
           {selectors.isLoadingMore && (
             <div className="flex justify-center py-8">
@@ -600,8 +370,8 @@ export default function EventLoader({
       ) : !selectors.isInitial && !selectors.hasError && !selectors.isBackendDown && !selectors.isSearching && !selectors.isLoading ? (
         <div className="text-center py-12">
           <p className="text-primary text-lg">
-            {state.query.search ? 
-              <>No events found matching &quot;{state.query.search}&quot;</> : 
+            {state.query.search ?
+              <>No events found matching &quot;{state.query.search}&quot;</> :
               "No events found matching your filters."
             }
           </p>

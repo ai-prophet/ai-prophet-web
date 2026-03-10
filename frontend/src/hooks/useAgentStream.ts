@@ -55,10 +55,9 @@ function parseBoardIdFromOutput(outputText: string): number | null {
 }
 
 export default function useAgentStream() {
-  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [messages, setMessages] = useState<ChatMessage[]>(loadMessages);
   const [isRunning, setIsRunning] = useState(false);
   const [isPlanning, setIsPlanning] = useState(false);
-  const hydratedRef = useRef(false);
   const stepRef = useRef(0);
 
   const searchGroupsRef = useRef<SearchGroup[]>([]);
@@ -68,16 +67,8 @@ export default function useAgentStream() {
   const onSearchResult = useRef<((g: SearchGroup) => void) | null>(null);
   const onBoardUpdate = useRef<((e: BoardEntry[]) => void) | null>(null);
 
-  // Restore messages from sessionStorage (client-only)
-  useEffect(() => {
-    const saved = loadMessages();
-    if (saved.length > 0) setMessages(saved);
-    hydratedRef.current = true;
-  }, []);
-
   // Persist messages to sessionStorage
   useEffect(() => {
-    if (!hydratedRef.current) return;
     saveMessages(messages);
   }, [messages]);
 
@@ -101,7 +92,20 @@ export default function useAgentStream() {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ prompt, settings }),
         });
-        const data = await res.json();
+        const text = await res.text();
+        let data: Record<string, unknown>;
+        try {
+          data = JSON.parse(text);
+        } catch {
+          addMessage({
+            id: nextId(),
+            type: "error",
+            content: `Failed to parse response from server. Raw: ${text.slice(0, 200)}`,
+            timestamp: Date.now(),
+            isError: true,
+          });
+          return;
+        }
         if (!res.ok) {
           addMessage({
             id: nextId(),
@@ -119,14 +123,14 @@ export default function useAgentStream() {
             type: "plan",
             content: "",
             timestamp: Date.now(),
-            planTitle: data.title,
-            planOutcomes: data.outcomes,
+            planTitle: data.title as string,
+            planOutcomes: data.outcomes as string[],
           });
         } else {
           addMessage({
             id: nextId(),
             type: "error",
-            content: data.message || "Failed to generate a forecasting plan.",
+            content: (data.message as string) || "Failed to generate a forecasting plan.",
             timestamp: Date.now(),
             isError: true,
           });
@@ -301,7 +305,13 @@ export default function useAgentStream() {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ title, outcomes, settings }),
         });
-        const data = await res.json();
+        const rawText = await res.text();
+        let data: Record<string, unknown>;
+        try {
+          data = JSON.parse(rawText);
+        } catch {
+          throw new Error(`Failed to parse server response. Raw: ${rawText.slice(0, 200)}`);
+        }
         if (!res.ok) {
           throw new Error(getApiErrorMessage(data));
         }

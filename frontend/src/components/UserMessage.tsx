@@ -1,12 +1,15 @@
 "use client";
 
+import Image from "next/image";
 import { motion } from "framer-motion";
 
 interface UserMessageProps {
   content: string;
+  userPicture?: string;
+  userName?: string;
 }
 
-export default function UserMessage({ content }: UserMessageProps) {
+export default function UserMessage({ content, userPicture, userName }: UserMessageProps) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 10 }}
@@ -17,10 +20,20 @@ export default function UserMessage({ content }: UserMessageProps) {
         <div className="bg-surface border border-edge rounded-2xl rounded-tr-sm px-3 sm:px-5 py-2.5 sm:py-3 min-w-0">
           <p className="text-primary text-sm sm:text-[15px] leading-relaxed break-words">{content}</p>
         </div>
-        <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-overlay flex-shrink-0 flex items-center justify-center">
-          <svg className="w-5 h-5 text-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0" />
-          </svg>
+        <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-overlay flex-shrink-0 flex items-center justify-center overflow-hidden">
+          {userPicture ? (
+            <Image
+              src={userPicture}
+              alt={userName || "User"}
+              width={36}
+              height={36}
+              className="w-full h-full object-cover"
+            />
+          ) : (
+            <svg className="w-5 h-5 text-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0" />
+            </svg>
+          )}
         </div>
       </div>
     </motion.div>

@@ -167,7 +167,6 @@ export default async function ResearchPostPage({
       title={post.frontmatter.title as string}
       date={post.frontmatter.date as string}
       author={post.frontmatter.author as string}
-      type={(post.frontmatter.type as string) || "Post"}
       heroImage={heroImg}
       contentHtml={contentHtml}
       toc={toc}

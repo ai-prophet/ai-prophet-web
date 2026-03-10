@@ -85,10 +85,12 @@ export default function Navbar({ onToggleHistory, historyOpen, onLogoDoubleClick
               className="flex items-center gap-2 text-sm font-bold text-primary hover:text-accent transition-colors"
             >
               <Image
-                src="/assets/logo.png"
+                src="/assets/logo-sm.png"
                 alt="AI Prophet"
                 width={24}
                 height={24}
+                priority
+                quality={75}
                 className="rounded-md"
               />
               <span>AI Prophet</span>
@@ -239,7 +241,7 @@ export default function Navbar({ onToggleHistory, historyOpen, onLogoDoubleClick
             className="fixed inset-0 bg-black/50 z-40 md:hidden"
             onClick={() => setMobileOpen(false)}
           />
-          <div className="fixed top-12 right-0 w-64 h-[calc(100vh-3rem)] bg-surface border-l border-edge z-50 md:hidden overflow-y-auto">
+          <div className="fixed top-12 right-0 w-[min(16rem,80vw)] h-[calc(100vh-3rem)] bg-surface border-l border-edge z-50 md:hidden overflow-y-auto">
             <div className="p-4 space-y-1">
               {NAV_LINKS.map((link) =>
                 link.children ? (

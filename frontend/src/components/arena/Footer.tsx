@@ -15,10 +15,11 @@ export default function Footer() {
         <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
           <div className="flex items-center gap-2.5">
             <Image
-              src="/assets/logo.png"
+              src="/assets/logo-sm.png"
               alt="AI Prophet"
               width={22}
               height={22}
+              quality={75}
               className="rounded-md"
             />
             <span className="text-sm font-semibold text-primary">

@@ -57,6 +57,11 @@ def init_db():
                     CREATE INDEX IF NOT EXISTS idx_forecast_user
                     ON forecast_history(user_id, created_at DESC)
                 """)
+                # Add outcomes column if not present (migration)
+                cur.execute("""
+                    ALTER TABLE forecast_history
+                    ADD COLUMN IF NOT EXISTS outcomes JSONB DEFAULT '[]'
+                """)
     except Exception as exc:
         import logging
         logging.getLogger("prophet_web.db").warning("DB init failed: %s", exc)

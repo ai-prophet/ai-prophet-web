@@ -6,6 +6,8 @@ import Link from "next/link";
 import ArenaLayout from "@/components/arena/ArenaLayout";
 import { getApiUrl } from "@/config/api";
 import { niceName, isModelConfigured } from "@/config/models";
+import { formatDate } from "@/lib/date-utils";
+import { parseProb, heatColor } from "@/lib/color-utils";
 
 /* ── Types ── */
 interface MarketEvent {
@@ -31,21 +33,6 @@ interface ConsolidatedData {
 }
 
 /* ── Helpers ── */
-function formatDate(d: string | null) {
-  if (!d) return "No date";
-  return new Date(d).toLocaleDateString("en-US", {
-    weekday: "short", month: "short", day: "numeric",
-    year: "numeric", hour: "numeric", minute: "2-digit",
-  });
-}
-
-function parseProb(p: string | number | undefined): number {
-  if (typeof p === "number") return p >= 0 ? p : -1;
-  if (typeof p === "string" && p.includes("%")) return parseFloat(p.replace("%", "")) / 100;
-  if (typeof p === "string" && !isNaN(parseFloat(p))) { const n = parseFloat(p); return n >= 0 ? n : -1; }
-  return -1;
-}
-
 function getWinners(result: MarketEvent["event_result"]): string[] {
   if (!result) return [];
   try {
@@ -53,14 +40,6 @@ function getWinners(result: MarketEvent["event_result"]): string[] {
     return Object.entries(obj).filter(([, v]) => v === 1).map(([k]) => k);
   } catch { return []; }
 }
-
-const heatColor = (v: number) =>
-  v === -1 ? "bg-overlay"
-    : v <= 0.2 ? "bg-accent/10"
-    : v <= 0.4 ? "bg-accent/20"
-    : v <= 0.6 ? "bg-accent/30"
-    : v <= 0.8 ? "bg-accent/45"
-    : "bg-accent/60";
 
 /* ── Page ── */
 export default function MarketDetail() {

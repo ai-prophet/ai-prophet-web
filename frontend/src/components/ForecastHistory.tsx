@@ -32,18 +32,36 @@ export async function deleteFromHistory(entryId: string): Promise<boolean> {
 export async function saveToHistory(
   userId: string,
   title: string,
-  submission: Record<string, number>
+  submission: Record<string, number>,
+  outcomes: string[] = []
 ): Promise<{ id: string; timestamp: number } | null> {
   try {
     const res = await fetch(`${API_BASE}/api/history`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ user_id: userId, title, submission }),
+      body: JSON.stringify({ user_id: userId, title, submission, outcomes }),
     });
     if (!res.ok) return null;
     return await res.json();
   } catch {
     return null;
+  }
+}
+
+export async function updateHistorySubmission(
+  entryId: string,
+  userId: string,
+  submission: Record<string, number>
+): Promise<boolean> {
+  try {
+    const res = await fetch(`${API_BASE}/api/history/${entryId}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ user_id: userId, submission }),
+    });
+    return res.ok;
+  } catch {
+    return false;
   }
 }
 
@@ -110,14 +128,15 @@ export default function ForecastHistory({
               </svg>
             </div>
             <p className="text-xs font-medium text-muted">No forecasts yet</p>
-            <p className="text-[10px] text-muted/60 mt-1">Completed forecasts appear here</p>
+            <p className="text-[10px] text-muted/60 mt-1">Your forecasts will appear here</p>
           </div>
         ) : (
           <div className="p-1.5 space-y-px">
             {history.map((entry) => {
-              const topOutcome = Object.entries(entry.submission).sort(
-                ([, a], [, b]) => b - a
-              )[0];
+              const hasResults = Object.keys(entry.submission).length > 0;
+              const topOutcome = hasResults
+                ? Object.entries(entry.submission).sort(([, a], [, b]) => b - a)[0]
+                : null;
               return (
                 <div
                   key={entry.id}
@@ -131,9 +150,13 @@ export default function ForecastHistory({
                       {entry.title}
                     </p>
                     <div className="flex items-center gap-2 mt-1">
-                      {topOutcome && (
+                      {topOutcome ? (
                         <span className="text-[11px] text-accent/80 font-mono">
                           {topOutcome[0].length > 18 ? topOutcome[0].slice(0, 18) + "..." : topOutcome[0]}: {(topOutcome[1] * 100).toFixed(0)}%
+                        </span>
+                      ) : (
+                        <span className="text-[11px] text-muted italic">
+                          Not yet run
                         </span>
                       )}
                       <span className="text-[10px] text-muted ml-auto">

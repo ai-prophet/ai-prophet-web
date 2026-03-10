@@ -4,11 +4,28 @@ import { Auth0Provider } from "@auth0/nextjs-auth0";
 import "./globals.css";
 import ThemeProvider from "@/components/ThemeProvider";
 
-const dmSans = DM_Sans({ subsets: ["latin"], weight: ["400", "500", "600", "700"] });
+const dmSans = DM_Sans({ subsets: ["latin"], weight: ["400", "500", "600", "700"], display: "swap" });
 
 export const metadata: Metadata = {
   title: "AI Prophet",
-  description: "AI-powered forecasting agent web interface",
+  description: "Harnessing AI to illuminate our path ahead",
+  icons: {
+    icon: "/assets/icon-192.png",
+    apple: "/apple-icon.png",
+  },
+  openGraph: {
+    title: "AI Prophet",
+    description: "Harnessing AI to illuminate our path ahead",
+    siteName: "AI Prophet",
+    images: [{ url: "/assets/og-image.png", width: 1200, height: 630 }],
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "AI Prophet",
+    description: "Harnessing AI to illuminate our path ahead",
+    images: ["/assets/og-image.png"],
+  },
 };
 
 export default function RootLayout({

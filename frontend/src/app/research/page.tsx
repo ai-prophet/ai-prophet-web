@@ -1,5 +1,3 @@
-"use client";
-
 import Image from "next/image";
 import Link from "next/link";
 import ArenaLayout from "@/components/arena/ArenaLayout";
@@ -62,6 +60,7 @@ export default function ResearchPage() {
                 src={post.heroImage}
                 alt={post.title}
                 fill
+                sizes="(max-width: 768px) 100vw, 50vw"
                 className="object-cover group-hover:scale-[1.02] transition-transform duration-300"
               />
             </div>

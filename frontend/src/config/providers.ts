@@ -161,6 +161,36 @@ export const PROVIDER_CONFIG: Record<string, ProviderConfig> = {
 };
 
 /**
+ * Extract provider key from a full model name string.
+ */
+export const getProviderFromModelName = (modelName: string): string => {
+  // Handle agent- prefixed models
+  if (modelName.startsWith('agent-')) {
+    const withoutAgentPrefix = modelName.substring(6); // Remove 'agent-' prefix
+    if (withoutAgentPrefix.startsWith('google/')) return 'google';
+    if (withoutAgentPrefix.startsWith('gemini')) return 'google';
+    if (withoutAgentPrefix.startsWith('anthropic/')) return 'anthropic';
+    if (withoutAgentPrefix.startsWith('x-ai/')) return 'xai';
+    if (withoutAgentPrefix.startsWith('meta-llama/')) return 'meta';
+    if (withoutAgentPrefix.startsWith('deepseek/')) return 'deepseek';
+    if (withoutAgentPrefix.startsWith('qwen/')) return 'qwen';
+    if (withoutAgentPrefix.startsWith('moonshotai/')) return 'moonshotai';
+    if (withoutAgentPrefix.startsWith('glm')) return 'zhipu';
+  }
+
+  // Handle regular models
+  if (modelName.startsWith('google/')) return 'google';
+  if (modelName.startsWith('meta-llama/')) return 'meta';
+  if (modelName.startsWith('deepseek/')) return 'deepseek';
+  if (modelName.startsWith('qwen/')) return 'qwen';
+  if (modelName.startsWith('x-ai/')) return 'xai';
+  if (modelName.startsWith('moonshotai/')) return 'moonshotai';
+  if (modelName.startsWith('anthropic/')) return 'anthropic';
+
+  return '';
+};
+
+/**
  * Normalize provider name by stripping spaces and making lowercase
  */
 const normalizeProviderName = (providerName: string): string => {

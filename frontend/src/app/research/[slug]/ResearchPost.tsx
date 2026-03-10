@@ -4,13 +4,11 @@ import ArenaLayout from "@/components/arena/ArenaLayout";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState, useCallback } from "react";
-
-const TYPE_LABELS: Record<string, string> = {
-  analysis: "Analysis",
-  post: "Post",
-  guide: "Guide",
-  experiment: "Experiment",
-};
+import {
+  KATEX_CSS_URL,
+  KATEX_JS_URL,
+  KATEX_AUTO_RENDER_URL,
+} from "@/lib/constants";
 
 function TableOfContents({
   toc,
@@ -108,7 +106,7 @@ function TableOfContents({
             className="fixed inset-0 z-40 xl:hidden"
             onClick={() => setMobileOpen(false)}
           />
-          <nav className="fixed bottom-20 right-6 z-50 xl:hidden w-72 max-h-[60vh] overflow-y-auto bg-surface border border-edge rounded-xl shadow-xl p-4 custom-scrollbar">
+          <nav className="fixed bottom-20 right-4 left-4 sm:left-auto sm:right-6 z-50 xl:hidden sm:w-72 max-h-[60vh] overflow-y-auto bg-surface border border-edge rounded-xl shadow-xl p-4 custom-scrollbar">
             <h3 className="text-[11px] font-semibold text-muted uppercase tracking-wider mb-3">
               Contents
             </h3>
@@ -144,7 +142,6 @@ export default function ResearchPost({
   title,
   date,
   author,
-  type,
   heroImage,
   contentHtml,
   toc,
@@ -153,7 +150,6 @@ export default function ResearchPost({
   title: string;
   date: string;
   author: string;
-  type: string;
   heroImage: string | null;
   contentHtml: string;
   toc: { id: string; text: string; level: number }[];
@@ -162,33 +158,38 @@ export default function ResearchPost({
   const articleRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
-    // Load KaTeX auto-render to process LaTeX in the article
+    // Load KaTeX CSS
     const link = document.createElement("link");
     link.rel = "stylesheet";
-    link.href = "https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css";
+    link.href = KATEX_CSS_URL;
     document.head.appendChild(link);
 
-    const script = document.createElement("script");
-    script.src = "https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js";
-    script.onload = () => {
-      const renderScript = document.createElement("script");
-      renderScript.src = "https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js";
-      renderScript.onload = () => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const win = window as any;
-        if (articleRef.current && win.renderMathInElement) {
-          win.renderMathInElement(articleRef.current, {
-            delimiters: [
-              { left: "$$", right: "$$", display: true },
-              { left: "$", right: "$", display: false },
-            ],
-            throwOnError: false,
-          });
-        }
-      };
-      document.head.appendChild(renderScript);
-    };
-    document.head.appendChild(script);
+    // Load KaTeX JS and auto-render in parallel, then render
+    const loadScript = (src: string): Promise<void> =>
+      new Promise((resolve, reject) => {
+        const s = document.createElement("script");
+        s.src = src;
+        s.async = true;
+        s.onload = () => resolve();
+        s.onerror = reject;
+        document.head.appendChild(s);
+      });
+
+    Promise.all([loadScript(KATEX_JS_URL), loadScript(KATEX_AUTO_RENDER_URL)]).then(() => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const win = window as any;
+      if (articleRef.current && win.renderMathInElement) {
+        win.renderMathInElement(articleRef.current, {
+          delimiters: [
+            { left: "$$", right: "$$", display: true },
+            { left: "$", right: "$", display: false },
+          ],
+          throwOnError: false,
+        });
+      }
+    }).catch(() => {
+      // KaTeX failed to load — math will render as raw text
+    });
   }, [contentHtml]);
 
   const formattedDate = new Date(date).toLocaleDateString("en-US", {
@@ -196,8 +197,6 @@ export default function ResearchPost({
     month: "long",
     day: "numeric",
   });
-  const typeLabel = TYPE_LABELS[type.toLowerCase()] || type;
-
   return (
     <ArenaLayout>
       <TableOfContents toc={toc} />
@@ -240,12 +239,12 @@ export default function ResearchPost({
             <span className="block text-[11px] font-semibold text-muted uppercase tracking-wider mb-1">
               Share
             </span>
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2">
               <a
                 href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(`https://prophetarena.co/research/${slug}`)}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 text-sm font-medium bg-overlay hover:bg-surface-hover px-3.5 py-1.5 rounded-lg transition-colors text-accent-primary"
+                className="inline-flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm font-medium bg-overlay hover:bg-surface-hover px-2.5 sm:px-3.5 py-1.5 rounded-lg transition-colors text-accent-primary"
               >
                 <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
@@ -256,7 +255,7 @@ export default function ResearchPost({
                 href={`https://linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(`https://prophetarena.co/research/${slug}`)}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 text-sm font-medium bg-overlay hover:bg-surface-hover px-3.5 py-1.5 rounded-lg transition-colors text-accent-primary"
+                className="inline-flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm font-medium bg-overlay hover:bg-surface-hover px-2.5 sm:px-3.5 py-1.5 rounded-lg transition-colors text-accent-primary"
               >
                 <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
@@ -269,11 +268,12 @@ export default function ResearchPost({
 
         {/* Hero image */}
         {heroImage && (
-          <div className="relative aspect-[2/1] rounded-xl overflow-hidden border border-edge mb-10 -mx-8 sm:-mx-12 lg:-mx-20">
+          <div className="relative aspect-[2/1] rounded-xl overflow-hidden border border-edge mb-10 -mx-2 sm:-mx-12 lg:-mx-20">
             <Image
               src={heroImage}
               alt={title}
               fill
+              sizes="(max-width: 1024px) 100vw, 80vw"
               className="object-cover"
               priority
             />
@@ -283,7 +283,7 @@ export default function ResearchPost({
         {/* Article content */}
         <article
           ref={articleRef}
-          className="prose prose-lg max-w-none text-primary
+          className="prose prose-base sm:prose-lg max-w-none text-primary
             prose-headings:text-primary prose-headings:font-semibold
             prose-h2:text-base prose-h2:pb-0
             prose-h3:text-sm
