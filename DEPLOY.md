@@ -1,4 +1,4 @@
-# Deploying Mini Prophet Web
+# Deploying AI Prophet
 
 This guide walks you through deploying the **backend** (FastAPI) and **frontend** (Next.js) for ~100 users. We use **Render** for the backend and **Vercel** for the frontend—both have free tiers and require no credit card.
 

@@ -11,7 +11,7 @@ from queue import Queue
 
 from config import AGENT_DEFAULTS, ENVIRONMENT_DEFAULTS, UserSettings, resolve_user_settings
 
-logger = logging.getLogger("prophet_web.runner")
+logger = logging.getLogger("ai_prophet.runner")
 
 RUNS_DIR = Path(__file__).resolve().parent.parent / "runs"
 
