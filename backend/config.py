@@ -10,13 +10,6 @@ import os
 
 from pydantic import BaseModel
 
-try:
-    from dotenv import load_dotenv
-except Exception:  # pragma: no cover - dependency optional at import time
-    load_dotenv = None
-
-if load_dotenv is not None:
-    load_dotenv(os.path.join(os.path.dirname(__file__), ".env"))
 
 AGENT_SYSTEM_TEMPLATE = """\
 You are a forecasting agent specialized in researching and predicting real-world event outcomes.
