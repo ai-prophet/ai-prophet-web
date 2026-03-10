@@ -1,2 +1,35 @@
+# Claude Code
 .claude/
+
+# Environment variables
 .env
+.env.*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDEs and editors
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+
+# Node
+node_modules/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# Next.js
+.next/
+
+# Build output
+build/
+dist/
