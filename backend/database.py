@@ -12,7 +12,7 @@ except Exception:
     load_dotenv = None
 
 if load_dotenv is not None:
-    load_dotenv(os.path.join(os.path.dirname(__file__), "..", ".env"))
+    load_dotenv(os.path.join(os.path.dirname(__file__), ".env"))
 
 DATABASE_URL = os.getenv("DATABASE_URL", "")
 
