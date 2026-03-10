@@ -123,14 +123,14 @@ export default function useAgentStream() {
             type: "plan",
             content: "",
             timestamp: Date.now(),
-            planTitle: data.title,
-            planOutcomes: data.outcomes,
+            planTitle: data.title as string,
+            planOutcomes: data.outcomes as string[],
           });
         } else {
           addMessage({
             id: nextId(),
             type: "error",
-            content: data.message || "Failed to generate a forecasting plan.",
+            content: (data.message as string) || "Failed to generate a forecasting plan.",
             timestamp: Date.now(),
             isError: true,
           });
