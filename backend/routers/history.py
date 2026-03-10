@@ -5,7 +5,7 @@ import time
 import uuid
 
 from fastapi import APIRouter
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 import psycopg2.extras
 
 from database import get_db
@@ -16,11 +16,12 @@ router = APIRouter(prefix="/api/history", tags=["history"])
 class SaveForecastRequest(BaseModel):
     user_id: str
     title: str
-    submission: dict[str, float] = {}
-    outcomes: list[str] = []
+    submission: dict[str, float] = Field(default_factory=dict)
+    outcomes: list[str] = Field(default_factory=list)
 
 
 class UpdateForecastRequest(BaseModel):
+    user_id: str
     submission: dict[str, float]
 
 
@@ -28,7 +29,7 @@ class ForecastEntry(BaseModel):
     id: str
     title: str
     submission: dict[str, float]
-    outcomes: list[str] = []
+    outcomes: list[str] = Field(default_factory=list)
     timestamp: float
 
 
@@ -50,9 +51,12 @@ async def update_forecast(entry_id: str, req: UpdateForecastRequest):
     with get_db() as conn:
         with conn.cursor() as cur:
             cur.execute(
-                "UPDATE forecast_history SET submission = %s WHERE id = %s",
-                (json.dumps(req.submission), entry_id),
+                "UPDATE forecast_history SET submission = %s WHERE id = %s AND user_id = %s",
+                (json.dumps(req.submission), entry_id, req.user_id),
             )
+            if cur.rowcount == 0:
+                from fastapi import HTTPException
+                raise HTTPException(status_code=404, detail="Forecast not found")
     return {"ok": True}
 
 

@@ -511,7 +511,6 @@ export function useAgentLeaderboardData() {
           return ALLOWED_AGENT_MODELS.includes(model.name);
         });
 
-        console.log(`Found ${agentModels.length} agent models from API:`, agentModels.map((m: any) => m.name));
 
         const processedModels = transformApiDataToAgentData(agentModels);
 
@@ -553,14 +552,6 @@ export function useAgentLeaderboardData() {
           processedModels.push(marketBaselineModel);
         }
 
-        console.log('Agent leaderboard models:', processedModels.map(m => ({
-          name: m.name,
-          hasBrier: m.brier !== undefined && m.brier !== null,
-          brierValue: m.brier,
-          hasAvgReturn: m.average_return !== undefined,
-          avgReturnValue: m.average_return?.['0']?.score,
-          numEvents: m.num_events || m.resolved_events
-        })));
 
         setData(processedModels);
         setModelsCount(processedModels.length);

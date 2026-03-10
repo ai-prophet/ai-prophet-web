@@ -187,6 +187,8 @@ export default function ResearchPost({
           throwOnError: false,
         });
       }
+    }).catch(() => {
+      // KaTeX failed to load — math will render as raw text
     });
   }, [contentHtml]);
 

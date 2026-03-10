@@ -9,7 +9,8 @@ export const KATEX_JS_URL = `https://cdn.jsdelivr.net/npm/katex@${KATEX_VERSION}
 export const KATEX_AUTO_RENDER_URL = `https://cdn.jsdelivr.net/npm/katex@${KATEX_VERSION}/dist/contrib/auto-render.min.js`;
 
 // ── Unsplash ──
-export const UNSPLASH_ACCESS_KEY = "eEHiw4CWDSz9swFt162d2liFAOYeCuO-QyY9PYGlIpg";
+export const UNSPLASH_ACCESS_KEY =
+  process.env.NEXT_PUBLIC_UNSPLASH_ACCESS_KEY || "";
 export const UNSPLASH_FALLBACK_IMAGE =
   "https://images.unsplash.com/photo-1416339306562-f3d12fefd36f";
 export const EVENT_CARD_FALLBACK_IMAGE =

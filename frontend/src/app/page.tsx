@@ -26,12 +26,14 @@ const SETTINGS_KEY = "prophet_settings";
 const SESSION_KEY = "prophet_session";
 const HERO_INPUT_KEY = "prophet_hero_input";
 const CHAT_MESSAGES_KEY = "prophet_chat_messages";
+const HISTORY_ID_KEY = "prophet_current_history_id";
 
 /** Clear all transient session state atomically. */
 function clearSessionState() {
   try { sessionStorage.removeItem(SESSION_KEY); } catch {}
   try { sessionStorage.removeItem(HERO_INPUT_KEY); } catch {}
   try { sessionStorage.removeItem(CHAT_MESSAGES_KEY); } catch {}
+  try { sessionStorage.removeItem(HISTORY_ID_KEY); } catch {}
 }
 
 interface SessionState {
@@ -106,7 +108,18 @@ export default function Home() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const layoutRef = useRef<HTMLDivElement>(null);
   const resizingRef = useRef(false);
-  const currentHistoryIdRef = useRef<string | null>(null);
+  const currentHistoryIdRef = useRef<string | null>(
+    typeof window !== "undefined"
+      ? (() => { try { return sessionStorage.getItem(HISTORY_ID_KEY); } catch { return null; } })()
+      : null
+  );
+  const setCurrentHistoryId = useCallback((id: string | null) => {
+    currentHistoryIdRef.current = id;
+    try {
+      if (id) sessionStorage.setItem(HISTORY_ID_KEY, id);
+      else sessionStorage.removeItem(HISTORY_ID_KEY);
+    } catch {}
+  }, []);
 
   useEffect(() => {
     setSettings(loadSettings());
@@ -171,15 +184,11 @@ export default function Home() {
 
   const handlePlanSave = useCallback(async (title: string, outcomes: string[]) => {
     if (!user?.sub) return;
-    // Deduplicate: don't save if a plan with this title already exists
-    const existing = forecastHistory.find((e) => e.title === title);
-    if (existing) {
-      currentHistoryIdRef.current = existing.id;
-      return;
-    }
+    // Deduplicate: skip if this session already has a tracked history entry
+    if (currentHistoryIdRef.current) return;
     const result = await saveToHistory(user.sub as string, title, {}, outcomes);
     if (result) {
-      currentHistoryIdRef.current = result.id;
+      setCurrentHistoryId(result.id);
       const entry: ForecastHistoryEntry = {
         id: result.id,
         title,
@@ -207,7 +216,8 @@ export default function Home() {
       return;
     }
     // Update existing plan entry with results
-    const ok = await updateHistorySubmission(entryId, submission);
+    if (!user?.sub) return;
+    const ok = await updateHistorySubmission(entryId, user.sub as string, submission);
     if (ok) {
       setForecastHistory((prev) =>
         prev.map((e) => (e.id === entryId ? { ...e, submission } : e))
@@ -243,7 +253,7 @@ export default function Home() {
     try {
       sessionStorage.setItem(CHAT_MESSAGES_KEY, JSON.stringify(seedMessages));
     } catch {}
-    currentHistoryIdRef.current = entry.id;
+    setCurrentHistoryId(entry.id);
     setViewingEntry(null);
     setInitialQuery(""); // Don't re-fire the query; plan is already seeded
     setChatKey((k) => k + 1);
@@ -277,7 +287,7 @@ export default function Home() {
     setHighlightBoardId(null);
     setActiveTab("board");
     setViewingEntry(null);
-    currentHistoryIdRef.current = null;
+    setCurrentHistoryId(null);
     setChatKey((k) => k + 1); // Ensure next ChatInterface mount is fresh
     clearSessionState();
   }, []);

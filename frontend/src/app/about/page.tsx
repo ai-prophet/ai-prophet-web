@@ -128,7 +128,7 @@ export default function About() {
             <h2 className="text-[11px] font-semibold text-muted uppercase tracking-wider mb-4">
               Our Mission
             </h2>
-            <p className="text-lg sm:text-xl font-medium text-accent leading-snug mb-6 whitespace-nowrap">
+            <p className="text-lg sm:text-xl font-medium text-accent leading-snug mb-6">
               How can AI transform open-domain forecasting and help humans make
               better decisions?
             </p>

@@ -61,7 +61,7 @@ export default function HeroLanding({
               </span>
             </h1>
             <p className="text-sm sm:text-base text-secondary max-w-md mx-auto animate-[fadeIn_1s_ease-out] leading-relaxed">
-              Ask a question about the future. Our AI agents search, analyze, and produce calibrated probability forecasts.
+              Harnessing AI to illuminate our path ahead
             </p>
           </div>
 

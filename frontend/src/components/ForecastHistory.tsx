@@ -50,13 +50,14 @@ export async function saveToHistory(
 
 export async function updateHistorySubmission(
   entryId: string,
+  userId: string,
   submission: Record<string, number>
 ): Promise<boolean> {
   try {
     const res = await fetch(`${API_BASE}/api/history/${entryId}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ submission }),
+      body: JSON.stringify({ user_id: userId, submission }),
     });
     return res.ok;
   } catch {

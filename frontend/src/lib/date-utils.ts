@@ -5,14 +5,20 @@
 /** Full date with weekday and time (used on market detail pages). */
 export function formatDate(d: string | null): string {
   if (!d) return "No date";
-  return new Date(d).toLocaleDateString("en-US", {
-    weekday: "short",
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-    hour: "numeric",
-    minute: "2-digit",
-  });
+  try {
+    const date = new Date(d);
+    if (isNaN(date.getTime())) return "Invalid date";
+    return date.toLocaleDateString("en-US", {
+      weekday: "short",
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
+    });
+  } catch {
+    return "Invalid date";
+  }
 }
 
 /** Date with time but no weekday. */
