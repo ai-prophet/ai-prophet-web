@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import type {
   AgentEvent,
   ChatMessage,
+  CostStats,
   SearchGroup,
   BoardEntry,
   SearchSource,
@@ -63,6 +64,9 @@ export default function useAgentStream() {
   const searchGroupsRef = useRef<SearchGroup[]>([]);
   const boardRef = useRef<BoardEntry[]>([]);
   const sourceRegistryRef = useRef<Record<string, SearchSource>>({});
+  const plannerCostRef = useRef<number>(0);
+  const plannerModelRef = useRef<string>("");
+  const lastRunIdRef = useRef<string>("");
 
   const onSearchResult = useRef<((g: SearchGroup) => void) | null>(null);
   const onBoardUpdate = useRef<((e: BoardEntry[]) => void) | null>(null);
@@ -77,7 +81,7 @@ export default function useAgentStream() {
   }, []);
 
   const plan = useCallback(
-    async (prompt: string, settings: UserSettings) => {
+    async (prompt: string, settings: UserSettings, userId?: string) => {
       setIsPlanning(true);
       addMessage({
         id: nextId(),
@@ -90,7 +94,7 @@ export default function useAgentStream() {
         const res = await fetch(`${API_BASE}/api/plan`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ prompt, settings }),
+          body: JSON.stringify({ prompt, settings, user_id: userId || "" }),
         });
         const text = await res.text();
         let data: Record<string, unknown>;
@@ -118,6 +122,8 @@ export default function useAgentStream() {
         }
 
         if (data.status === "success" && data.title && data.outcomes) {
+          plannerCostRef.current = (data.planner_cost as number) || 0;
+          plannerModelRef.current = (data.planner_model as string) || "";
           addMessage({
             id: nextId(),
             type: "plan",
@@ -267,6 +273,14 @@ export default function useAgentStream() {
             onBoardUpdate.current?.(event.board);
           }
 
+          const costStats: CostStats | undefined = event.cost_stats
+            ? {
+                ...event.cost_stats,
+                planner_cost: plannerCostRef.current,
+                planner_model: plannerModelRef.current,
+              }
+            : undefined;
+
           addMessage({
             id: nextId(),
             type: "result",
@@ -275,6 +289,7 @@ export default function useAgentStream() {
             submission: event.submission,
             exitStatus: event.exit_status,
             board: event.board,
+            costStats: costStats,
           });
           setIsRunning(false);
           break;
@@ -285,12 +300,13 @@ export default function useAgentStream() {
   );
 
   const startRun = useCallback(
-    async (title: string, outcomes: string[], settings: UserSettings) => {
+    async (title: string, outcomes: string[], settings: UserSettings, userId?: string) => {
       setIsRunning(true);
       stepRef.current = 0;
       searchGroupsRef.current = [];
       boardRef.current = [];
       sourceRegistryRef.current = {};
+      // plannerCostRef is already set from the plan() call
 
       addMessage({
         id: nextId(),
@@ -303,7 +319,7 @@ export default function useAgentStream() {
         const res = await fetch(`${API_BASE}/api/run`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ title, outcomes, settings }),
+          body: JSON.stringify({ title, outcomes, settings, user_id: userId || "" }),
         });
         const rawText = await res.text();
         let data: Record<string, unknown>;
@@ -319,6 +335,7 @@ export default function useAgentStream() {
         if (!run_id) {
           throw new Error("Missing run_id from backend.");
         }
+        lastRunIdRef.current = run_id;
 
         const eventSource = new EventSource(
           `${API_BASE}/api/run/${run_id}/stream`
@@ -369,5 +386,6 @@ export default function useAgentStream() {
     clearMessages,
     onSearchResult,
     onBoardUpdate,
+    lastRunIdRef,
   };
 }

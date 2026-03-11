@@ -1,6 +1,6 @@
 "use client";
 
-import type { ForecastHistoryEntry } from "@/types";
+import type { ForecastHistoryEntry, CostStats } from "@/types";
 
 const API_BASE = (
   process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"
@@ -51,13 +51,16 @@ export async function saveToHistory(
 export async function updateHistorySubmission(
   entryId: string,
   userId: string,
-  submission: Record<string, number>
+  submission: Record<string, number>,
+  costStats?: CostStats
 ): Promise<boolean> {
   try {
+    const body: Record<string, unknown> = { user_id: userId, submission };
+    if (costStats) body.cost_stats = costStats;
     const res = await fetch(`${API_BASE}/api/history/${entryId}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ user_id: userId, submission }),
+      body: JSON.stringify(body),
     });
     return res.ok;
   } catch {

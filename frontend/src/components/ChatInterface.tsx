@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import useAgentStream from "@/hooks/useAgentStream";
-import type { SearchGroup, BoardEntry, UserSettings } from "@/types";
+import type { SearchGroup, BoardEntry, UserSettings, CostStats } from "@/types";
 import UserMessage from "./UserMessage";
 import ForecastPlan from "./ForecastPlan";
 import AgentDivider from "./AgentDivider";
@@ -22,7 +22,7 @@ interface ChatInterfaceProps {
   onToggleSettings: () => void;
   settingsOpen: boolean;
   onPlanSave?: (title: string, outcomes: string[]) => void;
-  onForecastComplete?: (title: string, submission: Record<string, number>) => void;
+  onForecastComplete?: (title: string, submission: Record<string, number>, costStats?: CostStats, runId?: string) => void;
   onToggleHistory?: () => void;
   onToggleSidebar?: () => void;
   historyOpen?: boolean;
@@ -30,6 +30,7 @@ interface ChatInterfaceProps {
   onNewForecast?: () => void;
   userPicture?: string;
   userName?: string;
+  userId?: string;
 }
 
 export default function ChatInterface({
@@ -52,6 +53,7 @@ export default function ChatInterface({
   onNewForecast,
   userPicture,
   userName,
+  userId,
 }: ChatInterfaceProps) {
   const [input, setInput] = useState("");
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -65,6 +67,7 @@ export default function ChatInterface({
     clearMessages,
     onSearchResult: searchRef,
     onBoardUpdate: boardRef,
+    lastRunIdRef,
   } = useAgentStream();
 
   useEffect(() => {
@@ -75,7 +78,7 @@ export default function ChatInterface({
   useEffect(() => {
     if (initialQuery && !initialQueryFired.current) {
       initialQueryFired.current = true;
-      plan(initialQuery, settings);
+      plan(initialQuery, settings, userId);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -109,7 +112,7 @@ export default function ChatInterface({
       if (msg.type === "result" && msg.submission && Object.keys(msg.submission).length > 0 && !savedIdsRef.current.has(msg.id)) {
         savedIdsRef.current.add(msg.id);
         const planMsg = [...messages].reverse().find((m) => m.type === "plan" && m.planTitle);
-        onForecastComplete?.(planMsg?.planTitle || "Untitled Forecast", msg.submission);
+        onForecastComplete?.(planMsg?.planTitle || "Untitled Forecast", msg.submission, msg.costStats, lastRunIdRef.current || undefined);
       }
     }
   }, [messages, onPlanSave, onForecastComplete]);
@@ -119,13 +122,13 @@ export default function ChatInterface({
     const text = input.trim();
     if (!text || isPlanning || isRunning) return;
     setInput("");
-    plan(text, settings);
+    plan(text, settings, userId);
   };
 
   const handleRun = (title: string, outcomes: string[]) => {
     if (isRunning) return;
     onRunStart();
-    startRun(title, outcomes, settings);
+    startRun(title, outcomes, settings, userId);
   };
 
   const handleNewForecast = () => {
@@ -164,7 +167,7 @@ export default function ChatInterface({
   }, [hasForecastPlans, onToggleSettings, openLatestForecastEdit]);
 
   return (
-    <div className="h-full flex flex-col bg-ground">
+    <div className="h-full flex flex-col bg-ground overflow-hidden">
       {/* ── Toolbar ── */}
       <div className="flex-shrink-0 h-11 border-b border-edge bg-surface/80 backdrop-blur-sm flex items-center justify-between px-3">
         {/* Left */}
@@ -245,8 +248,8 @@ export default function ChatInterface({
       </div>
 
       {/* ── Messages ── */}
-      <div className="flex-1 overflow-y-auto custom-scrollbar">
-        <div className="max-w-3xl mx-auto px-3 sm:px-6 py-4 sm:py-6 space-y-4">
+      <div className="flex-1 overflow-y-auto custom-scrollbar overscroll-contain">
+        <div className="max-w-3xl mx-auto px-3 sm:px-6 py-4 sm:py-6 space-y-4 min-h-0">
           {/* Empty state */}
           {!hasMessages && !isPlanning && (
             <div className="flex items-center justify-center pt-32">

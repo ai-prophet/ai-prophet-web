@@ -31,11 +31,21 @@ interface NavbarProps {
 export default function Navbar({ onToggleHistory, historyOpen, onLogoDoubleClick }: NavbarProps = {}) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const logoTapRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const pathname = usePathname();
   const { theme, toggle: toggleTheme } = useTheme();
   const { user, isLoading: authLoading } = useUser();
+
+  useEffect(() => {
+    if (!user?.sub) return;
+    const API_BASE = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000").replace(/\/+$/, "");
+    fetch(`${API_BASE}/api/admin/check?user_id=${encodeURIComponent(user.sub as string)}`)
+      .then((r) => r.json())
+      .then((data) => setIsAdmin(data.is_admin === true))
+      .catch(() => setIsAdmin(false));
+  }, [user]);
 
   // Close dropdown on outside click
   useEffect(() => {
@@ -187,12 +197,32 @@ export default function Navbar({ onToggleHistory, historyOpen, onLogoDoubleClick
                     )}
                   </button>
                   {/* Hover dropdown */}
-                  <div className="absolute right-0 top-full pt-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 z-50">
+                  <div className="absolute right-0 top-full pt-0.5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 z-50">
                     <div className="w-48 bg-surface rounded-lg shadow-lg shadow-black/30 border border-edge py-2">
                       <div className="px-3 py-2 border-b border-edge">
                         <p className="text-xs font-medium text-primary truncate">{user.name as string}</p>
                         <p className="text-[11px] text-muted truncate">{user.email as string}</p>
                       </div>
+                      <a
+                        href="/usage"
+                        className="flex items-center gap-2 px-3 py-2 text-xs font-medium text-secondary hover:text-primary hover:bg-surface-hover transition-colors"
+                      >
+                        <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
+                        </svg>
+                        Usage
+                      </a>
+                      {isAdmin && (
+                        <a
+                          href="/admin"
+                          className="flex items-center gap-2 px-3 py-2 text-xs font-medium text-secondary hover:text-primary hover:bg-surface-hover transition-colors"
+                        >
+                          <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.94-3.197a5.971 5.971 0 00-.94 3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z" />
+                          </svg>
+                          Admin
+                        </a>
+                      )}
                       <a
                         href="/auth/logout"
                         className="flex items-center gap-2 px-3 py-2 text-xs font-medium text-secondary hover:text-primary hover:bg-surface-hover transition-colors"
@@ -281,6 +311,23 @@ export default function Navbar({ onToggleHistory, historyOpen, onLogoDoubleClick
               )}
               <div className="pt-3 border-t border-edge mt-3">
                 {user ? (
+                  <>
+                  <Link
+                    href="/usage"
+                    className="block px-3 py-2 text-sm font-medium text-secondary hover:text-primary hover:bg-surface-hover rounded-lg transition-colors"
+                    onClick={() => setMobileOpen(false)}
+                  >
+                    Usage
+                  </Link>
+                  {isAdmin && (
+                    <Link
+                      href="/admin"
+                      className="block px-3 py-2 text-sm font-medium text-secondary hover:text-primary hover:bg-surface-hover rounded-lg transition-colors"
+                      onClick={() => setMobileOpen(false)}
+                    >
+                      Admin
+                    </Link>
+                  )}
                   <a
                     href="/auth/logout"
                     className="block px-3 py-2 text-sm font-medium text-secondary hover:text-primary hover:bg-surface-hover rounded-lg transition-colors"
@@ -288,6 +335,7 @@ export default function Navbar({ onToggleHistory, historyOpen, onLogoDoubleClick
                   >
                     Logout
                   </a>
+                  </>
                 ) : (
                   <a
                     href="/auth/login"

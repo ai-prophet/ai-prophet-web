@@ -11,6 +11,7 @@ from sse_starlette.sse import EventSourceResponse
 
 from agent.runner import get_run_queue, start_run
 from config import UserSettings
+from services.credits import check_credit
 from services.planner import generate_forecast_plan
 
 router = APIRouter(prefix="/api")
@@ -18,23 +19,39 @@ router = APIRouter(prefix="/api")
 
 class PlanRequest(BaseModel):
     prompt: str
+    user_id: str = ""
     settings: UserSettings = UserSettings()
 
 
 class RunRequest(BaseModel):
     title: str
     outcomes: list[str]
+    user_id: str = ""
     settings: UserSettings = UserSettings()
+
+
+def _enforce_credit(user_id: str) -> None:
+    """Raise 403 if user has exceeded their credit limit."""
+    if not user_id:
+        return  # No user_id means unauthenticated — skip check
+    allowed, remaining, limit = check_credit(user_id)
+    if not allowed:
+        raise HTTPException(
+            403,
+            detail=f"Credit limit reached (${limit:.2f}). Contact an admin to increase your limit.",
+        )
 
 
 @router.post("/plan")
 async def plan(req: PlanRequest):
+    _enforce_credit(req.user_id)
     result = generate_forecast_plan(req.prompt, req.settings)
     return result
 
 
 @router.post("/run")
 async def run(req: RunRequest):
+    _enforce_credit(req.user_id)
     if len(req.outcomes) < 2:
         raise HTTPException(400, "At least 2 outcomes are required.")
     run_id, _ = start_run(req.title, req.outcomes, req.settings)

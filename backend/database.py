@@ -55,6 +55,24 @@ def init_db():
                     ALTER TABLE forecast_history
                     ADD COLUMN IF NOT EXISTS outcomes JSONB DEFAULT '[]'
                 """)
+                # Add cost_stats column if not present (migration)
+                cur.execute("""
+                    ALTER TABLE forecast_history
+                    ADD COLUMN IF NOT EXISTS cost_stats JSONB DEFAULT '{}'
+                """)
+                # Add reasoning_trace column if not present (migration)
+                cur.execute("""
+                    ALTER TABLE forecast_history
+                    ADD COLUMN IF NOT EXISTS reasoning_trace JSONB DEFAULT NULL
+                """)
+                # User credits table
+                cur.execute("""
+                    CREATE TABLE IF NOT EXISTS user_credits (
+                        user_id TEXT PRIMARY KEY,
+                        credit_limit DOUBLE PRECISION NOT NULL DEFAULT 5.0,
+                        created_at DOUBLE PRECISION NOT NULL DEFAULT EXTRACT(EPOCH FROM NOW())
+                    )
+                """)
     except Exception as exc:
         import logging
         logging.getLogger("ai_prophet.db").warning("DB init failed: %s", exc)
