@@ -68,11 +68,24 @@ export interface ObservationEvent {
   probabilities?: Record<string, number>;
 }
 
+export interface CostStats {
+  model_cost: number;
+  search_cost: number;
+  total_cost: number;
+  planner_cost?: number;
+  n_api_calls: number;
+  n_searches: number;
+  model_name?: string;
+  search_backend?: string;
+  planner_model?: string;
+}
+
 export interface RunEndEvent {
   type: "run_end";
   exit_status: string;
   submission: Record<string, number>;
   board: BoardEntry[];
+  cost_stats?: CostStats;
   error?: string;
 }
 
@@ -124,6 +137,7 @@ export interface ChatMessage {
   submission?: Record<string, number>;
   exitStatus?: string;
   board?: BoardEntry[];
+  costStats?: CostStats;
   isError?: boolean;
   // plan data
   planTitle?: string;
@@ -135,6 +149,7 @@ export interface ForecastHistoryEntry {
   title: string;
   submission: Record<string, number>;
   outcomes?: string[];
+  cost_stats?: CostStats;
   timestamp: number;
 }
 

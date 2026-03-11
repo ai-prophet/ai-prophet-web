@@ -90,6 +90,8 @@ def start_run(
                 context_manager=ctx_mgr,
                 event_queue=event_queue,
                 output_path=str(output_path),
+                model_name=settings.model_name,
+                search_backend=settings.search_backend,
                 **{k: v for k, v in agent_cfg.items() if k != "output_path"},
             )
 

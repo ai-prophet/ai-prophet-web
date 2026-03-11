@@ -111,6 +111,10 @@ def generate_forecast_plan(prompt: str, settings: UserSettings) -> dict:
             temperature=0.7,
             response_format={"type": "json_object"},
         )
+        try:
+            planner_cost = litellm.completion_cost(completion_response=response)
+        except Exception:
+            planner_cost = 0.0
         raw = (response.choices[0].message.content or "{}").strip()
         # Strip markdown code fences if present
         if raw.startswith("```"):
@@ -124,6 +128,8 @@ def generate_forecast_plan(prompt: str, settings: UserSettings) -> dict:
             result = _extract_first_json(raw)
         if "status" not in result:
             result["status"] = "success"
+        result["planner_cost"] = round(planner_cost, 6)
+        result["planner_model"] = planner_model
         return result
     except json.JSONDecodeError:
         logger.warning("Failed to parse LLM response: %s", raw[:500])

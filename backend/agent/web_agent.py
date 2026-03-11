@@ -35,10 +35,14 @@ class WebForecastAgent(DefaultForecastAgent):
         *,
         context_manager: ContextManager | None = None,
         event_queue: Queue | None = None,
+        model_name: str = "",
+        search_backend: str = "",
         **kwargs,
     ) -> None:
         super().__init__(model=model, env=env, context_manager=context_manager, **kwargs)
         self._queue: Queue = event_queue or Queue()
+        self._model_name = model_name
+        self._search_backend = search_backend
 
     @property
     def event_queue(self) -> Queue:
@@ -134,5 +138,14 @@ class WebForecastAgent(DefaultForecastAgent):
             "exit_status": result.get("exit_status", "unknown"),
             "submission": result.get("submission", {}),
             "board": board,
+            "cost_stats": {
+                "model_cost": round(getattr(self, "model_cost", 0), 6),
+                "search_cost": round(getattr(self, "search_cost", 0), 6),
+                "total_cost": round(getattr(self, "total_cost", 0), 6),
+                "n_api_calls": getattr(self, "n_calls", 0),
+                "n_searches": getattr(self, "n_searches", 0),
+                "model_name": self._model_name,
+                "search_backend": self._search_backend,
+            },
         })
         self._queue.put(None)

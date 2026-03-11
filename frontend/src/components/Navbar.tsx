@@ -187,12 +187,21 @@ export default function Navbar({ onToggleHistory, historyOpen, onLogoDoubleClick
                     )}
                   </button>
                   {/* Hover dropdown */}
-                  <div className="absolute right-0 top-full pt-1 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 z-50">
+                  <div className="absolute right-0 top-full pt-0.5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150 z-50">
                     <div className="w-48 bg-surface rounded-lg shadow-lg shadow-black/30 border border-edge py-2">
                       <div className="px-3 py-2 border-b border-edge">
                         <p className="text-xs font-medium text-primary truncate">{user.name as string}</p>
                         <p className="text-[11px] text-muted truncate">{user.email as string}</p>
                       </div>
+                      <a
+                        href="/usage"
+                        className="flex items-center gap-2 px-3 py-2 text-xs font-medium text-secondary hover:text-primary hover:bg-surface-hover transition-colors"
+                      >
+                        <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
+                        </svg>
+                        Usage
+                      </a>
                       <a
                         href="/auth/logout"
                         className="flex items-center gap-2 px-3 py-2 text-xs font-medium text-secondary hover:text-primary hover:bg-surface-hover transition-colors"
@@ -281,6 +290,14 @@ export default function Navbar({ onToggleHistory, historyOpen, onLogoDoubleClick
               )}
               <div className="pt-3 border-t border-edge mt-3">
                 {user ? (
+                  <>
+                  <Link
+                    href="/usage"
+                    className="block px-3 py-2 text-sm font-medium text-secondary hover:text-primary hover:bg-surface-hover rounded-lg transition-colors"
+                    onClick={() => setMobileOpen(false)}
+                  >
+                    Usage
+                  </Link>
                   <a
                     href="/auth/logout"
                     className="block px-3 py-2 text-sm font-medium text-secondary hover:text-primary hover:bg-surface-hover rounded-lg transition-colors"
@@ -288,6 +305,7 @@ export default function Navbar({ onToggleHistory, historyOpen, onLogoDoubleClick
                   >
                     Logout
                   </a>
+                  </>
                 ) : (
                   <a
                     href="/auth/login"

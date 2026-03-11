@@ -5,7 +5,7 @@ import dynamic from "next/dynamic";
 import { useUser } from "@auth0/nextjs-auth0";
 import ChatInterface from "@/components/ChatInterface";
 import Navbar from "@/components/Navbar";
-import type { SearchGroup, BoardEntry, UserSettings, ForecastHistoryEntry } from "@/types";
+import type { SearchGroup, BoardEntry, UserSettings, ForecastHistoryEntry, CostStats } from "@/types";
 import { DEFAULT_SETTINGS } from "@/types";
 import { getApiUrl } from "@/config/api";
 import { fetchHistory, saveToHistory, updateHistorySubmission, deleteFromHistory } from "@/components/ForecastHistory";
@@ -200,7 +200,14 @@ export default function Home() {
     }
   }, [user, forecastHistory]);
 
-  const handleForecastComplete = useCallback(async (title: string, submission: Record<string, number>) => {
+  const saveTrace = useCallback(async (entryId: string, runId: string) => {
+    try {
+      const API_BASE = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000").replace(/\/+$/, "");
+      await fetch(`${API_BASE}/api/history/${entryId}/trace/${runId}`, { method: "POST" });
+    } catch {}
+  }, []);
+
+  const handleForecastComplete = useCallback(async (title: string, submission: Record<string, number>, costStats?: CostStats, runId?: string) => {
     const entryId = currentHistoryIdRef.current;
     if (!entryId) {
       // Fallback: save new entry if no tracked plan
@@ -210,20 +217,22 @@ export default function Home() {
         setForecastHistory((prev) => {
           const exists = prev.some((e) => e.id === result.id);
           if (exists) return prev;
-          return [{ id: result.id, title, submission, timestamp: result.timestamp }, ...prev];
+          return [{ id: result.id, title, submission, cost_stats: costStats, timestamp: result.timestamp }, ...prev];
         });
+        if (runId) saveTrace(result.id, runId);
       }
       return;
     }
     // Update existing plan entry with results
     if (!user?.sub) return;
-    const ok = await updateHistorySubmission(entryId, user.sub as string, submission);
+    const ok = await updateHistorySubmission(entryId, user.sub as string, submission, costStats as Record<string, unknown> | undefined);
     if (ok) {
       setForecastHistory((prev) =>
-        prev.map((e) => (e.id === entryId ? { ...e, submission } : e))
+        prev.map((e) => (e.id === entryId ? { ...e, submission, cost_stats: costStats } : e))
       );
     }
-  }, [user]);
+    if (runId) saveTrace(entryId, runId);
+  }, [user, saveTrace]);
 
   const handleHistorySelect = useCallback((entry: ForecastHistoryEntry) => {
     const hasResults = Object.keys(entry.submission).length > 0;
