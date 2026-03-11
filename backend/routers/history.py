@@ -64,7 +64,6 @@ async def update_forecast(entry_id: str, req: UpdateForecastRequest):
                     (json.dumps(req.submission), entry_id, req.user_id),
                 )
             if cur.rowcount == 0:
-                from fastapi import HTTPException
                 raise HTTPException(status_code=404, detail="Forecast not found")
     return {"ok": True}
 
@@ -157,13 +156,34 @@ async def get_usage(user_id: str):
     return {"totals": totals, "runs": runs}
 
 
+@router.get("/{user_id}/credit")
+async def get_credit(user_id: str):
+    """Return credit limit, total spent, and remaining for a user."""
+    from services.credits import get_credit_limit, get_total_spent
+    limit = get_credit_limit(user_id)
+    spent = get_total_spent(user_id)
+    return {
+        "credit_limit": limit,
+        "total_spent": round(spent, 4),
+        "remaining": round(max(0, limit - spent), 4),
+    }
+
+
 RUNS_DIR = Path(__file__).resolve().parent.parent / "runs"
 
 
 @router.post("/{entry_id}/trace/{run_id}")
-async def save_trace(entry_id: str, run_id: str):
+async def save_trace(entry_id: str, run_id: str, user_id: str = ""):
     """Read the reasoning trace from the runs directory and save it to the DB."""
-    run_dir = RUNS_DIR / run_id
+    if not user_id:
+        raise HTTPException(401, "user_id is required")
+    # Validate run_id to prevent path traversal
+    import re
+    if not re.match(r'^[\w\-]+$', run_id):
+        raise HTTPException(400, "Invalid run_id")
+    run_dir = (RUNS_DIR / run_id).resolve()
+    if not str(run_dir).startswith(str(RUNS_DIR.resolve())):
+        raise HTTPException(400, "Invalid run_id")
     if not run_dir.is_dir():
         raise HTTPException(404, f"Run directory '{run_id}' not found")
     trace = {}
@@ -177,26 +197,28 @@ async def save_trace(entry_id: str, run_id: str):
     with get_db() as conn:
         with conn.cursor() as cur:
             cur.execute(
-                "UPDATE forecast_history SET reasoning_trace = %s WHERE id = %s",
-                (json.dumps(trace), entry_id),
+                "UPDATE forecast_history SET reasoning_trace = %s WHERE id = %s AND user_id = %s",
+                (json.dumps(trace), entry_id, user_id),
             )
             if cur.rowcount == 0:
-                raise HTTPException(404, "Forecast entry not found")
+                raise HTTPException(404, "Forecast entry not found or not owned by user")
     return {"ok": True}
 
 
 @router.get("/{entry_id}/trace")
-async def get_trace(entry_id: str):
+async def get_trace(entry_id: str, user_id: str = ""):
     """Retrieve the stored reasoning trace for a forecast entry."""
+    if not user_id:
+        raise HTTPException(401, "user_id is required")
     with get_db() as conn:
         with conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
             cur.execute(
-                "SELECT reasoning_trace FROM forecast_history WHERE id = %s",
-                (entry_id,),
+                "SELECT reasoning_trace FROM forecast_history WHERE id = %s AND user_id = %s",
+                (entry_id, user_id),
             )
             row = cur.fetchone()
     if not row:
-        raise HTTPException(404, "Forecast entry not found")
+        raise HTTPException(404, "Forecast entry not found or not owned by user")
     trace = row.get("reasoning_trace")
     if not trace:
         return {"trace": None}

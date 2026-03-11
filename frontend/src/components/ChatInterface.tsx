@@ -30,6 +30,7 @@ interface ChatInterfaceProps {
   onNewForecast?: () => void;
   userPicture?: string;
   userName?: string;
+  userId?: string;
 }
 
 export default function ChatInterface({
@@ -52,6 +53,7 @@ export default function ChatInterface({
   onNewForecast,
   userPicture,
   userName,
+  userId,
 }: ChatInterfaceProps) {
   const [input, setInput] = useState("");
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -76,7 +78,7 @@ export default function ChatInterface({
   useEffect(() => {
     if (initialQuery && !initialQueryFired.current) {
       initialQueryFired.current = true;
-      plan(initialQuery, settings);
+      plan(initialQuery, settings, userId);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -120,13 +122,13 @@ export default function ChatInterface({
     const text = input.trim();
     if (!text || isPlanning || isRunning) return;
     setInput("");
-    plan(text, settings);
+    plan(text, settings, userId);
   };
 
   const handleRun = (title: string, outcomes: string[]) => {
     if (isRunning) return;
     onRunStart();
-    startRun(title, outcomes, settings);
+    startRun(title, outcomes, settings, userId);
   };
 
   const handleNewForecast = () => {

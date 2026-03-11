@@ -13,6 +13,7 @@ if load_dotenv is not None:
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from routers.admin import router as admin_router
 from routers.forecast import router as forecast_router
 from routers.history import router as history_router
 
@@ -34,6 +35,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+app.include_router(admin_router)
 app.include_router(forecast_router)
 app.include_router(history_router)
 

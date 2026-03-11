@@ -65,13 +65,13 @@ def init_db():
                     ALTER TABLE forecast_history
                     ADD COLUMN IF NOT EXISTS reasoning_trace JSONB DEFAULT NULL
                 """)
-                # Backfill model_name/search_backend into existing cost_stats
+                # User credits table
                 cur.execute("""
-                    UPDATE forecast_history
-                    SET cost_stats = cost_stats
-                        || '{"model_name": "anthropic/claude-sonnet-4-6", "search_backend": "perplexity"}'::jsonb
-                    WHERE cost_stats != '{}'::jsonb
-                      AND cost_stats->>'model_name' IS NULL
+                    CREATE TABLE IF NOT EXISTS user_credits (
+                        user_id TEXT PRIMARY KEY,
+                        credit_limit DOUBLE PRECISION NOT NULL DEFAULT 5.0,
+                        created_at DOUBLE PRECISION NOT NULL DEFAULT EXTRACT(EPOCH FROM NOW())
+                    )
                 """)
     except Exception as exc:
         import logging

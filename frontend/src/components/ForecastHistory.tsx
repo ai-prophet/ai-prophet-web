@@ -1,6 +1,6 @@
 "use client";
 
-import type { ForecastHistoryEntry } from "@/types";
+import type { ForecastHistoryEntry, CostStats } from "@/types";
 
 const API_BASE = (
   process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"
@@ -52,7 +52,7 @@ export async function updateHistorySubmission(
   entryId: string,
   userId: string,
   submission: Record<string, number>,
-  costStats?: Record<string, unknown>
+  costStats?: CostStats
 ): Promise<boolean> {
   try {
     const body: Record<string, unknown> = { user_id: userId, submission };

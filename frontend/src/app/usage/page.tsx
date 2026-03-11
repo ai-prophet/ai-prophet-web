@@ -3,25 +3,14 @@
 import { useCallback, useEffect, useState } from "react";
 import { useUser } from "@auth0/nextjs-auth0";
 import Navbar from "@/components/Navbar";
+import type { CostStats } from "@/types";
 
 const API_BASE = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000").replace(/\/+$/, "");
-
-interface CostStatsData {
-  model_cost: number;
-  search_cost: number;
-  total_cost: number;
-  planner_cost?: number;
-  n_api_calls: number;
-  n_searches: number;
-  model_name?: string;
-  search_backend?: string;
-  planner_model?: string;
-}
 
 interface UsageRun {
   id: string;
   title: string;
-  cost_stats: CostStatsData;
+  cost_stats: CostStats;
   created_at: number;
 }
 
@@ -124,10 +113,17 @@ function roleColor(role: string): string {
   }
 }
 
+interface CreditInfo {
+  credit_limit: number;
+  total_spent: number;
+  remaining: number;
+}
+
 export default function UsagePage() {
   const { user, isLoading: authLoading } = useUser();
   const [data, setData] = useState<UsageData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [credit, setCredit] = useState<CreditInfo | null>(null);
   const [expandedTrace, setExpandedTrace] = useState<string | null>(null);
   const [traceData, setTraceData] = useState<Record<string, TraceData>>({});
   const [traceLoading, setTraceLoading] = useState<string | null>(null);
@@ -142,6 +138,14 @@ export default function UsagePage() {
       .finally(() => setLoading(false));
   }, [user]);
 
+  useEffect(() => {
+    if (!user?.sub) return;
+    fetch(`${API_BASE}/api/history/${user.sub}/credit`)
+      .then((r) => r.json())
+      .then(setCredit)
+      .catch(() => {});
+  }, [user]);
+
   const toggleTrace = useCallback(async (entryId: string) => {
     if (expandedTrace === entryId) {
       setExpandedTrace(null);
@@ -149,16 +153,17 @@ export default function UsagePage() {
     }
     setExpandedTrace(entryId);
     if (traceData[entryId]) return;
+    if (!user?.sub) return;
     setTraceLoading(entryId);
     try {
-      const res = await fetch(`${API_BASE}/api/history/${entryId}/trace`);
+      const res = await fetch(`${API_BASE}/api/history/${entryId}/trace?user_id=${encodeURIComponent(user.sub as string)}`);
       const json = await res.json();
       if (json.trace) {
         setTraceData((prev) => ({ ...prev, [entryId]: json.trace }));
       }
     } catch {}
     setTraceLoading(null);
-  }, [expandedTrace, traceData]);
+  }, [expandedTrace, traceData, user]);
 
   if (authLoading) {
     return (
@@ -206,6 +211,33 @@ export default function UsagePage() {
             <p className="text-sm text-muted">No usage data yet. Run a forecast to see your costs here.</p>
           ) : (
             <>
+              {/* Credit bar */}
+              {credit && (
+                <div className="mb-6 p-4 border border-edge rounded-xl bg-surface/50">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-xs font-semibold text-muted uppercase tracking-wider">Credit Usage</span>
+                    <span className="text-xs text-muted">
+                      {formatCost(credit.total_spent)} / {formatCost(credit.credit_limit)}
+                    </span>
+                  </div>
+                  <div className="h-2 bg-ground rounded-full overflow-hidden">
+                    <div
+                      className={`h-full rounded-full transition-all ${
+                        credit.remaining <= 0
+                          ? "bg-danger"
+                          : credit.remaining < credit.credit_limit * 0.2
+                          ? "bg-warning"
+                          : "bg-accent"
+                      }`}
+                      style={{ width: `${Math.min(100, (credit.total_spent / credit.credit_limit) * 100)}%` }}
+                    />
+                  </div>
+                  <p className="text-xs text-muted mt-1.5">
+                    {formatCost(credit.remaining)} remaining
+                  </p>
+                </div>
+              )}
+
               {/* Summary cards */}
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
                 <SummaryCard label="Total Cost" value={formatCost(totals.total_cost)} />

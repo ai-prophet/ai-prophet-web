@@ -81,7 +81,7 @@ export default function useAgentStream() {
   }, []);
 
   const plan = useCallback(
-    async (prompt: string, settings: UserSettings) => {
+    async (prompt: string, settings: UserSettings, userId?: string) => {
       setIsPlanning(true);
       addMessage({
         id: nextId(),
@@ -94,7 +94,7 @@ export default function useAgentStream() {
         const res = await fetch(`${API_BASE}/api/plan`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ prompt, settings }),
+          body: JSON.stringify({ prompt, settings, user_id: userId || "" }),
         });
         const text = await res.text();
         let data: Record<string, unknown>;
@@ -278,7 +278,6 @@ export default function useAgentStream() {
                 ...event.cost_stats,
                 planner_cost: plannerCostRef.current,
                 planner_model: plannerModelRef.current,
-                total_cost: event.cost_stats.total_cost + plannerCostRef.current,
               }
             : undefined;
 
@@ -301,7 +300,7 @@ export default function useAgentStream() {
   );
 
   const startRun = useCallback(
-    async (title: string, outcomes: string[], settings: UserSettings) => {
+    async (title: string, outcomes: string[], settings: UserSettings, userId?: string) => {
       setIsRunning(true);
       stepRef.current = 0;
       searchGroupsRef.current = [];
@@ -320,7 +319,7 @@ export default function useAgentStream() {
         const res = await fetch(`${API_BASE}/api/run`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ title, outcomes, settings }),
+          body: JSON.stringify({ title, outcomes, settings, user_id: userId || "" }),
         });
         const rawText = await res.text();
         let data: Record<string, unknown>;

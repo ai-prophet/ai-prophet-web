@@ -201,11 +201,12 @@ export default function Home() {
   }, [user, forecastHistory]);
 
   const saveTrace = useCallback(async (entryId: string, runId: string) => {
+    if (!user?.sub) return;
     try {
       const API_BASE = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000").replace(/\/+$/, "");
-      await fetch(`${API_BASE}/api/history/${entryId}/trace/${runId}`, { method: "POST" });
+      await fetch(`${API_BASE}/api/history/${entryId}/trace/${runId}?user_id=${encodeURIComponent(user.sub as string)}`, { method: "POST" });
     } catch {}
-  }, []);
+  }, [user]);
 
   const handleForecastComplete = useCallback(async (title: string, submission: Record<string, number>, costStats?: CostStats, runId?: string) => {
     const entryId = currentHistoryIdRef.current;
@@ -225,7 +226,7 @@ export default function Home() {
     }
     // Update existing plan entry with results
     if (!user?.sub) return;
-    const ok = await updateHistorySubmission(entryId, user.sub as string, submission, costStats as Record<string, unknown> | undefined);
+    const ok = await updateHistorySubmission(entryId, user.sub as string, submission, costStats);
     if (ok) {
       setForecastHistory((prev) =>
         prev.map((e) => (e.id === entryId ? { ...e, submission, cost_stats: costStats } : e))
@@ -489,6 +490,7 @@ export default function Home() {
             onNewForecast={handleNewForecast}
             userPicture={user?.picture as string | undefined}
             userName={user?.name as string | undefined}
+            userId={user?.sub as string | undefined}
           />
         </div>
         {/* Desktop sidebar */}
