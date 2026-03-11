@@ -1,16 +1,13 @@
 "use client";
 
 import type { ForecastHistoryEntry, CostStats } from "@/types";
-
-const API_BASE = (
-  process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"
-).replace(/\/+$/, "");
+import { getApiUrl } from "@/config/api";
 
 export async function fetchHistory(
   userId: string
 ): Promise<ForecastHistoryEntry[]> {
   try {
-    const res = await fetch(`${API_BASE}/api/history/${userId}`);
+    const res = await fetch(getApiUrl(`/history/${userId}`));
     if (!res.ok) return [];
     return await res.json();
   } catch {
@@ -20,7 +17,7 @@ export async function fetchHistory(
 
 export async function deleteFromHistory(entryId: string): Promise<boolean> {
   try {
-    const res = await fetch(`${API_BASE}/api/history/${entryId}`, {
+    const res = await fetch(getApiUrl(`/history/${entryId}`), {
       method: "DELETE",
     });
     return res.ok;
@@ -36,7 +33,7 @@ export async function saveToHistory(
   outcomes: string[] = []
 ): Promise<{ id: string; timestamp: number } | null> {
   try {
-    const res = await fetch(`${API_BASE}/api/history`, {
+    const res = await fetch(getApiUrl("/history"), {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ user_id: userId, title, submission, outcomes }),
@@ -57,7 +54,7 @@ export async function updateHistorySubmission(
   try {
     const body: Record<string, unknown> = { user_id: userId, submission };
     if (costStats) body.cost_stats = costStats;
-    const res = await fetch(`${API_BASE}/api/history/${entryId}`, {
+    const res = await fetch(getApiUrl(`/history/${entryId}`), {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),

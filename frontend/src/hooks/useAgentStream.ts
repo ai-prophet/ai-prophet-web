@@ -10,8 +10,7 @@ import type {
   SearchSource,
   UserSettings,
 } from "@/types";
-
-const API_BASE = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000").replace(/\/+$/, "");
+import { getApiUrl, getDirectApiUrl } from "@/config/api";
 
 const SESSION_KEY = "prophet_chat_messages";
 
@@ -91,7 +90,7 @@ export default function useAgentStream() {
       });
 
       try {
-        const res = await fetch(`${API_BASE}/api/plan`, {
+        const res = await fetch(getApiUrl("/plan"), {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ prompt, settings, user_id: userId || "" }),
@@ -316,7 +315,7 @@ export default function useAgentStream() {
       });
 
       try {
-        const res = await fetch(`${API_BASE}/api/run`, {
+        const res = await fetch(getApiUrl("/run"), {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ title, outcomes, settings, user_id: userId || "" }),
@@ -338,7 +337,7 @@ export default function useAgentStream() {
         lastRunIdRef.current = run_id;
 
         const eventSource = new EventSource(
-          `${API_BASE}/api/run/${run_id}/stream`
+          getDirectApiUrl(`/run/${run_id}/stream`)
         );
 
         eventSource.onmessage = (ev) => {

@@ -6,6 +6,7 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useTheme } from "@/components/ThemeProvider";
 import { useUser } from "@auth0/nextjs-auth0";
+import { getApiUrl } from "@/config/api";
 
 const NAV_LINKS = [
   { label: "Events", href: "/markets" },
@@ -40,8 +41,7 @@ export default function Navbar({ onToggleHistory, historyOpen, onLogoDoubleClick
 
   useEffect(() => {
     if (!user?.sub) return;
-    const API_BASE = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000").replace(/\/+$/, "");
-    fetch(`${API_BASE}/api/admin/check?user_id=${encodeURIComponent(user.sub as string)}`)
+    fetch(getApiUrl(`/admin/check?user_id=${encodeURIComponent(user.sub as string)}`))
       .then((r) => r.json())
       .then((data) => setIsAdmin(data.is_admin === true))
       .catch(() => setIsAdmin(false));

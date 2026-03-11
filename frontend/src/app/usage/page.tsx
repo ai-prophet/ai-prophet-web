@@ -4,8 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useUser } from "@auth0/nextjs-auth0";
 import Navbar from "@/components/Navbar";
 import type { CostStats } from "@/types";
-
-const API_BASE = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000").replace(/\/+$/, "");
+import { getApiUrl } from "@/config/api";
 
 interface UsageRun {
   id: string;
@@ -131,7 +130,7 @@ export default function UsagePage() {
   useEffect(() => {
     if (!user?.sub) return;
     setLoading(true);
-    fetch(`${API_BASE}/api/history/${user.sub}/usage`)
+    fetch(getApiUrl(`/history/${user.sub}/usage`))
       .then((r) => r.json())
       .then(setData)
       .catch(() => setData(null))
@@ -140,7 +139,7 @@ export default function UsagePage() {
 
   useEffect(() => {
     if (!user?.sub) return;
-    fetch(`${API_BASE}/api/history/${user.sub}/credit`)
+    fetch(getApiUrl(`/history/${user.sub}/credit`))
       .then((r) => r.json())
       .then(setCredit)
       .catch(() => {});
@@ -156,7 +155,7 @@ export default function UsagePage() {
     if (!user?.sub) return;
     setTraceLoading(entryId);
     try {
-      const res = await fetch(`${API_BASE}/api/history/${entryId}/trace?user_id=${encodeURIComponent(user.sub as string)}`);
+      const res = await fetch(getApiUrl(`/history/${entryId}/trace?user_id=${encodeURIComponent(user.sub as string)}`));
       const json = await res.json();
       if (json.trace) {
         setTraceData((prev) => ({ ...prev, [entryId]: json.trace }));

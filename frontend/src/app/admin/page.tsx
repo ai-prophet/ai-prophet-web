@@ -3,8 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useUser } from "@auth0/nextjs-auth0";
 import Navbar from "@/components/Navbar";
-
-const API_BASE = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000").replace(/\/+$/, "");
+import { getApiUrl } from "@/config/api";
 
 interface AdminUser {
   user_id: string;
@@ -29,7 +28,7 @@ export default function AdminPage() {
   // Check if current user is admin
   useEffect(() => {
     if (!user?.sub) return;
-    fetch(`${API_BASE}/api/admin/check?user_id=${encodeURIComponent(user.sub as string)}`)
+    fetch(getApiUrl(`/admin/check?user_id=${encodeURIComponent(user.sub as string)}`))
       .then((r) => r.json())
       .then((data) => setIsAdmin(data.is_admin === true))
       .catch(() => setIsAdmin(false));
@@ -41,7 +40,7 @@ export default function AdminPage() {
     setLoading(true);
     try {
       const res = await fetch(
-        `${API_BASE}/api/admin/users?admin_user_id=${encodeURIComponent(user.sub as string)}`
+        getApiUrl(`/admin/users?admin_user_id=${encodeURIComponent(user.sub as string)}`)
       );
       if (!res.ok) throw new Error("Failed to load users");
       const data = await res.json();
@@ -63,7 +62,7 @@ export default function AdminPage() {
     if (isNaN(limit) || limit < 0) return;
     setSaving(true);
     try {
-      const res = await fetch(`${API_BASE}/api/admin/credits`, {
+      const res = await fetch(getApiUrl("/admin/credits"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

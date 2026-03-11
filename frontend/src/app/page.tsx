@@ -203,8 +203,7 @@ export default function Home() {
   const saveTrace = useCallback(async (entryId: string, runId: string) => {
     if (!user?.sub) return;
     try {
-      const API_BASE = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000").replace(/\/+$/, "");
-      await fetch(`${API_BASE}/api/history/${entryId}/trace/${runId}?user_id=${encodeURIComponent(user.sub as string)}`, { method: "POST" });
+      await fetch(getApiUrl(`/history/${entryId}/trace/${runId}?user_id=${encodeURIComponent(user.sub as string)}`), { method: "POST" });
     } catch {}
   }, [user]);
 
